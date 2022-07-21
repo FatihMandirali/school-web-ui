@@ -1,7 +1,7 @@
 import axios from "axios";
 // import { sessionStorageService } from "./sessionStorageService";
 
-const instance = axios.create({ baseURL: "http://localhost:3000/" });
+const instance = axios.create({ baseURL: "http://localhost:5246/api/" });
 
 axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 

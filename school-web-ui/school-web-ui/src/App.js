@@ -145,7 +145,7 @@ export default function App() {
     </MDBox>
   );
   const currentRoles = () => {
-    const rolee = "admin1";
+    const rolee = "admin";
     const setRole = sessionStorageService.returnSetCurrentRole(rolee);
     // SetRole login olduktan sonra response'de atanacak denemek amaçlı yapıldı şimdi
     const getRole = sessionStorageService.returnGetCurrentRole(setRole);

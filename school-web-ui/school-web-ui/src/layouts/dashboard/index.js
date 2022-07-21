@@ -34,17 +34,9 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
-import { useEffect } from "react";
-import useList from "./service/useList";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-
-  const { service, get } = useList();
-
-  useEffect(() => {
-    get();
-  }, []);
 
   return (
     <DashboardLayout>
@@ -66,7 +58,6 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          {service.serviceStatus === "loaded" && service.payload.clubName}
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard

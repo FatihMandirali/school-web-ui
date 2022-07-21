@@ -7,9 +7,10 @@ const useList = (page1) => {
     try {
       setService({ serviceStatus: "loading" });
       console.log(page);
-      const res = await httpservice.get(`users?per_page=${2}&page=${page}`);
+      const res = await httpservice.get(`Admins/List`);
+      console.log(res);
       const value = {
-        ...res.data,
+        data: res.data,
         serviceStatus: "loaded",
       };
       console.log(value);

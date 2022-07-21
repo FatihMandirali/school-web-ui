@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -36,17 +36,12 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import useList from "./service/useList";
 import usePost from "./service/usePostLogin";
 
 function Basic() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { service, get } = useList();
   const { service: postService, post } = usePost();
-  useEffect(() => {
-    get();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,9 +64,7 @@ function Basic() {
           mb={1}
           textAlign="center"
         >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            {service.serviceStatus === "loaded" && service.payload.clubName}
-          </MDTypography>
+          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1} />
           <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">

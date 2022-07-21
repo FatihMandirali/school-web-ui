@@ -20,13 +20,16 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
+import Icon from "@mui/material/Icon";
+import { Link } from "react-router-dom";
 import useList from "./service/useList";
+import MDButton from "../../components/MDButton";
+import MDTypography from "../../components/MDTypography";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -37,12 +40,22 @@ function Tables() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 200 },
-    { field: "email", headerName: "Email", minWidth: 400 },
-    { field: "first_name", headerName: "First name", minWidth: 200 },
+    { field: "AdminName", headerName: "Admin Adı", width: 200 },
+    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 400 },
     {
-      field: "last_name",
-      headerName: "Last Name",
+      field: "RoleName",
+      headerName: "Admin Rolü",
+      minWidth: 200,
+      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
+    },
+    {
+      field: "username",
+      headerName: "Kullanıcı Adı",
+      minWidth: 200,
+    },
+    {
+      field: "BranchName",
+      headerName: "Bölgesi",
       minWidth: 200,
     },
     {
@@ -75,8 +88,19 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar />
       <MDBox pt={6} pb={3}>
+        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant="h6" fontWeight="medium">
+            <h1>Kullanıcılar</h1>
+          </MDTypography>
+          <Link to="/dashboard" style={{ color: "#FFF" }}>
+            <MDButton variant="gradient" color="dark">
+              <Icon sx={{ fontWeight: "bold" }}>add</Icon>
+              &nbsp;ekle
+            </MDButton>
+          </Link>
+        </MDBox>
+        <br />
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
@@ -84,6 +108,7 @@ function Tables() {
               columns={columns}
               pageSize={10}
               pagination
+              getRowId={(row) => row.AdminId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
