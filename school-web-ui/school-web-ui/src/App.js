@@ -153,6 +153,16 @@ export default function App() {
     return result;
   };
 
+  const currentMenuRoles = () => {
+    const rolee = "admin";
+    const setRole = sessionStorageService.returnSetCurrentRole(rolee);
+    // SetRole login olduktan sonra response'de atanacak denemek amaçlı yapıldı şimdi
+    const getRole = sessionStorageService.returnGetCurrentRole(setRole);
+    let result = routes.filter(({ role }) => role.includes(getRole));
+    result = result.filter(({ isActive }) => isActive === true);
+    return result;
+  };
+
   console.log(`direction ${direction} layout ${layout} rtlCache ${rtlCache} `);
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
@@ -162,7 +172,7 @@ export default function App() {
           color={sidenavColor}
           brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
           brandName="Material Dashboard 2"
-          routes={currentRoles()}
+          routes={currentMenuRoles()}
           onMouseEnter={handleOnMouseEnter}
           onMouseLeave={handleOnMouseLeave}
         />
@@ -171,6 +181,7 @@ export default function App() {
       {configsButton}
       <Routes>
         {getRoutes(currentRoles())}
+        <Route path="/user-create" element={<Navigate to="/user-create" />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </ThemeProvider>

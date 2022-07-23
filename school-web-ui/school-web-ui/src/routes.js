@@ -37,13 +37,14 @@ Coded by www.creative-tim.com
 
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
+import Users from "layouts/users";
 import Billing from "layouts/billing";
 import RTL from "layouts/rtl";
 import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import CreateUser from "layouts/users/createUser";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -57,6 +58,7 @@ const routes = [
     route: "/authentication/sign-in",
     component: <SignIn />,
     role: "admin",
+    isActive: true,
   },
   {
     type: "collapse",
@@ -66,15 +68,27 @@ const routes = [
     route: "/dashboard",
     component: <Dashboard />,
     role: "admin",
+    isActive: true,
   },
   {
     type: "collapse",
     name: "Kullanıcılar",
-    key: "tables",
+    key: "users",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
+    route: "/users",
+    component: <Users />,
     role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Kullanıcı Oluştur",
+    key: "usercreate",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/user_create",
+    component: <CreateUser />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
@@ -84,6 +98,7 @@ const routes = [
     route: "/billing",
     component: <Billing />,
     role: "admin11",
+    isActive: true,
   },
   {
     type: "collapse",
@@ -93,6 +108,7 @@ const routes = [
     route: "/rtl",
     component: <RTL />,
     role: "admin111",
+    isActive: true,
   },
   {
     type: "collapse",
@@ -102,6 +118,7 @@ const routes = [
     route: "/notifications",
     component: <Notifications />,
     role: "admin11111",
+    isActive: true,
   },
   {
     type: "collapse",
@@ -111,6 +128,7 @@ const routes = [
     route: "/profile",
     component: <Profile />,
     role: "admin1121",
+    isActive: true,
   },
   {
     type: "collapse",
@@ -119,7 +137,8 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
-    role: "admi32n1",
+    role: "admin1",
+    isActive: true,
   },
 ];
 
