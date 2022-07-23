@@ -93,7 +93,7 @@ function Tables() {
           <MDTypography variant="h6" fontWeight="medium">
             <h1>Kullanıcılar</h1>
           </MDTypography>
-          <Link to="/dashboard" style={{ color: "#FFF" }}>
+          <Link to="/user_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
