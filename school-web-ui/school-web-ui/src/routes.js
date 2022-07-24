@@ -45,6 +45,8 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import CreateUser from "layouts/users/createUser";
+import Branchs from "layouts/branchs";
+import BranchsCreate from "layouts/branchs/createBranch";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -58,7 +60,7 @@ const routes = [
     route: "/authentication/sign-in",
     component: <SignIn />,
     role: "admin",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -68,17 +70,37 @@ const routes = [
     route: "/dashboard",
     component: <Dashboard />,
     role: "admin",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
-    name: "Kullanıcılar",
+    name: "Kullanıcı İşlemleri",
     key: "users",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/users",
     component: <Users />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Şube İşlemleri",
+    key: "branchs",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/branchs",
+    component: <Branchs />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Şube Oluştur",
+    key: "branchscreate",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/branch_create",
+    component: <BranchsCreate />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
@@ -98,7 +120,7 @@ const routes = [
     route: "/billing",
     component: <Billing />,
     role: "admin11",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -108,7 +130,7 @@ const routes = [
     route: "/rtl",
     component: <RTL />,
     role: "admin111",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -118,7 +140,7 @@ const routes = [
     route: "/notifications",
     component: <Notifications />,
     role: "admin11111",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -128,7 +150,7 @@ const routes = [
     route: "/profile",
     component: <Profile />,
     role: "admin1121",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -138,7 +160,7 @@ const routes = [
     route: "/authentication/sign-up",
     component: <SignUp />,
     role: "admin1",
-    isActive: true,
+    isActive: false,
   },
 ];
 

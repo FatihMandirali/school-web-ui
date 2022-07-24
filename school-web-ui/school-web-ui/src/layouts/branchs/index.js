@@ -40,23 +40,12 @@ function Tables() {
   };
 
   const columns = [
-    { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 400 },
+    { field: "BranchName", headerName: "Şube Adı", width: 200 },
     {
-      field: "RoleName",
-      headerName: "Admin Rolü",
-      minWidth: 200,
-      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
-    },
-    {
-      field: "username",
-      headerName: "Kullanıcı Adı",
-      minWidth: 200,
-    },
-    {
-      field: "BranchName",
-      headerName: "Bölgesi",
-      minWidth: 200,
+      field: "IsActive",
+      headerName: "Aktiflik",
+      minWidth: 400,
+      valueGetter: (params) => (params.row.IsActive === 1 ? "Aktif" : "Aktif Değil"),
     },
     {
       field: "actions",
@@ -91,9 +80,9 @@ function Tables() {
       <MDBox pt={6} pb={3}>
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kullanıcılar</h1>
+            <h1>Şubeler</h1>
           </MDTypography>
-          <Link to="/user_create" style={{ color: "#FFF" }}>
+          <Link to="/branch_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
@@ -106,9 +95,9 @@ function Tables() {
             <DataGrid
               rows={service.data}
               columns={columns}
-              pageSize={100}
+              pageSize={10}
               pagination
-              getRowId={(row) => row.AdminId}
+              getRowId={(row) => row.BranchId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
