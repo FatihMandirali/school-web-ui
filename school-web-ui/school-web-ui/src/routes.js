@@ -47,9 +47,14 @@ import SignUp from "layouts/authentication/sign-up";
 import CreateUser from "layouts/users/createUser";
 import Branchs from "layouts/branchs";
 import BranchsCreate from "layouts/branchs/createBranch";
+import Finance from "layouts/finance";
+import CreateFinance from "layouts/finance/craeteFinance";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import GroupIcon from "@mui/icons-material/Group";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import PaymentIcon from "@mui/icons-material/Payment";
 
 const routes = [
   {
@@ -76,7 +81,7 @@ const routes = [
     type: "collapse",
     name: "Kullanıcı İşlemleri",
     key: "users",
-    icon: <Icon fontSize="small">table_view</Icon>,
+    icon: <GroupIcon />,
     route: "/users",
     component: <Users />,
     role: "admin1",
@@ -86,11 +91,31 @@ const routes = [
     type: "collapse",
     name: "Şube İşlemleri",
     key: "branchs",
-    icon: <Icon fontSize="small">table_view</Icon>,
+    icon: <ApartmentIcon />,
     route: "/branchs",
     component: <Branchs />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödeme İşlemleri",
+    key: "finances",
+    icon: <PaymentIcon />,
+    route: "/finances",
+    component: <Finance />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödeme İşlemi Oluştur",
+    key: "financecreate",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/finance_create",
+    component: <CreateFinance />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
