@@ -49,6 +49,8 @@ import Branchs from "layouts/branchs";
 import BranchsCreate from "layouts/branchs/createBranch";
 import Finance from "layouts/finance";
 import CreateFinance from "layouts/finance/craeteFinance";
+import DetailUser from "layouts/users/detailUser";
+import DetailBranch from "layouts/branchs/detailBranch";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -134,6 +136,26 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/user_create",
     component: <CreateUser />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Kullanıcı Detay",
+    key: "userdetail",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/user_detail/:id",
+    component: <DetailUser />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Şube Detay",
+    key: "branchdetail",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/branch_detail/:id",
+    component: <DetailBranch />,
     role: "admin1",
     isActive: false,
   },

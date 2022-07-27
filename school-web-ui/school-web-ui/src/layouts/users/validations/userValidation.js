@@ -8,7 +8,5 @@ export const validationSchema = Yup.object({
   tc: Yup.number().typeError("Lütfen rakam girin").required("Lütfen tc girin."),
   roleId: Yup.number().min(1, "Lütfen rol seçin"),
   branchId: Yup.number().min(1, "Lütfen bölge seçin"),
-  pass: Yup.string()
-    .required("Lütfen şifre girin.")
-    .min(5, "En az 5 karakter olacak şekilde girin."),
+  pass: Yup.string().required("Lütfen şifre girin."),
 });

@@ -36,7 +36,7 @@ function Tables() {
   const { service, get } = useList(email);
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/dashboard/${id}`;
+    window.location.href = `/user_detail/${id}`;
   };
 
   const columns = [

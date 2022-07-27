@@ -4,9 +4,9 @@ import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useDetail from "./service/useDetail";
-import DetailUserComponent from "../../components/DetailUser/DetailUserComponent";
+import DetailBranchComponent from "../../components/DetailBranch/DetailBranchComponent";
 
-function CreateUser() {
+function DetailBranch() {
   const { id } = useParams();
   const { serviceDetail } = useDetail(id);
 
@@ -15,21 +15,15 @@ function CreateUser() {
       <MDBox>
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kullanıcı Detay</h1>
+            <h1>Şube Detay</h1>
           </MDTypography>
         </MDBox>
         <Card>
           {serviceDetail.serviceStatus === "loaded" && (
-            <DetailUserComponent
-              adminName={serviceDetail.data.AdminName}
-              adminRole={serviceDetail.data.AdminRole}
-              adminSurname={serviceDetail.data.AdminSurname}
+            <DetailBranchComponent
               branchId={serviceDetail.data.BranchId}
-              username={serviceDetail.data.username}
+              branchName={serviceDetail.data.BranchName}
               isActive={serviceDetail.data.IsActive}
-              adminId={serviceDetail.data.AdminId}
-              tc={serviceDetail.data.AdminTcOrPasaportNo}
-              password={serviceDetail.data.PASSWORD}
             />
           )}
         </Card>
@@ -38,4 +32,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default DetailBranch;
