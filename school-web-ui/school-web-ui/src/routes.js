@@ -52,6 +52,7 @@ import CreateFinance from "layouts/finance/craeteFinance";
 import DetailUser from "layouts/users/detailUser";
 import DetailBranch from "layouts/branchs/detailBranch";
 import DetailFinance from "layouts/finance/detailFinance";
+import UnAuthorization from "layouts/authentication/un-authorization";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -147,6 +148,16 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/user_detail/:id",
     component: <DetailUser />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Yetersiz Yetki",
+    key: "un-authorization",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/unauthorization",
+    component: <UnAuthorization />,
     role: "admin1",
     isActive: false,
   },

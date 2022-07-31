@@ -4,25 +4,34 @@ import httpservice from "../../../../httpservice/httpservice";
 const usePost = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (email, password) => {
-    try {
-      console.log(email, password);
-      setService({ serviceStatus: "loading" });
+  const post = async (userName, password, roleName) =>
+    // eslint-disable-next-line no-async-promise-executor
+    new Promise(async (resolve) => {
+      try {
+        console.log(userName, password);
+        setService({ serviceStatus: "loading" });
+        const request = {
+          userName,
+          password,
+          roleName,
+        };
+        console.log(request);
+        const res = await httpservice.post(`Login`, request, {
+          headers: { "content-type": "application/json" },
+        });
 
-      const res = await httpservice.post(`panel/club`, email, {
-        headers: { "content-type": "multipart/form-data" },
-      });
+        const value = {
+          ...res.data,
+          serviceStatus: "loaded",
+        };
 
-      const value = {
-        ...res.data,
-        serviceStatus: "loaded",
-      };
-
-      setService(value);
-    } catch (error) {
-      setService({ serviceStatus: "failed" });
-    }
-  };
+        setService(value);
+        resolve(value);
+      } catch (error) {
+        setService({ serviceStatus: "failed" });
+        resolve({ serviceStatus: "failed", errorMessage: error.response.data });
+      }
+    });
 
   return { service, post };
 };

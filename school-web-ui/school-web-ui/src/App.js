@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -35,10 +35,6 @@ import theme from "assets/theme";
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
@@ -65,18 +61,7 @@ export default function App() {
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
-
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
-    });
-
-    setRtlCache(cacheRtl);
-  }, []);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -163,7 +148,6 @@ export default function App() {
     return result;
   };
 
-  console.log(`direction ${direction} layout ${layout} rtlCache ${rtlCache} `);
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />

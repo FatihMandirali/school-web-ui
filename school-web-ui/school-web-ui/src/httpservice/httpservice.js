@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { sessionStorageService } from "./sessionStorageService";
+import { sessionStorageService } from "./sessionStorageService";
 
 const instance = axios.create({ baseURL: "http://localhost:5246/api/" });
 
@@ -8,26 +8,27 @@ axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("errorrr");
-    console.log(error);
     if (error.response.status === 401) {
-      // Add Logic to
-      // 1. Redirect to login page or
-      // 2. Request refresh token
-      console.log("errorrr 401");
+      window.location.href = "/authentication/sign-in";
+    }
+    if (error.response.status === 403) {
+      window.location.href = "/unauthorization";
     }
     return Promise.reject(error);
   }
 );
 
 instance.interceptors.request.use(
-  (config) =>
-    // const token = sessionStorageService.returnGetAccessToken();
-    // if (token === null && window.location.href.indexOf("authentication/sign-in") < 0) {
-    //  window.location.href = "/authentication/sign-in";
-    // }
+  (config) => {
+    const token = sessionStorageService.returnGetAccessToken();
+    // eslint-disable-next-line no-param-reassign
+    config.headers.Authorization = `Bearer ${sessionStorageService.returnGetAccessToken()}`;
+    if (token === null && window.location.href.indexOf("authentication/sign-in") < 0) {
+      window.location.href = "/authentication/sign-in";
+    }
 
-    config,
+    return config;
+  },
   (error) => {
     Promise.reject(error);
   }
