@@ -53,12 +53,15 @@ import DetailUser from "layouts/users/detailUser";
 import DetailBranch from "layouts/branchs/detailBranch";
 import DetailFinance from "layouts/finance/detailFinance";
 import UnAuthorization from "layouts/authentication/un-authorization";
-
+import CourseType from "layouts/coursetype";
+import CreateCourseType from "layouts/coursetype/craeteCourseType";
+import DetailCourseType from "layouts/coursetype/detailCourseType";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import PaymentIcon from "@mui/icons-material/Payment";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 
 const routes = [
   {
@@ -103,6 +106,16 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Kurs İşlemleri",
+    key: "courseType",
+    icon: <LocalLibraryIcon />,
+    route: "/courseTypes",
+    component: <CourseType />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
     name: "Ödeme İşlemleri",
     key: "finances",
     icon: <PaymentIcon />,
@@ -110,6 +123,26 @@ const routes = [
     component: <Finance />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Kurs Türü Oluştur",
+    key: "coursetypecreate",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/courseType_create",
+    component: <CreateCourseType />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Kurs Türü Güncelle",
+    key: "coursetypeupdate",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/courseType_detail/:id",
+    component: <DetailCourseType />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
