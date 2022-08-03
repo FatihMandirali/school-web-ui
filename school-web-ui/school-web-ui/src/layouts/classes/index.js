@@ -36,26 +36,22 @@ function Tables() {
   const { service, get } = useList(email);
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/user_detail/${id}`;
+    window.location.href = `/classes_detail/${id}`;
   };
 
   const columns = [
-    { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 400 },
+    { field: "ClassName", headerName: "Sınıf", width: 200 },
+    { field: "TeacherName", headerName: "Sınıf Öğretmeni Adı", minWidth: 400 },
+    { field: "TeacherSurname", headerName: "Sınıf Öğretmeni Soyadı", minWidth: 400 },
     {
-      field: "RoleName",
-      headerName: "Admin Rolü",
+      field: "CourseName",
+      headerName: "Kurs Adı",
       minWidth: 200,
       // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
     },
     {
-      field: "username",
-      headerName: "Kullanıcı Adı",
-      minWidth: 200,
-    },
-    {
       field: "BranchName",
-      headerName: "Bölgesi",
+      headerName: "Şube",
       minWidth: 200,
     },
     {
@@ -89,11 +85,11 @@ function Tables() {
   return (
     <DashboardLayout>
       <MDBox pt={6} pb={3}>
-        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kullanıcılar</h1>
+            <h1>Sınıflar</h1>
           </MDTypography>
-          <Link to="/user_create" style={{ color: "#FFF" }}>
+          <Link to="/classes_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
@@ -108,7 +104,7 @@ function Tables() {
               columns={columns}
               pageSize={100}
               pagination
-              getRowId={(row) => row.AdminId}
+              getRowId={(row) => row.ClassId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}

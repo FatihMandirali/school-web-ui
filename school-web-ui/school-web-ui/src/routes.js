@@ -56,12 +56,15 @@ import UnAuthorization from "layouts/authentication/un-authorization";
 import CourseType from "layouts/coursetype";
 import CreateCourseType from "layouts/coursetype/craeteCourseType";
 import DetailCourseType from "layouts/coursetype/detailCourseType";
+import Classes from "layouts/classes";
+import CreateClasses from "layouts/classes/createClasses";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import PaymentIcon from "@mui/icons-material/Payment";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 
 const routes = [
   {
@@ -113,6 +116,26 @@ const routes = [
     component: <CourseType />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Sınıf İşlemleri",
+    key: "classes",
+    icon: <TableRestaurantIcon />,
+    route: "/classes",
+    component: <Classes />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Sınıf Oluştur",
+    key: "classescreate",
+    icon: <TableRestaurantIcon />,
+    route: "/classes_create",
+    component: <CreateClasses />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
