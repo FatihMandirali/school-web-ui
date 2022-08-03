@@ -4,9 +4,9 @@ import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useDetail from "./service/useDetail";
-import DetailUserComponent from "../../components/DetailUser/DetailUserComponent";
+import DetailClassesComponent from "./components/DetailClassesComponent";
 
-function CreateUser() {
+function DetailClasses() {
   const { id } = useParams();
   const { serviceDetail } = useDetail(id);
 
@@ -20,16 +20,12 @@ function CreateUser() {
         </MDBox>
         <Card>
           {serviceDetail.serviceStatus === "loaded" && (
-            <DetailUserComponent
-              adminName={serviceDetail.data.AdminName}
-              adminRole={serviceDetail.data.AdminRole}
-              adminSurname={serviceDetail.data.AdminSurname}
+            <DetailClassesComponent
+              classId={serviceDetail.data.ClassId}
               branchId={serviceDetail.data.BranchId}
-              username={serviceDetail.data.username}
-              isActive={serviceDetail.data.IsActive}
-              adminId={serviceDetail.data.AdminId}
-              tc={serviceDetail.data.AdminTcOrPasaportNo}
-              password={serviceDetail.data.PASSWORD}
+              teacherId={serviceDetail.data.TeacherId}
+              courseType={serviceDetail.data.CourseType}
+              className={serviceDetail.data.ClassName}
             />
           )}
         </Card>
@@ -38,4 +34,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default DetailClasses;

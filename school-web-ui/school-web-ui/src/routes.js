@@ -58,6 +58,7 @@ import CreateCourseType from "layouts/coursetype/craeteCourseType";
 import DetailCourseType from "layouts/coursetype/detailCourseType";
 import Classes from "layouts/classes";
 import CreateClasses from "layouts/classes/createClasses";
+import DetailClasses from "layouts/classes/detailClasses";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -134,6 +135,16 @@ const routes = [
     icon: <TableRestaurantIcon />,
     route: "/classes_create",
     component: <CreateClasses />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Sınıf Detay",
+    key: "classesdetail",
+    icon: <TableRestaurantIcon />,
+    route: "/classes_detail/:id",
+    component: <DetailClasses />,
     role: "admin1",
     isActive: false,
   },

@@ -4,13 +4,13 @@ import httpservice from "../../../httpservice/httpservice";
 const useDelete = () => {
   const [serviceDelete, setService] = useState({ serviceStatus: "idle" });
 
-  const postDelete = async (adminId) =>
+  const postDelete = async (classId) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
 
-        const res = await httpservice.delete(`Admins/Deleted?adminId=${adminId}`, {
+        const res = await httpservice.delete(`Classes/Delete?classId=${classId}`, {
           headers: { "content-type": "application/json" },
         });
 
