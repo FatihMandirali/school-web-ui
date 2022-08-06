@@ -65,6 +65,9 @@ import DetailAnnouncement from "layouts/announcement/detailAnnoncement";
 import Covers from "layouts/covers";
 import CoverCreate from "layouts/covers/createCover";
 import CoverDetail from "layouts/covers/detailCover";
+import Lessons from "layouts/lessons";
+import LessonsCreate from "layouts/lessons/craeteLesson";
+import LessonsDetail from "layouts/lessons/detailLesson";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -74,6 +77,7 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import EscalatorWarningIcon from "@mui/icons-material/EscalatorWarning";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 const routes = [
   {
@@ -155,6 +159,36 @@ const routes = [
     component: <Announcement />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ders İşlemleri",
+    key: "lessons",
+    icon: <AutoStoriesIcon />,
+    route: "/lessons",
+    component: <Lessons />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ders İşlemleri",
+    key: "lessonscreate",
+    icon: <AutoStoriesIcon />,
+    route: "/lesson_create",
+    component: <LessonsCreate />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Ders İşlemleri",
+    key: "lessonsdetail",
+    icon: <AutoStoriesIcon />,
+    route: "/lesson_detail/:id",
+    component: <LessonsDetail />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",

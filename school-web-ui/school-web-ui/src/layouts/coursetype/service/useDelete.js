@@ -10,7 +10,7 @@ const useDelete = () => {
       try {
         setService({ serviceStatus: "loading" });
 
-        const res = await httpservice.delete(`CourseTypes/Delete?courseId=${courseTypeId}`, {
+        const res = await httpservice.delete(`Lessons/Delete?lessonId=${courseTypeId}`, {
           headers: { "content-type": "application/json" },
         });
 

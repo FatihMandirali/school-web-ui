@@ -1,19 +1,16 @@
 import { useState } from "react";
 import httpservice from "../../../httpservice/httpservice";
 
-const useUpdate = () => {
-  const [service, setService] = useState({ serviceStatus: "idle" });
+const useDelete = () => {
+  const [serviceDelete, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (lessonId, lessonName) =>
+  const postDelete = async (courseTypeId) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        const request = {
-          lessonId,
-          lessonName,
-        };
-        const res = await httpservice.post(`Lessons/AddOrUpdate`, request, {
+
+        const res = await httpservice.delete(`CourseTypes/Delete?courseId=${courseTypeId}`, {
           headers: { "content-type": "application/json" },
         });
 
@@ -32,7 +29,7 @@ const useUpdate = () => {
       }
     });
 
-  return { service, post };
+  return { serviceDelete, postDelete };
 };
 
-export default useUpdate;
+export default useDelete;
