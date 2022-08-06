@@ -182,9 +182,9 @@ function CreateClasses() {
               )}
               {values.branchId > 0 && serviceTeacher.serviceStatus === "loaded" && (
                 <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Öğretmen</InputLabel>
+                  <InputLabel id="demo-simple-select-filled-label">Rehber Öğretmeni</InputLabel>
                   <Select
-                    label="Öğretmen"
+                    label="Sınıf Rehber Öğretmeni"
                     displayEmpty
                     variant="outlined"
                     margin="dense"

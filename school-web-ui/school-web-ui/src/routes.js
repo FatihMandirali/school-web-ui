@@ -59,6 +59,9 @@ import DetailCourseType from "layouts/coursetype/detailCourseType";
 import Classes from "layouts/classes";
 import CreateClasses from "layouts/classes/createClasses";
 import DetailClasses from "layouts/classes/detailClasses";
+import Announcement from "layouts/announcement/index";
+import CreateAnnouncement from "layouts/announcement/craeteAnnouncement";
+import DetailAnnouncement from "layouts/announcement/detailAnnoncement";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -66,6 +69,7 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import PaymentIcon from "@mui/icons-material/Payment";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import CampaignIcon from "@mui/icons-material/Campaign";
 
 const routes = [
   {
@@ -90,7 +94,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Kullanıcı İşlemleri",
+    name: "Yönetici İşlemleri",
     key: "users",
     icon: <GroupIcon />,
     route: "/users",
@@ -107,6 +111,36 @@ const routes = [
     component: <Branchs />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Duyuru İşlemleri",
+    key: "announcements",
+    icon: <CampaignIcon />,
+    route: "/announcements",
+    component: <Announcement />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Duyuru Oluştur",
+    key: "announcementscreate",
+    icon: <CampaignIcon />,
+    route: "/announcement_create",
+    component: <CreateAnnouncement />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Duyuru Güncelle",
+    key: "announcementsdetail",
+    icon: <CampaignIcon />,
+    route: "/announcement_detail/:id",
+    component: <DetailAnnouncement />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
