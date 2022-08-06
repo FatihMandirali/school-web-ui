@@ -32,20 +32,22 @@ import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 
 function Tables() {
-  const { service, get } = useList(0);
+  const { service, get } = useList();
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/announcement_detail/${id}`;
+    window.location.href = `/cover_detail/${id}`;
   };
 
   const columns = [
-    { field: "AnnouncementTitle", headerName: "Başlık", width: 200 },
-    { field: "AnnouncementText", headerName: "Açıklama", width: 200 },
-    { field: "RelaseDate", headerName: "Yayın Tarihi", width: 200 },
-    { field: "EndDate", headerName: "Bitiş Tarihi", width: 200 },
-    { field: "LocationId", headerName: "Paylaşılma Yeri", width: 200 },
-    { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", width: 200 },
+    { field: "CoverName", headerName: "Adı", width: 200 },
+    { field: "CoverSurname", headerName: "Soyadı", minWidth: 400 },
+    { field: "CoverEmail", headerName: "Mail", minWidth: 400 },
+    {
+      field: "CoverPhoneNumber",
+      headerName: "Telefon Numarası",
+      minWidth: 200,
+      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
+    },
     {
       field: "actions",
       type: "actions",
@@ -65,18 +67,20 @@ function Tables() {
     },
   ];
 
-  useEffect(() => {
-    get();
-  }, []);
+  const changePage = () => {
+    useEffect(() => {
+      get();
+    }, []);
+  };
 
   return (
     <DashboardLayout>
       <MDBox pt={6} pb={3}>
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Duyurular</h1>
+            <h1>Veliler</h1>
           </MDTypography>
-          <Link to="/announcement_create" style={{ color: "#FFF" }}>
+          <Link to="/cover_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
@@ -89,10 +93,11 @@ function Tables() {
             <DataGrid
               rows={service.data}
               columns={columns}
-              pageSize={10}
+              pageSize={100}
               pagination
-              getRowId={(row) => row.AnnouncementId}
+              getRowId={(row) => row.CoverId}
               rowsPerPageOptions={[5, 10, 15]}
+              onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
             />
           </div>

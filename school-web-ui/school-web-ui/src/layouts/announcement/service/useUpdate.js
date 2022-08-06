@@ -23,8 +23,8 @@ const useUpdate = () => {
           text,
           adminId,
           locationId,
-          createdDate,
-          sharingEndDate,
+          relaseDate: createdDate,
+          endDate: sharingEndDate,
         };
         const res = await httpservice.post(`Announcements/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },

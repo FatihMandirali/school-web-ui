@@ -1,43 +1,35 @@
 import { useState } from "react";
 import httpservice from "../../../httpservice/httpservice";
 
-const useCreate = () => {
-  const [service, setService] = useState({ serviceStatus: "idle" });
+const useDelete = () => {
+  const [serviceDelete, setService] = useState({ serviceStatus: "idle" });
 
-  const post = (title, text, adminId, locationId, createdDate, sharingEndDate) =>
+  const postDelete = async (classId) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        const request = {
-          title,
-          text,
-          adminId,
-          locationId,
-          relaseDate: createdDate,
-          endDate: sharingEndDate,
-        };
-        console.log(request);
-        const res = await httpservice.post(`Announcements/AddOrUpdate`, request, {
+
+        const res = await httpservice.delete(`Cover/Delete?coverId=${classId}`, {
           headers: { "content-type": "application/json" },
         });
+
+        console.log(res);
 
         const value = {
           ...res.data,
           serviceStatus: "loaded",
         };
-        console.log(value);
 
         setService(value);
         resolve(value);
       } catch (error) {
-        console.log(error);
         setService({ serviceStatus: "failed" });
         resolve({ serviceStatus: "failed", errorMessage: error.response.data });
       }
     });
 
-  return { service, post };
+  return { serviceDelete, postDelete };
 };
 
-export default useCreate;
+export default useDelete;

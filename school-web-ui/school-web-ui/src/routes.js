@@ -62,6 +62,9 @@ import DetailClasses from "layouts/classes/detailClasses";
 import Announcement from "layouts/announcement/index";
 import CreateAnnouncement from "layouts/announcement/craeteAnnouncement";
 import DetailAnnouncement from "layouts/announcement/detailAnnoncement";
+import Covers from "layouts/covers";
+import CoverCreate from "layouts/covers/createCover";
+import CoverDetail from "layouts/covers/detailCover";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -70,6 +73,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import EscalatorWarningIcon from "@mui/icons-material/EscalatorWarning";
 
 const routes = [
   {
@@ -101,6 +105,36 @@ const routes = [
     component: <Users />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Veli İşlemleri",
+    key: "covers",
+    icon: <EscalatorWarningIcon />,
+    route: "/covers",
+    component: <Covers />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Veli Oluştur",
+    key: "covercreate",
+    icon: <EscalatorWarningIcon />,
+    route: "/cover_create",
+    component: <CoverCreate />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Veli Detay",
+    key: "coverdetail",
+    icon: <EscalatorWarningIcon />,
+    route: "/cover_detail/:id",
+    component: <CoverDetail />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
