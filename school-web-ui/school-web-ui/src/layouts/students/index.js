@@ -40,22 +40,37 @@ function Tables() {
   };
 
   const columns = [
-    { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 400 },
+    { field: "StudentName", headerName: "Adı", width: 200 },
+    { field: "StudentSurname", headerName: "Soyadı", minWidth: 400 },
     {
-      field: "RoleName",
-      headerName: "Admin Rolü",
+      field: "StudentNo",
+      headerName: "Öğrenci Numarası",
       minWidth: 200,
       // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
     },
     {
-      field: "username",
-      headerName: "Kullanıcı Adı",
+      field: "StudentTcOrPassNo",
+      headerName: "Kimlik Bilgisi",
       minWidth: 200,
     },
     {
-      field: "BranchName",
-      headerName: "Bölgesi",
+      field: "StudentPhoneNumber",
+      headerName: "Telefon",
+      minWidth: 200,
+    },
+    {
+      field: "StudentEmail",
+      headerName: "Mail",
+      minWidth: 200,
+    },
+    {
+      field: "ClassName",
+      headerName: "Sınıf",
+      minWidth: 200,
+    },
+    {
+      field: "Adress",
+      headerName: "Adres",
       minWidth: 200,
     },
     {
@@ -91,9 +106,9 @@ function Tables() {
       <MDBox pt={6} pb={3}>
         <MDBox display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Yöneticiler</h1>
+            <h1>Kayıtlı Öğrenciler</h1>
           </MDTypography>
-          <Link to="/user_create" style={{ color: "#FFF" }}>
+          <Link to="/student_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
@@ -108,7 +123,7 @@ function Tables() {
               columns={columns}
               pageSize={100}
               pagination
-              getRowId={(row) => row.AdminId}
+              getRowId={(row) => row.StudentId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}

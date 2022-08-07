@@ -68,6 +68,9 @@ import CoverDetail from "layouts/covers/detailCover";
 import Lessons from "layouts/lessons";
 import LessonsCreate from "layouts/lessons/craeteLesson";
 import LessonsDetail from "layouts/lessons/detailLesson";
+import StudentRecord from "layouts/students/index";
+import StudentCreate from "layouts/students/createStudent";
+import StudentNotRecord from "layouts/students/indexNotRecord";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -78,6 +81,8 @@ import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import EscalatorWarningIcon from "@mui/icons-material/EscalatorWarning";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import SchoolIcon from "@mui/icons-material/School";
+import EditOffIcon from "@mui/icons-material/EditOff";
 
 const routes = [
   {
@@ -119,6 +124,36 @@ const routes = [
     component: <Covers />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Kayıtlı Öğrenci İşlemleri",
+    key: "student_records",
+    icon: <SchoolIcon />,
+    route: "/student_records",
+    component: <StudentRecord />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Kayıtsız Öğrenci İşlemleri",
+    key: "student_notrecords",
+    icon: <EditOffIcon />,
+    route: "/student_notrecords",
+    component: <StudentNotRecord />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Kayıtlı Öğrenci İşlemleri",
+    key: "student_create",
+    icon: <SchoolIcon />,
+    route: "/student_create",
+    component: <StudentCreate />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
