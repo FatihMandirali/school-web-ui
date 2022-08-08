@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import httpservice from "../../../httpservice/httpservice";
+import httpservice from "../../../../httpservice/httpservice";
 
 const useList = () => {
   const [service, setService] = useState({ serviceStatus: "loading" });
@@ -7,7 +7,9 @@ const useList = () => {
     try {
       setService({ serviceStatus: "loading" });
       console.log(locationId);
-      const res = await httpservice.get(`Announcements/AllList`);
+      const res = await httpservice.get(
+        `Announcements/List?locationId=${locationId === undefined ? 0 : locationId}`
+      );
       console.log(res);
       const value = {
         data: res.data,
