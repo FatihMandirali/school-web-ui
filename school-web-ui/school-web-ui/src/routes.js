@@ -71,6 +71,9 @@ import LessonsDetail from "layouts/lessons/detailLesson";
 import StudentRecord from "layouts/students/index";
 import StudentCreate from "layouts/students/createStudent";
 import StudentNotRecord from "layouts/students/indexNotRecord";
+import Teacher from "layouts/teacher";
+import TeacherCreate from "layouts/teacher/createTeacher";
+import TeacherDetail from "layouts/teacher/detailTeacher";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -83,6 +86,7 @@ import EscalatorWarningIcon from "@mui/icons-material/EscalatorWarning";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import SchoolIcon from "@mui/icons-material/School";
 import EditOffIcon from "@mui/icons-material/EditOff";
+import FaceIcon from "@mui/icons-material/Face";
 
 const routes = [
   {
@@ -124,6 +128,36 @@ const routes = [
     component: <Covers />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İşlemleri",
+    key: "teacher",
+    icon: <FaceIcon />,
+    route: "/teacher",
+    component: <Teacher />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İşlemleri",
+    key: "teachercreate",
+    icon: <FaceIcon />,
+    route: "/teacher_create",
+    component: <TeacherCreate />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İşlemleri",
+    key: "teacherdetail",
+    icon: <FaceIcon />,
+    route: "/teacher_detail/:id",
+    component: <TeacherDetail />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",

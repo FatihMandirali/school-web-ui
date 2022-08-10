@@ -12,28 +12,23 @@ import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import useCountryList from "./service/useCountryList";
 import useCreate from "./service/useCreate";
 import useBranchList from "./service/useBranchList";
-import useClassList from "./service/useClassList";
-import useCoverList from "./service/useCoverList";
-import { validationSchema } from "./validations/studentValidation";
+import { validationSchema } from "./validations/userValidation";
 import MDSnackbar from "../../components/MDSnackbar";
+import useClassList from "../students/service/useClassList";
+import useLessonList from "./service/useLessonList";
 
-function CreateStudent() {
-  const { service, get } = useCountryList();
-  const { serviceBranch, getBranch } = useBranchList();
+function CreateTeacher() {
+  const { serviceLesson, getLesson } = useLessonList();
   const { serviceClass, getClass } = useClassList();
-  const { serviceCover, getCover } = useCoverList();
+  const { serviceBranch, getBranch } = useBranchList();
   const { service: postService, post } = useCreate();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [phone, setPhone] = useState("");
-  const [studentPerId2, setStudentPerId2] = useState(0);
-  const [studentPerId3, setStudentPerId3] = useState(0);
-  const [isActiveRecord] = useState(false);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -45,7 +40,7 @@ function CreateStudent() {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Kullanıcı başarılı bir şekilde eklendi."
+      content="Tebrikler, Öğretmen başarılı bir şekilde eklendi."
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -68,42 +63,33 @@ function CreateStudent() {
     />
   );
   useEffect(async () => {
-    await get();
+    await getLesson();
+    await getClass();
     await getBranch();
-    await getCover();
   }, []);
 
   const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
-      studentNo: "",
-      studentName: "",
-      studentSurName: "",
-      studentIdName: "",
-      adress: "",
-      country: 0,
-      email: "",
-      classId: 0,
+      teacherName: "",
+      teacherSurname: "",
+      tcPaspNo: "",
+      emailAdress: "",
       branchId: 0,
-      studentPerId: 0,
+      lessonId: 0,
+      classId: 0,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
       const res = await post(
-        values.studentNo,
-        values.studentName,
-        values.studentSurName,
-        values.studentIdName,
-        values.adress,
-        values.country,
-        values.email,
-        values.classId,
+        values.teacherName,
+        values.teacherSurname,
+        values.tcPaspNo,
+        values.emailAdress,
         values.branchId,
         phone,
-        values.studentPerId,
-        studentPerId2,
-        studentPerId3,
-        isActiveRecord
+        values.lessonId,
+        values.classId
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -125,7 +111,7 @@ function CreateStudent() {
       <MDBox>
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            <h1>Öğrenci Oluştur</h1>
+            <h1>Öğretmen Oluştur</h1>
           </MDTypography>
         </MDBox>
         <Card>
@@ -135,55 +121,13 @@ function CreateStudent() {
                 <MDInput
                   type="text"
                   onChange={handleChange}
-                  label="Öğrenci Numarası"
-                  fullWidth
-                  name="studentNo"
-                />
-                {sendForm === true && errors.studentNo && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.studentNo}</Alert>
-                  </Stack>
-                )}
-              </MDBox>
-              <MDBox mb={2}>
-                <MDInput
-                  type="text"
-                  onChange={handleChange}
                   label="Adı"
                   fullWidth
-                  name="studentName"
+                  name="teacherName"
                 />
-                {sendForm === true && errors.studentName && (
+                {sendForm === true && errors.teacherName && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.studentName}</Alert>
-                  </Stack>
-                )}
-              </MDBox>
-              <MDBox mb={2}>
-                <MDInput
-                  name="studentSurName"
-                  type="text"
-                  onChange={handleChange}
-                  label="Soyadı"
-                  fullWidth
-                />
-                {sendForm === true && errors.studentSurName && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.studentSurName}</Alert>
-                  </Stack>
-                )}
-              </MDBox>
-              <MDBox mb={2}>
-                <MDInput
-                  name="studentIdName"
-                  type="text"
-                  onChange={handleChange}
-                  label="Kimlik Bilgisi"
-                  fullWidth
-                />
-                {sendForm === true && errors.studentIdName && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.studentIdName}</Alert>
+                    <Alert severity="error">{errors.teacherName}</Alert>
                   </Stack>
                 )}
               </MDBox>
@@ -191,24 +135,84 @@ function CreateStudent() {
                 <MDInput
                   type="text"
                   onChange={handleChange}
-                  label="Adres"
+                  label="Soyad"
                   fullWidth
-                  name="adress"
+                  name="teacherSurname"
                 />
-                {sendForm === true && errors.adress && (
+                {sendForm === true && errors.teacherSurname && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.adress}</Alert>
+                    <Alert severity="error">{errors.teacherSurname}</Alert>
                   </Stack>
                 )}
               </MDBox>
               <MDBox mb={2}>
-                <MDInput type="text" onChange={handleChange} label="Email" fullWidth name="email" />
-                {sendForm === true && errors.email && (
+                <MDInput
+                  name="tcPaspNo"
+                  type="text"
+                  onChange={handleChange}
+                  label="TC ve Pasaport Numarası"
+                  fullWidth
+                />
+                {sendForm === true && errors.tcPaspNo && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.email}</Alert>
+                    <Alert severity="error">{errors.tcPaspNo}</Alert>
                   </Stack>
                 )}
               </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  name="emailAdress"
+                  type="text"
+                  onChange={handleChange}
+                  label="Mail"
+                  fullWidth
+                />
+                {sendForm === true && errors.emailAdress && (
+                  <Stack sx={{ width: "100%" }} spacing={2}>
+                    <Alert severity="error">{errors.emailAdress}</Alert>
+                  </Stack>
+                )}
+              </MDBox>
+              <MDBox mb={2}>
+                <MuiPhoneNumber
+                  onChange={(e) => setPhone(e)}
+                  defaultCountry="tr"
+                  name="coverPhoneNumber"
+                  fullWidth
+                />
+              </MDBox>
+
+              {serviceLesson.serviceStatus === "loaded" && (
+                <FormControl mb={5} fullWidth>
+                  <InputLabel id="demo-simple-select-filled-label">Ders</InputLabel>
+                  <Select
+                    label="Ders"
+                    displayEmpty
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    onChange={handleChange}
+                    defaultValue={0}
+                    name="lessonId"
+                  >
+                    <MenuItem key={0} value={0}>
+                      Seçiniz
+                    </MenuItem>
+                    {serviceLesson.data.map((u) => (
+                      <MenuItem key={u.LessonId} value={u.LessonId}>
+                        {u.LessonName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {sendForm === true && errors.lessonId && (
+                    <Stack sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="error">{errors.lessonId}</Alert>
+                    </Stack>
+                  )}
+                </FormControl>
+              )}
 
               {serviceBranch.serviceStatus === "loaded" && (
                 <FormControl mb={5} fullWidth>
@@ -237,38 +241,6 @@ function CreateStudent() {
                   {sendForm === true && errors.branchId && (
                     <Stack sx={{ width: "100%" }} spacing={2}>
                       <Alert severity="error">{errors.branchId}</Alert>
-                    </Stack>
-                  )}
-                </FormControl>
-              )}
-
-              {service.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Ülkesi</InputLabel>
-                  <Select
-                    label="Ülkesi"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={handleChange}
-                    defaultValue={0}
-                    name="country"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {service.data.map((u) => (
-                      <MenuItem key={u.Id} value={u.Id}>
-                        {u.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {sendForm === true && errors.country && (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert severity="error">{errors.country}</Alert>
                     </Stack>
                   )}
                 </FormControl>
@@ -306,100 +278,6 @@ function CreateStudent() {
                 </FormControl>
               )}
 
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 1</InputLabel>
-                  <Select
-                    label="Veli 1"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={handleChange}
-                    defaultValue={0}
-                    name="studentPerId"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {sendForm === true && errors.studentPerId && (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert severity="error">{errors.studentPerId}</Alert>
-                    </Stack>
-                  )}
-                </FormControl>
-              )}
-
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 2</InputLabel>
-                  <Select
-                    label="Veli 2"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId2()}
-                    defaultValue={0}
-                    name="studentPerId2"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 3</InputLabel>
-                  <Select
-                    label="Veli 3"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId3()}
-                    defaultValue={0}
-                    name="studentPerId3"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-
-              <MDBox mb={2}>
-                <MuiPhoneNumber
-                  onChange={(e) => setPhone(e)}
-                  defaultCountry="tr"
-                  name="coverPhoneNumber"
-                  fullWidth
-                />
-              </MDBox>
               {postService.serviceStatus === "loading" ? (
                 <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
                   <CircularProgress color="secondary" />
@@ -421,4 +299,4 @@ function CreateStudent() {
   );
 }
 
-export default CreateStudent;
+export default CreateTeacher;

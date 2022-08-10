@@ -31,12 +31,27 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Modal } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+} from "@mui/material";
+import { useFormik } from "formik";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import useList from "./service/useList";
-import useChangeStatus from "./service/useChangeStatus";
+import useUpdate from "./service/useUpdate";
+// import useChangeStatus from "./service/useChangeStatus";
 import MDSnackbar from "../../components/MDSnackbar";
+import MDInput from "../../components/MDInput";
+import { validationSchema } from "./validations/studentPaymentValidation";
 
 const style = {
   position: "absolute",
@@ -52,13 +67,17 @@ const style = {
 
 function Tables() {
   const [email, setEmail] = useState(0);
-  const [selectedId, setSelectedId] = useState(0);
+  const [advanceAmount, setAdvanceAmount] = useState(0);
+  const [installment, setInstallment] = useState(1);
+  const [paymentType, setPaymentType] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
   const [openChangePopup, setOpenChangePopup] = useState(false);
   const { service, get } = useList(email);
-  const { post } = useChangeStatus();
+  const { serviceUpdate, post } = useUpdate();
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [sendForm, setSendForm] = useState(false);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -70,18 +89,12 @@ function Tables() {
   };
 
   const handleChangeStatusClick = (id) => () => {
-    setSelectedId(id);
+    // setSelectedId(id);
+    console.log(id);
     setOpenChangePopup(true);
   };
   const sendChangeStatus = () => async () => {
-    const res = await post(selectedId);
-    if (res.serviceStatus === "loaded") openSuccessSB();
-    else {
-      setErrorMsg("Güncelleme başarısız.");
-      openErrorSB();
-    }
-    setOpenChangePopup(false);
-    window.location.href = "/student_notrecords";
+    setOpenDialog(true);
   };
 
   const renderSuccessSB = (
@@ -89,7 +102,7 @@ function Tables() {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, öğrenci başarılı bir şekilde güncellendi."
+      content="Tebrikler, öğrenci ödeme işlemi başarılı bir şekilde güncellendi."
       open={successSB}
       onClose={closeSuccessSB}
       close={closeSuccessSB}
@@ -179,6 +192,36 @@ function Tables() {
     }, [email]);
   };
 
+  const { handleSubmit, handleChange, errors } = useFormik({
+    initialValues: {
+      totalAmount: 0,
+      firstPaymentDate: "",
+    },
+    validationSchema,
+    // eslint-disable-next-line no-shadow
+    onSubmit: async (values) => {
+      const res = await post(
+        values.totalAmount,
+        values.firstPaymentDate,
+        advanceAmount,
+        installment,
+        paymentType
+      );
+      console.log(res);
+      if (res.serviceStatus === "loaded") {
+        openSuccessSB();
+      } else {
+        setErrorMsg(res.errorMessage);
+        openErrorSB();
+      }
+    },
+  });
+
+  const handleChangeInstallment = (event) => {
+    console.log(event.target.value);
+    setPaymentType(event.target.value);
+  };
+
   return (
     <DashboardLayout>
       <MDBox pt={6} pb={3}>
@@ -209,8 +252,6 @@ function Tables() {
           </div>
         )}
       </MDBox>
-      {renderSuccessSB}
-      {renderErrorSB}
       <Modal
         open={openChangePopup}
         onClose={() => setOpenChangePopup(false)}
@@ -237,7 +278,116 @@ function Tables() {
           </Stack>
         </Box>
       </Modal>
+      <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Ödeme Planı</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <Box mt={2}>
+              <MDInput
+                onChange={handleChange}
+                type="number"
+                label="Toplam Ödenecek Tutar"
+                fullWidth
+                name="totalAmount"
+              />
+              {sendForm === true && errors.totalAmount && (
+                <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Alert severity="error">{errors.totalAmount}</Alert>
+                </Stack>
+              )}
+            </Box>
+            <Box mt={2}>
+              <MDInput
+                onChange={(e) => setAdvanceAmount(e.target.value)}
+                type="number"
+                label="Peşinat Tutarı"
+                fullWidth
+                name="advancedAmount"
+              />
+            </Box>
+            <Box mt={2}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Ödeme Türü</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={paymentType}
+                  label="Ödeme Türü"
+                  onChange={handleChangeInstallment}
+                >
+                  <MenuItem value={1}>Peşin</MenuItem>
+                  <MenuItem value={2}>Taksit</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            {paymentType === 2 && (
+              <Box mt={2}>
+                <MDInput
+                  onChange={(e) => setInstallment(e.target.value)}
+                  type="number"
+                  label="Taksit Sayısı"
+                  fullWidth
+                  value={installment}
+                  name="installment"
+                />
+                {sendForm === true && installment <= 0 && (
+                  <Stack sx={{ width: "100%" }} spacing={2}>
+                    <Alert severity="error">Lütfen sıfırdan büyük değer girin.</Alert>
+                  </Stack>
+                )}
+              </Box>
+            )}
+
+            <Box mt={2}>
+              <MDInput
+                id="date"
+                label="İlk taksit ödemesi"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                name="firstPaymentDate"
+                onChange={handleChange}
+                lang="tr-TR"
+              />
+              {sendForm === true && errors.firstPaymentDate && (
+                <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Alert severity="error">{errors.firstPaymentDate}</Alert>
+                </Stack>
+              )}
+            </Box>
+
+            {serviceUpdate.serviceStatus === "loading" ? (
+              <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                <CircularProgress color="secondary" />
+              </Stack>
+            ) : (
+              <MDBox
+                pt={2}
+                py={2}
+                px={2}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <MDTypography variant="h6" fontWeight="medium" />
+                <MDButton
+                  type="submit"
+                  onClick={() => setSendForm(true)}
+                  variant="gradient"
+                  color="dark"
+                >
+                  &nbsp;Onayla
+                </MDButton>
+              </MDBox>
+            )}
+          </form>
+        </DialogContent>
+      </Dialog>
       <Footer />
+      {renderSuccessSB}
+      {renderErrorSB}
     </DashboardLayout>
   );
 }
