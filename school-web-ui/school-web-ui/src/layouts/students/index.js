@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
+import PaymentIcon from "@mui/icons-material/Payment";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
@@ -37,6 +38,9 @@ function Tables() {
 
   const handleEditClick = (id) => () => {
     window.location.href = `/user_detail/${id}`;
+  };
+  const handlePaymentClick = (id) => () => {
+    window.location.href = `/student_paymentdetail/${id}`;
   };
 
   const columns = [
@@ -76,7 +80,7 @@ function Tables() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Detay",
+      headerName: "İşlemler",
       width: 100,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
@@ -86,6 +90,13 @@ function Tables() {
           label="Edit"
           className="textPrimary"
           onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+        <GridActionsCellItem
+          icon={<PaymentIcon />}
+          label="Payment"
+          className="textPrimary"
+          onClick={handlePaymentClick(id)}
           color="inherit"
         />,
       ],

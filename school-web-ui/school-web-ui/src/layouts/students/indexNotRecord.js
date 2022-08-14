@@ -47,8 +47,8 @@ import Alert from "@mui/material/Alert";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import useList from "./service/useList";
-import useUpdate from "./service/useUpdate";
-// import useChangeStatus from "./service/useChangeStatus";
+import usePostPaymentPlan from "./service/usePostPaymentPlan";
+import useChangeStatus from "./service/useChangeStatus";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDInput from "../../components/MDInput";
 import { validationSchema } from "./validations/studentPaymentValidation";
@@ -67,17 +67,18 @@ const style = {
 
 function Tables() {
   const [email, setEmail] = useState(0);
-  const [advanceAmount, setAdvanceAmount] = useState(0);
   const [installment, setInstallment] = useState(1);
   const [paymentType, setPaymentType] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
   const [openChangePopup, setOpenChangePopup] = useState(false);
   const { service, get } = useList(email);
-  const { serviceUpdate, post } = useUpdate();
+  const { serviceUpdate, post } = usePostPaymentPlan();
+  const { postStatus } = useChangeStatus();
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [sendForm, setSendForm] = useState(false);
+  const [selectedId, setSelectedId] = useState();
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -89,7 +90,7 @@ function Tables() {
   };
 
   const handleChangeStatusClick = (id) => () => {
-    // setSelectedId(id);
+    setSelectedId(id);
     console.log(id);
     setOpenChangePopup(true);
   };
@@ -200,16 +201,13 @@ function Tables() {
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(
-        values.totalAmount,
-        values.firstPaymentDate,
-        advanceAmount,
-        installment,
-        paymentType
-      );
+      const res = await post(selectedId, values.totalAmount, values.firstPaymentDate, installment);
+
       console.log(res);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        await postStatus(selectedId);
+        window.location.href = "/student_notrecords";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
@@ -295,15 +293,6 @@ function Tables() {
                   <Alert severity="error">{errors.totalAmount}</Alert>
                 </Stack>
               )}
-            </Box>
-            <Box mt={2}>
-              <MDInput
-                onChange={(e) => setAdvanceAmount(e.target.value)}
-                type="number"
-                label="Peşinat Tutarı"
-                fullWidth
-                name="advancedAmount"
-              />
             </Box>
             <Box mt={2}>
               <FormControl fullWidth>

@@ -74,6 +74,8 @@ import StudentNotRecord from "layouts/students/indexNotRecord";
 import Teacher from "layouts/teacher";
 import TeacherCreate from "layouts/teacher/createTeacher";
 import TeacherDetail from "layouts/teacher/detailTeacher";
+import PaymentDetail from "layouts/students/paymentDetail";
+import LessonProgram from "layouts/classes/lessonProgram";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -118,6 +120,26 @@ const routes = [
     component: <Users />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğrenci Ödeme İşlemleri",
+    key: "student_paymentdetail",
+    icon: <GroupIcon />,
+    route: "/student_paymentdetail/:id",
+    component: <PaymentDetail />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Öğrenci Ödeme İşlemleri",
+    key: "lesson_program",
+    icon: <GroupIcon />,
+    route: "/lesson_program/:id",
+    component: <LessonProgram />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",

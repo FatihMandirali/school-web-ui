@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
+import EventIcon from "@mui/icons-material/Event";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
@@ -37,6 +38,9 @@ function Tables() {
 
   const handleEditClick = (id) => () => {
     window.location.href = `/classes_detail/${id}`;
+  };
+  const handleLessonProgramEditClick = (id) => () => {
+    window.location.href = `/lesson_program/${id}`;
   };
 
   const columns = [
@@ -67,6 +71,13 @@ function Tables() {
           label="Edit"
           className="textPrimary"
           onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+        <GridActionsCellItem
+          icon={<EventIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleLessonProgramEditClick(id)}
           color="inherit"
         />,
       ],
