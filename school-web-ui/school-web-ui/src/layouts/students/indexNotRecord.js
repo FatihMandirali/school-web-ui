@@ -46,7 +46,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
-import useList from "./service/useList";
+import useList from "./service/useNotRecordList";
 import usePostPaymentPlan from "./service/usePostPaymentPlan";
 import useChangeStatus from "./service/useChangeStatus";
 import MDSnackbar from "../../components/MDSnackbar";

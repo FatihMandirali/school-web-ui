@@ -47,7 +47,6 @@ import SignUp from "layouts/authentication/sign-up";
 import CreateUser from "layouts/users/createUser";
 import Branchs from "layouts/branchs";
 import BranchsCreate from "layouts/branchs/createBranch";
-import Finance from "layouts/finance";
 import CreateFinance from "layouts/finance/craeteFinance";
 import DetailUser from "layouts/users/detailUser";
 import DetailBranch from "layouts/branchs/detailBranch";
@@ -80,7 +79,6 @@ import LessonProgram from "layouts/classes/lessonProgram";
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import PaymentIcon from "@mui/icons-material/Payment";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import CampaignIcon from "@mui/icons-material/Campaign";
@@ -340,16 +338,6 @@ const routes = [
     component: <DetailClasses />,
     role: "admin1",
     isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "Ödeme İşlemleri",
-    key: "finances",
-    icon: <PaymentIcon />,
-    route: "/finances",
-    component: <Finance />,
-    role: "admin1",
-    isActive: true,
   },
   {
     type: "collapse",
