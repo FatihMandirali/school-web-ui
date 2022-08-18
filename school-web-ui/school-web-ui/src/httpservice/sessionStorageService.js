@@ -8,6 +8,12 @@ export const sessionStorageService = (() => {
   function setRefreshToken(tokenObj) {
     sessionStorage.setItem("refresh_token", tokenObj);
   }
+  function setRollCall(tokenObj) {
+    sessionStorage.setItem("roll_call", tokenObj);
+  }
+  function getRollCall() {
+    return sessionStorage.getItem("roll_call");
+  }
   function getAccessToken() {
     return sessionStorage.getItem("access_token");
   }
@@ -29,6 +35,8 @@ export const sessionStorageService = (() => {
     returnClearToken: clearToken,
     returnGetCurrentRole: getCurrentRole,
     returnSetCurrentRole: setCurrentRole,
+    returnSetRollCall: setRollCall,
+    returnGetRollCall: getRollCall,
   };
 })();
 export const loadState = () => {

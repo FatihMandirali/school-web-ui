@@ -75,6 +75,7 @@ import TeacherCreate from "layouts/teacher/createTeacher";
 import TeacherDetail from "layouts/teacher/detailTeacher";
 import PaymentDetail from "layouts/students/paymentDetail";
 import LessonProgram from "layouts/classes/lessonProgram";
+import RollCall from "layouts/classes/rollcall";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -136,6 +137,16 @@ const routes = [
     icon: <GroupIcon />,
     route: "/lesson_program/:id",
     component: <LessonProgram />,
+    role: "admin1",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Yoklama",
+    key: "lesson_program",
+    icon: <GroupIcon />,
+    route: "/roll_call/:id",
+    component: <RollCall />,
     role: "admin1",
     isActive: false,
   },
