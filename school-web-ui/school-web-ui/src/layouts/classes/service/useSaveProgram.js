@@ -1,19 +1,18 @@
 import { useState } from "react";
 import httpservice from "../../../httpservice/httpservice";
+import lessonProgram from "../prepareData/lessonProgram";
 
 const useUpdate = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (data) =>
+  const post = (data, id) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        const request = {
-          data,
-        };
+        const request = await lessonProgram(data, id);
         console.log(request);
-        const res = await httpservice.post(`Lesson/Program`, request, {
+        const res = await httpservice.post(`LessonPrograming/ProgramAddOrUpdate`, request, {
           headers: { "content-type": "application/json" },
         });
 

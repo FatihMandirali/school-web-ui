@@ -43,10 +43,12 @@ import MDTypography from "../../../components/MDTypography";
 import MDButton from "../../../components/MDButton";
 import useSaveProgram from "../service/useSaveProgram";
 import MDSnackbar from "../../../components/MDSnackbar";
+import useLessonProgramByClassId from "../service/useLessonProgramByClassId";
 
 // eslint-disable-next-line react/prop-types
 function Tables({ id, lessons, teachers }) {
   const { post } = useSaveProgram();
+  const { getLessonProgram } = useLessonProgramByClassId();
   const [program, setProgram] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [teacherId, setTeacherId] = useState(0);
@@ -62,28 +64,11 @@ function Tables({ id, lessons, teachers }) {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(async () => {
-    setProgram([
-      {
-        classId: parseInt(id, 10),
-        id: 1,
-        day: "monday",
-        clock: "09:00 - 10:00",
-        teacherId: 1,
-        teacherName: "Fatih Mandıralı",
-        lessonId: 1,
-        lessonName: "Fizik",
-      },
-      {
-        classId: parseInt(id, 10),
-        id: 2,
-        day: "tuesday",
-        clock: "09:50 - 10:50",
-        teacherId: 1,
-        teacherName: "Fatih Mandıralı",
-        lessonId: 1,
-        lessonName: "Sağlık",
-      },
-    ]);
+    const res = await getLessonProgram(id);
+    if (res.serviceStatus === "loaded") {
+      console.log(res.data);
+      setProgram(res.data);
+    }
   }, []);
 
   const openSuccessSB = () => setSuccessSB(true);
@@ -138,17 +123,17 @@ function Tables({ id, lessons, teachers }) {
     const request = {
       classId: parseInt(id, 10),
       id: program.length + 1,
-      day,
-      clock: `${startClock} - ${endClock}`,
-      teacherId,
+      DayId: day,
+      ClockTime: `${startClock} - ${endClock}`,
+      TeacherId: teacherId,
       // eslint-disable-next-line react/prop-types
-      teacherName: `${teachers.find((x) => x.TeacherId === teacherId).TeacherName} ${
+      TeacherName: `${teachers.find((x) => x.TeacherId === teacherId).TeacherName} ${
         // eslint-disable-next-line react/prop-types
         teachers.find((x) => x.TeacherId === teacherId).TeacherSurname
       }`,
-      lessonId,
+      LessonId: lessonId,
       // eslint-disable-next-line react/prop-types
-      lessonName: lessons.find((x) => x.LessonId === lessonId).LessonName,
+      LessonName: lessons.find((x) => x.LessonId === lessonId).LessonName,
     };
     setProgram([...program, request]);
     setOpenDialog(false);
@@ -170,12 +155,12 @@ function Tables({ id, lessons, teachers }) {
     setAnchorEl(null);
     setOpenClearButton(false);
     if (dayInfo === "all") setProgram([]);
-    else setProgram(program.filter((x) => x.day !== dayInfo));
+    else setProgram(program.filter((x) => x.DayId !== dayInfo));
   };
 
   const saveLessonProgram = async () => {
     console.log(program);
-    const res = await post(program);
+    const res = await post(program, id);
     if (res.serviceStatus === "loaded") {
       openSuccessSB();
     } else {
@@ -211,13 +196,13 @@ function Tables({ id, lessons, teachers }) {
             }}
           >
             <MenuItem onClick={() => handleClose("all")}>TÜMÜ</MenuItem>
-            <MenuItem onClick={() => handleClose("monday")}>PAZARTESİ</MenuItem>
-            <MenuItem onClick={() => handleClose("tuesday")}>SALI</MenuItem>
-            <MenuItem onClick={() => handleClose("wednesday")}>ÇARŞAMBA</MenuItem>
-            <MenuItem onClick={() => handleClose("thursday")}>PERŞEMBE</MenuItem>
-            <MenuItem onClick={() => handleClose("friday")}>CUMA</MenuItem>
-            <MenuItem onClick={() => handleClose("saturday")}>CUMARTESİ</MenuItem>
-            <MenuItem onClick={() => handleClose("sunday")}>PAZAR</MenuItem>
+            <MenuItem onClick={() => handleClose(1)}>PAZARTESİ</MenuItem>
+            <MenuItem onClick={() => handleClose(2)}>SALI</MenuItem>
+            <MenuItem onClick={() => handleClose(3)}>ÇARŞAMBA</MenuItem>
+            <MenuItem onClick={() => handleClose(4)}>PERŞEMBE</MenuItem>
+            <MenuItem onClick={() => handleClose(5)}>CUMA</MenuItem>
+            <MenuItem onClick={() => handleClose(6)}>CUMARTESİ</MenuItem>
+            <MenuItem onClick={() => handleClose(7)}>PAZAR</MenuItem>
           </Menu>
         </MDBox>
         <br />
@@ -227,19 +212,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Pazartesi</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "monday")
+                  .filter((x) => x.DayId === 1)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -252,7 +237,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("monday")}
+                  onClick={() => newLessonCreated(1)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -264,19 +249,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Salı</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "tuesday")
+                  .filter((x) => x.DayId === 2)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -289,7 +274,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("tuesday")}
+                  onClick={() => newLessonCreated(2)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -301,19 +286,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Çarşamba</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "wednesday")
+                  .filter((x) => x.DayId === 3)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -326,7 +311,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("wednesday")}
+                  onClick={() => newLessonCreated(3)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -338,19 +323,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Perşembe</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "thursday")
+                  .filter((x) => x.DayId === 4)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -363,7 +348,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("thursday")}
+                  onClick={() => newLessonCreated(4)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -375,19 +360,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Cuma</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "friday")
+                  .filter((x) => x.DayId === 5)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -400,7 +385,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("friday")}
+                  onClick={() => newLessonCreated(5)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -412,19 +397,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Cumartesi</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "saturday")
+                  .filter((x) => x.DayId === 6)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -437,7 +422,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("saturday")}
+                  onClick={() => newLessonCreated(6)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
@@ -449,19 +434,19 @@ function Tables({ id, lessons, teachers }) {
               <h4>Pazar</h4>
               <Grid container spacing={0.5}>
                 {program
-                  .filter((x) => x.day === "sunday")
+                  .filter((x) => x.DayId === 7)
                   .map((item) => (
                     <Grid textAlign="center" mt={1} fontSize={13} item xs={12}>
                       <CardActionArea>
                         <Card>
                           <span>
-                            <b>Saat :</b> {item.clock}
+                            <b>Saat :</b> {item.ClockTime}
                           </span>
                           <span>
-                            <b>Ders :</b> {item.lessonName}
+                            <b>Ders :</b> {item.LessonName}
                           </span>
                           <span>
-                            <b>Öğretmen :</b> {item.teacherName}
+                            <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -474,7 +459,7 @@ function Tables({ id, lessons, teachers }) {
                   item
                   xs={12}
                   justifyContent="center"
-                  onClick={() => newLessonCreated("sunday")}
+                  onClick={() => newLessonCreated(7)}
                 >
                   <Card>
                     <CardActionArea>Yeni Ders Ekle</CardActionArea>
