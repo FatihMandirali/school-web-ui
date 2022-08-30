@@ -30,6 +30,7 @@ import { Link } from "react-router-dom";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function Tables() {
   const { service, get } = useList(0);
@@ -71,11 +72,10 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Duyurular</h1>
-          </MDTypography>
+      <DashboardNavbar pageName="Duyurular" />
+      <MDBox>
+        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant="h6" fontWeight="medium" />
           <Link to="/announcement_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>

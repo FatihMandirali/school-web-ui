@@ -30,8 +30,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDButton from "../../components/MDButton";
-import MDTypography from "../../components/MDTypography";
 import { sessionStorageService } from "../../httpservice/sessionStorageService";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const style = {
   position: "absolute",
@@ -136,12 +136,8 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Yoklama</h1>
-          </MDTypography>
-        </MDBox>
+      <DashboardNavbar pageName="Yoklama" />
+      <MDBox>
         <br />
         <Box>
           <Grid container spacing={0.5}>

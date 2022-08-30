@@ -24,18 +24,17 @@ import Footer from "examples/Footer";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import Icon from "@mui/material/Icon";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Modal } from "@mui/material";
 import usePaymentList from "./service/usePaymentDetailList";
-import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import usePutPaymentId from "./service/usePutPaymentId";
 import MDSnackbar from "../../components/MDSnackbar";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const style = {
   position: "absolute",
@@ -155,18 +154,8 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
-        <MDBox display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kayıtlı Öğrenciler</h1>
-          </MDTypography>
-          <Link to="/student_create" style={{ color: "#FFF" }}>
-            <MDButton variant="gradient" color="dark">
-              <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-              &nbsp;ekle
-            </MDButton>
-          </Link>
-        </MDBox>
+      <DashboardNavbar pageName="Öğrenci Ücret Ödeme" />
+      <MDBox>
         <br />
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 400, width: "100%" }}>

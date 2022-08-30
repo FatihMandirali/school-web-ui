@@ -44,6 +44,7 @@ import MDButton from "../../../components/MDButton";
 import useSaveProgram from "../service/useSaveProgram";
 import MDSnackbar from "../../../components/MDSnackbar";
 import useLessonProgramByClassId from "../service/useLessonProgramByClassId";
+import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 
 // eslint-disable-next-line react/prop-types
 function Tables({ id, lessons, teachers }) {
@@ -171,11 +172,10 @@ function Tables({ id, lessons, teachers }) {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Ders Programı</h1>
-          </MDTypography>
+      <DashboardNavbar pageName="Ders Programı" />
+      <MDBox>
+        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant="h6" fontWeight="medium" />
           <MDButton
             id="basic-button"
             aria-controls={openClearButton ? "basic-menu" : undefined}

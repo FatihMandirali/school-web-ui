@@ -24,6 +24,7 @@ import useFindOneOnOneQuery from "./service/useFindOneOnOneQuery";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDButton from "../../components/MDButton";
 import MDInput from "../../components/MDInput";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const style = {
   position: "absolute",
@@ -115,12 +116,7 @@ function CreateOneOnOne() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-        <MDTypography variant="h6" fontWeight="medium">
-          <h1>Birebir Ders Oluştur</h1>
-        </MDTypography>
-      </MDBox>
-
+      <DashboardNavbar pageName="Bire Bir Ders Oluştur" />
       {openDialog === false && (
         <Box>
           <Grid container spacing={1}>

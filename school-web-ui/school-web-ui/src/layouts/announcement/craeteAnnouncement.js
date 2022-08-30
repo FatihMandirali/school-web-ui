@@ -9,12 +9,12 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useCreate from "./service/useCreate";
 import { validationSchema } from "./validations/announcementValidation";
 import MDSnackbar from "../../components/MDSnackbar";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function CreateAnnouncement() {
   const { service: postService, post } = useCreate();
@@ -87,12 +87,8 @@ function CreateAnnouncement() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar pageName="Duyuru Oluştur" />
       <MDBox>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Duyuru Oluştur</h1>
-          </MDTypography>
-        </MDBox>
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox pt={4} pb={3} px={3}>

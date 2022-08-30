@@ -8,12 +8,12 @@ import Switch from "@mui/material/Switch";
 import { FormControlLabel, FormGroup } from "@mui/material";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useCreate from "./service/useCreate";
 import { validationSchema } from "./validations/branchValidation";
 import MDSnackbar from "../../components/MDSnackbar";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function CreateUser() {
   const { service: postService, post } = useCreate();
@@ -78,12 +78,8 @@ function CreateUser() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar pageName="Şube Oluştur" />
       <MDBox>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Şube Oluştur</h1>
-          </MDTypography>
-        </MDBox>
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox pt={4} pb={3} px={3}>

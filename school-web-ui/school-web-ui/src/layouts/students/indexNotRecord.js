@@ -52,6 +52,7 @@ import useChangeStatus from "./service/useChangeStatus";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDInput from "../../components/MDInput";
 import { validationSchema } from "./validations/studentPaymentValidation";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const style = {
   position: "absolute",
@@ -222,11 +223,10 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
+      <DashboardNavbar pageName="Kayıtsız Öğrenciler" />
+      <MDBox>
         <MDBox display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kayıtsız Öğrenciler</h1>
-          </MDTypography>
+          <MDTypography variant="h6" fontWeight="medium" />
           <Link to="/student_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>

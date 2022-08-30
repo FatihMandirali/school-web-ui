@@ -8,7 +8,6 @@ import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
-import MDTypography from "../../components/MDTypography";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useCreate from "./service/useCreate";
@@ -17,6 +16,7 @@ import useTeacherList from "./service/useTeacherList";
 import useCourseList from "./service/useCourseList";
 import { validationSchema } from "./validations/classValidation";
 import MDSnackbar from "../../components/MDSnackbar";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function CreateClasses() {
   const { serviceBranch, getBranch } = useBranchList();
@@ -93,12 +93,8 @@ function CreateClasses() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar pageName="Sınıf Oluştur" />
       <MDBox>
-        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Sınıf Oluştur</h1>
-          </MDTypography>
-        </MDBox>
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox pt={4} pb={3} px={3}>

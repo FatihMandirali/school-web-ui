@@ -336,7 +336,7 @@ const routes = [
   {
     type: "collapse",
     name: "Bire bir ders",
-    key: "classes",
+    key: "oneonone",
     icon: <AccountTreeIcon />,
     route: "/oneonone",
     component: <Oneonone />,

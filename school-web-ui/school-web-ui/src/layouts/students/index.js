@@ -31,6 +31,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -114,11 +115,10 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <MDBox pt={6} pb={3}>
+      <DashboardNavbar pageName="Kayıtlı Öğrenciler" />
+      <MDBox>
         <MDBox display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            <h1>Kayıtlı Öğrenciler</h1>
-          </MDTypography>
+          <MDTypography variant="h6" fontWeight="medium" />
           <Link to="/student_create" style={{ color: "#FFF" }}>
             <MDButton variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
