@@ -76,6 +76,8 @@ import TeacherDetail from "layouts/teacher/detailTeacher";
 import PaymentDetail from "layouts/students/paymentDetail";
 import LessonProgram from "layouts/classes/lessonProgram";
 import RollCall from "layouts/classes/rollcall";
+import Oneonone from "layouts/oneonone";
+import OneononeCreate from "layouts/oneonone/createOneOnOne";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -88,6 +90,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import SchoolIcon from "@mui/icons-material/School";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import FaceIcon from "@mui/icons-material/Face";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
 const routes = [
   {
@@ -329,6 +332,26 @@ const routes = [
     component: <Classes />,
     role: "admin1",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Bire bir ders",
+    key: "classes",
+    icon: <AccountTreeIcon />,
+    route: "/oneonone",
+    component: <Oneonone />,
+    role: "admin1",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Bire bir ders",
+    key: "classes",
+    icon: <AccountTreeIcon />,
+    route: "/oneonone_create",
+    component: <OneononeCreate />,
+    role: "admin1",
+    isActive: false,
   },
   {
     type: "collapse",
