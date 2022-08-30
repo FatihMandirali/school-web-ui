@@ -16,6 +16,7 @@ import useBranchList from "./service/useBranchList";
 import { validationSchema } from "./validations/userValidation";
 import MDSnackbar from "../../components/MDSnackbar";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import "../../assets/selectbox/selectbox.css";
 
 function CreateUser() {
   const { service, get } = useRoleList();
@@ -179,6 +180,7 @@ function CreateUser() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="roleId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -211,6 +213,7 @@ function CreateUser() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="branchId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz

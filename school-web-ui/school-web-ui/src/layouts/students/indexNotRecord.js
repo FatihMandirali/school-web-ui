@@ -303,6 +303,7 @@ function Tables() {
                   value={paymentType}
                   label="Ödeme Türü"
                   onChange={handleChangeInstallment}
+                  className="specificSelectBox"
                 >
                   <MenuItem value={1}>Peşin</MenuItem>
                   <MenuItem value={2}>Taksit</MenuItem>

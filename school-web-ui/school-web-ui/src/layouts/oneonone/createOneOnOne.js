@@ -182,6 +182,7 @@ function CreateOneOnOne() {
                   onChange={(event) => setLesson(event.target.value)}
                   defaultValue={0}
                   name="lessonId"
+                  className="specificSelectBox"
                 >
                   <MenuItem key={0} value={0}>
                     Seçiniz

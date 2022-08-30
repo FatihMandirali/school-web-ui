@@ -237,6 +237,7 @@ function CreateTeacher(props) {
                   onChange={handleChange}
                   defaultValue={values.lessonId}
                   name="lessonId"
+                  className="specificSelectBox"
                 >
                   {serviceLesson.data.map((u) => (
                     <MenuItem key={u.LessonId} value={u.LessonId}>
@@ -266,6 +267,7 @@ function CreateTeacher(props) {
                   onChange={handleChange}
                   defaultValue={values.branchId}
                   name="branchId"
+                  className="specificSelectBox"
                 >
                   {serviceBranch.data.map((u) => (
                     <MenuItem key={u.BranchId} value={u.BranchId}>

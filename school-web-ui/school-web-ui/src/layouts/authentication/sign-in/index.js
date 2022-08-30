@@ -171,6 +171,7 @@ function Basic() {
                     onChange={handleChange}
                     defaultValue={values.roleName}
                     name="roleName"
+                    style={{ height: "45px", marginBottom: "15px" }}
                   >
                     <MenuItem key={0} value="NONE">
                       Seçiniz
@@ -220,7 +221,7 @@ function Basic() {
               </MDBox>
               <MDBox mt={4} mb={1}>
                 <MDButton type="submit" onClick={() => setSendForm(true)} color="info" fullWidth>
-                  sign in
+                  GİRİŞ YAP
                 </MDButton>
               </MDBox>
             </MDBox>

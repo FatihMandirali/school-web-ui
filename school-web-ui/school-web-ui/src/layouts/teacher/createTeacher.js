@@ -192,6 +192,7 @@ function CreateTeacher() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="lessonId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -224,6 +225,7 @@ function CreateTeacher() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="branchId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz

@@ -146,6 +146,7 @@ function CreateClasses(props) {
                 defaultValue={values.courseId}
                 name="courseId"
                 value={values.courseId}
+                className="specificSelectBox"
               >
                 {serviceCourse.data.map((u) => (
                   <MenuItem key={u.CourseId} value={u.CourseId}>
@@ -176,6 +177,7 @@ function CreateClasses(props) {
                 defaultValue={values.branchId}
                 name="branchId"
                 value={values.branchId}
+                className="specificSelectBox"
               >
                 {serviceBranch.data.map((u) => (
                   <MenuItem key={u.BranchId} value={u.BranchId}>
@@ -205,6 +207,7 @@ function CreateClasses(props) {
                 defaultValue={values.teacherId}
                 name="teacherId"
                 value={values.teacherId}
+                className="specificSelectBox"
               >
                 {serviceTeacher.data.map((u) => (
                   <MenuItem key={u.TeacherId} value={u.TeacherId}>

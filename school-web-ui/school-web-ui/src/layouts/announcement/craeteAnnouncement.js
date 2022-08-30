@@ -134,6 +134,7 @@ function CreateAnnouncement() {
                   onChange={handleChange}
                   defaultValue={0}
                   name="locationId"
+                  className="specificSelectBox"
                 >
                   <MenuItem key={0} value={0}>
                     Seçiniz

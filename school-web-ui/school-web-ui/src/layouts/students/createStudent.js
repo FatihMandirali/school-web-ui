@@ -220,6 +220,7 @@ function CreateStudent() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="branchId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -252,6 +253,7 @@ function CreateStudent() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="country"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -284,6 +286,7 @@ function CreateStudent() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="classId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -316,6 +319,7 @@ function CreateStudent() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="studentPerId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -348,6 +352,7 @@ function CreateStudent() {
                     onChange={() => setStudentPerId2()}
                     defaultValue={0}
                     name="studentPerId2"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -375,6 +380,7 @@ function CreateStudent() {
                     onChange={() => setStudentPerId3()}
                     defaultValue={0}
                     name="studentPerId3"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz

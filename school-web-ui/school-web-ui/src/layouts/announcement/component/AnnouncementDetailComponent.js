@@ -173,6 +173,7 @@ function CreateAnnouncement(props) {
               defaultValue={values.locationId}
               name="locationId"
               value={values.locationId}
+              className="specificSelectBox"
             >
               <MenuItem key={1} value={1}>
                 Giriş Sayfası

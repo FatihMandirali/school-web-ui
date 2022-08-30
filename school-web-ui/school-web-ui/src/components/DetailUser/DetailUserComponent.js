@@ -207,6 +207,7 @@ function CreateUserComponent(props) {
                 onChange={handleChange}
                 defaultValue={values.roleId}
                 name="roleId"
+                className="specificSelectBox"
               >
                 <MenuItem key={0} value={0}>
                   Seçiniz
@@ -239,6 +240,7 @@ function CreateUserComponent(props) {
                 onChange={handleChange}
                 defaultValue={values.branchId}
                 name="branchId"
+                className="specificSelectBox"
               >
                 <MenuItem key={0} value={0}>
                   Seçiniz

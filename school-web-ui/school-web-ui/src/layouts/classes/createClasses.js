@@ -127,6 +127,7 @@ function CreateClasses() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="courseId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -159,6 +160,7 @@ function CreateClasses() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="branchId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -190,6 +192,7 @@ function CreateClasses() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="teacherId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
