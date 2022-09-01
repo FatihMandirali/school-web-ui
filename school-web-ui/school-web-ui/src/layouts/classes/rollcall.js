@@ -22,16 +22,20 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CardActionArea, Dialog, DialogContent, DialogTitle, Modal } from "@mui/material";
 import Card from "@mui/material/Card";
 import { DataGrid } from "@mui/x-data-grid";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import { useParams } from "react-router-dom";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDButton from "../../components/MDButton";
 import { sessionStorageService } from "../../httpservice/sessionStorageService";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import useRollCallList from "./service/useRollCallList";
+import useRollCallStudentList from "./service/useRollCallStudentList";
+import useMakeRollCall from "./service/useMakeRollCall";
 
 const style = {
   position: "absolute",
@@ -47,21 +51,35 @@ const style = {
 
 // eslint-disable-next-line react/prop-types
 function Tables() {
+  const { id } = useParams();
+  const { getRollCall } = useRollCallList();
+  const { post } = useMakeRollCall();
+  const { serviceRollCallStudent, getRollCallStudent } = useRollCallStudentList();
   const [openDialog, setOpenDialog] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [temporarySelectedRows, setTemporarySelectedRows] = useState(
-    JSON.parse(sessionStorageService.returnGetRollCall()) === null
-      ? []
-      : JSON.parse(sessionStorageService.returnGetRollCall())
-  );
+  const [lessonId, setLessonId] = useState(0);
+  const [rollCall, setRollCall] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [temporarySelectedRows, setTemporarySelectedRows] = useState([]);
+
+  useEffect(async () => {
+    const studentRes = await getRollCallStudent(id);
+    if (studentRes.serviceStatus === "loaded") {
+      setStudents(studentRes.data);
+    }
+    const res = await getRollCall(id);
+    if (res.serviceStatus === "loaded") {
+      setRollCall(res.data);
+    }
+  }, []);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
-  // const openErrorSB = () => setErrorSB(true);
+  const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
 
   const renderSuccessSB = (
@@ -98,19 +116,19 @@ function Tables() {
   };
 
   // eslint-disable-next-line no-shadow
-  const clickRollCall = () => {
-    console.log(temporarySelectedRows);
+  const clickRollCall = (lessonId) => {
+    setLessonId(lessonId);
+    setTemporarySelectedRows(
+      JSON.parse(sessionStorageService.returnGetRollCall(lessonId)) === null
+        ? []
+        : JSON.parse(sessionStorageService.returnGetRollCall(lessonId))
+    );
     setOpenDialog(true);
   };
 
   const columns = [
-    { field: "name", headerName: "Adı", width: 200 },
-    { field: "surname", headerName: "Soyadı", minWidth: 400 },
-  ];
-  const data = [
-    { name: "name", surname: "Adı", id: 1 },
-    { name: "name1", surname: "Adı1", id: 2 },
-    { name: "name3", surname: "Adı3", id: 3 },
+    { field: "StudentName", headerName: "Adı", width: 200 },
+    { field: "StudentSurname", headerName: "Soyadı", minWidth: 400 },
   ];
 
   const changePage = (page) => {
@@ -119,7 +137,8 @@ function Tables() {
   };
 
   const btnSave = () => {
-    sessionStorageService.returnSetRollCall(JSON.stringify(temporarySelectedRows));
+    console.log(temporarySelectedRows);
+    sessionStorageService.returnSetRollCall(JSON.stringify(temporarySelectedRows), lessonId);
     setSuccessMsg("Tebrikler, yoklama kaydedildi.");
     openSuccessSB();
   };
@@ -128,10 +147,65 @@ function Tables() {
     setOpenModal(true);
   };
 
-  const btnSaveFinish = () => {
-    setSuccessMsg("Tebrikler, yoklama tamamlandı.");
-    openSuccessSB();
-    window.location.href = "/classes";
+  const btnSaveFinish = async () => {
+    console.log(temporarySelectedRows);
+    const request = [];
+    // eslint-disable-next-line array-callback-return
+    students.map((item) => {
+      request.push({
+        classId: id,
+        studentId: item.StudentId,
+        lessonId,
+        isActive: temporarySelectedRows.find((x) => x === item.StudentId) !== undefined ? 1 : 0,
+      });
+    });
+    console.log(request);
+    const res = await post(request);
+    if (res.serviceStatus === "loaded") {
+      setSuccessMsg("Tebrikler, yoklama tamamlandı.");
+      openSuccessSB();
+      window.location.href = "/classes";
+    } else {
+      setSuccessMsg("Yoklama tamamlanırken bir sorun oluştu.");
+      openErrorSB();
+    }
+  };
+
+  const cardsRollCall = () => {
+    const myArray = [];
+    let i;
+    // eslint-disable-next-line no-plusplus
+    for (i = 0; i < rollCall.length; i++) {
+      // eslint-disable-next-line no-loop-func
+      (function (index) {
+        myArray[i] = (
+          <Grid
+            onClick={() => clickRollCall(rollCall[index].LessonProgramId)}
+            textAlign="center"
+            mt={1}
+            fontSize={13}
+            item
+            xs={2}
+            key={index}
+          >
+            <CardActionArea>
+              <Card>
+                <span>
+                  <b>Saat :</b> {rollCall[i].ClockTime}
+                </span>
+                <span>
+                  <b>Ders :</b> {rollCall[i].LessonName}
+                </span>
+                <span>
+                  <b>Öğretmen :</b> {rollCall[i].TeacherName} {rollCall[i].TeacherSurname}
+                </span>
+              </Card>
+            </CardActionArea>
+          </Grid>
+        );
+      })(i);
+    }
+    return myArray;
   };
 
   return (
@@ -141,28 +215,7 @@ function Tables() {
         <br />
         <Box>
           <Grid container spacing={0.5}>
-            <Grid
-              onClick={() => clickRollCall(1)}
-              textAlign="center"
-              mt={1}
-              fontSize={13}
-              item
-              xs={2}
-            >
-              <CardActionArea>
-                <Card>
-                  <span>
-                    <b>Saat :</b> 10:00 - 12:00
-                  </span>
-                  <span>
-                    <b>Ders :</b> Matematik
-                  </span>
-                  <span>
-                    <b>Öğretmen :</b> Fatih Mandıralı
-                  </span>
-                </Card>
-              </CardActionArea>
-            </Grid>
+            {cardsRollCall()}
           </Grid>
         </Box>
       </MDBox>
@@ -171,17 +224,20 @@ function Tables() {
         <DialogContent>
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
-              rows={data}
+              rows={students}
               columns={columns}
               pageSize={15}
               pagination
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               checkboxSelection
+              getRowId={(row) => row.StudentId}
               onSelectionModelChange={(ids) => {
                 const selectedIDs = new Set(ids);
                 // eslint-disable-next-line no-shadow
-                const selectedRows = data.filter((row) => selectedIDs.has(row.id));
+                const selectedRows = serviceRollCallStudent.data.filter((row) =>
+                  selectedIDs.has(row.StudentId)
+                );
                 console.log(selectedRows);
                 console.log(ids);
 
@@ -190,6 +246,7 @@ function Tables() {
               selectionModel={temporarySelectedRows}
             />
           </div>
+
           <br />
           <Grid container spacing={2}>
             <Grid item xs={9} />

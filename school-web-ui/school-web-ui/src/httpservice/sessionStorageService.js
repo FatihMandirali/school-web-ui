@@ -8,11 +8,11 @@ export const sessionStorageService = (() => {
   function setRefreshToken(tokenObj) {
     sessionStorage.setItem("refresh_token", tokenObj);
   }
-  function setRollCall(tokenObj) {
-    sessionStorage.setItem("roll_call", tokenObj);
+  function setRollCall(tokenObj, id) {
+    sessionStorage.setItem(`roll_call-${id}`, tokenObj);
   }
-  function getRollCall() {
-    return sessionStorage.getItem("roll_call");
+  function getRollCall(id) {
+    return sessionStorage.getItem(`roll_call-${id}`);
   }
   function getAccessToken() {
     return sessionStorage.getItem("access_token");

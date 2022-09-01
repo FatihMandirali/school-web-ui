@@ -38,13 +38,36 @@ function Tables() {
   const handleEditClick = (id) => () => {
     window.location.href = `/announcement_detail/${id}`;
   };
+  // eslint-disable-next-line consistent-return
+  const shareLocation = (locationId) => {
+    if (locationId === 1) return "Giriş Sayfası";
+    if (locationId === 2) return "Öğrenci Sayfası";
+    if (locationId === 3) return "Öğretmen Sayfası";
+    if (locationId === 4) return "Veli Sayfası";
+    if (locationId === 5) return "Öğrenci ve Veli Sayfası";
+  };
 
   const columns = [
     { field: "AnnouncementTitle", headerName: "Başlık", width: 200 },
     { field: "AnnouncementText", headerName: "Açıklama", width: 200 },
-    { field: "RelaseDate", headerName: "Yayın Tarihi", width: 200 },
-    { field: "EndDate", headerName: "Bitiş Tarihi", width: 200 },
-    { field: "LocationId", headerName: "Paylaşılma Yeri", width: 200 },
+    {
+      field: "RelaseDate",
+      headerName: "Yayın Tarihi",
+      width: 200,
+      valueGetter: (params) => new Date(params.value).toLocaleString(),
+    },
+    {
+      field: "EndDate",
+      headerName: "Bitiş Tarihi",
+      width: 200,
+      valueGetter: (params) => new Date(params.value).toLocaleString(),
+    },
+    {
+      field: "LocationId",
+      headerName: "Paylaşılma Yeri",
+      width: 200,
+      valueGetter: (params) => shareLocation(params.row.LocationId),
+    },
     { field: "AdminName", headerName: "Admin Adı", width: 200 },
     { field: "AdminSurname", headerName: "Admin Soyadı", width: 200 },
     {
