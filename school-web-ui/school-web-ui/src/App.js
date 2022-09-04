@@ -124,7 +124,7 @@ export default function App() {
         <Sidenav
           color={sidenavColor}
           brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-          brandName="Material Dashboard 2"
+          brandName="Okul Yönetimi"
           routes={currentMenuRoles()}
           onMouseEnter={handleOnMouseEnter}
           onMouseLeave={handleOnMouseLeave}
@@ -134,7 +134,7 @@ export default function App() {
       <Routes>
         {getRoutes(currentRoles())}
         <Route path="/user-create" element={<Navigate to="/user-create" />} />
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/users" />} />
       </Routes>
     </ThemeProvider>
   );

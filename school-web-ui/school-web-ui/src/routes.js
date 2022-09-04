@@ -36,14 +36,9 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React layouts
-import Dashboard from "layouts/dashboard";
 import Users from "layouts/users";
 import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-import Notifications from "layouts/notifications";
-import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 import CreateUser from "layouts/users/createUser";
 import Branchs from "layouts/branchs";
 import BranchsCreate from "layouts/branchs/createBranch";
@@ -100,16 +95,6 @@ const routes = [
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-    role: "admin",
-    isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
-    component: <Dashboard />,
     role: "admin",
     isActive: false,
   },
@@ -471,46 +456,6 @@ const routes = [
     route: "/billing",
     component: <Billing />,
     role: "admin11",
-    isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
-    role: "admin111",
-    isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-    role: "admin11111",
-    isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-    role: "admin1121",
-    isActive: false,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
-    role: "admin1",
     isActive: false,
   },
 ];
