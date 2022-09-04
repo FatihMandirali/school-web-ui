@@ -28,6 +28,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
 import PaymentIcon from "@mui/icons-material/Payment";
+import Tooltip from "@mui/material/Tooltip";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
@@ -93,13 +94,15 @@ function Tables() {
           onClick={handleEditClick(id)}
           color="inherit"
         />,
-        <GridActionsCellItem
-          icon={<PaymentIcon />}
-          label="Payment"
-          className="textPrimary"
-          onClick={handlePaymentClick(id)}
-          color="inherit"
-        />,
+        <Tooltip title="Ödeme Detay">
+          <GridActionsCellItem
+            icon={<PaymentIcon />}
+            label="Payment"
+            className="textPrimary"
+            onClick={handlePaymentClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
   ];

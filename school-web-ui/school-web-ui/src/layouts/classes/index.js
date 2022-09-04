@@ -29,6 +29,7 @@ import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
 import EventIcon from "@mui/icons-material/Event";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import Tooltip from "@mui/material/Tooltip";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
@@ -78,20 +79,24 @@ function Tables() {
           onClick={handleEditClick(id)}
           color="inherit"
         />,
-        <GridActionsCellItem
-          icon={<EventIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleLessonProgramEditClick(id)}
-          color="inherit"
-        />,
-        <GridActionsCellItem
-          icon={<HowToRegIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleRollCallProgramEditClick(id)}
-          color="inherit"
-        />,
+        <Tooltip title="Ders Programı">
+          <GridActionsCellItem
+            icon={<EventIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleLessonProgramEditClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
+        <Tooltip title="Yoklama">
+          <GridActionsCellItem
+            icon={<HowToRegIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleRollCallProgramEditClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
   ];

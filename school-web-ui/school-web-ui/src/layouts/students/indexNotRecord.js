@@ -44,6 +44,7 @@ import {
 import { useFormik } from "formik";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+import Tooltip from "@mui/material/Tooltip";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import useList from "./service/useNotRecordList";
@@ -174,13 +175,15 @@ function Tables() {
           onClick={handleEditClick(id)}
           color="inherit"
         />,
-        <GridActionsCellItem
-          icon={<PublishedWithChangesIcon />}
-          label="Change"
-          className="textPrimary"
-          onClick={handleChangeStatusClick(id)}
-          color="inherit"
-        />,
+        <Tooltip title="Aktifleştir">
+          <GridActionsCellItem
+            icon={<PublishedWithChangesIcon />}
+            label="Change"
+            className="textPrimary"
+            onClick={handleChangeStatusClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
   ];

@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
@@ -67,13 +68,15 @@ function Tables() {
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
       getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
+        <Tooltip title="Detay">
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
   ];
