@@ -95,7 +95,7 @@ const routes = [
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-    role: "admin",
+    role: "SignIn",
     isActive: false,
   },
   {
@@ -105,7 +105,7 @@ const routes = [
     icon: <GroupIcon />,
     route: "/users",
     component: <Users />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -115,7 +115,7 @@ const routes = [
     icon: <GroupIcon />,
     route: "/student_paymentdetail/:id",
     component: <PaymentDetail />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -125,7 +125,7 @@ const routes = [
     icon: <GroupIcon />,
     route: "/lesson_program/:id",
     component: <LessonProgram />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -135,7 +135,7 @@ const routes = [
     icon: <GroupIcon />,
     route: "/roll_call/:id",
     component: <RollCall />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -145,7 +145,7 @@ const routes = [
     icon: <EscalatorWarningIcon />,
     route: "/covers",
     component: <Covers />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -155,7 +155,7 @@ const routes = [
     icon: <FaceIcon />,
     route: "/teacher",
     component: <Teacher />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -165,7 +165,7 @@ const routes = [
     icon: <FaceIcon />,
     route: "/teacher_create",
     component: <TeacherCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -175,7 +175,7 @@ const routes = [
     icon: <FaceIcon />,
     route: "/teacher_detail/:id",
     component: <TeacherDetail />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -185,7 +185,7 @@ const routes = [
     icon: <SchoolIcon />,
     route: "/student_records",
     component: <StudentRecord />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -195,7 +195,7 @@ const routes = [
     icon: <EditOffIcon />,
     route: "/student_notrecords",
     component: <StudentNotRecord />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -205,7 +205,7 @@ const routes = [
     icon: <SchoolIcon />,
     route: "/student_create",
     component: <StudentCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -215,7 +215,7 @@ const routes = [
     icon: <EscalatorWarningIcon />,
     route: "/cover_create",
     component: <CoverCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -225,7 +225,7 @@ const routes = [
     icon: <EscalatorWarningIcon />,
     route: "/cover_detail/:id",
     component: <CoverDetail />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -235,7 +235,7 @@ const routes = [
     icon: <ApartmentIcon />,
     route: "/branchs",
     component: <Branchs />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -245,7 +245,7 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/announcements",
     component: <Announcement />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -255,7 +255,7 @@ const routes = [
     icon: <AutoStoriesIcon />,
     route: "/lessons",
     component: <Lessons />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -265,7 +265,7 @@ const routes = [
     icon: <AutoStoriesIcon />,
     route: "/lesson_create",
     component: <LessonsCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -275,7 +275,7 @@ const routes = [
     icon: <AutoStoriesIcon />,
     route: "/lesson_detail/:id",
     component: <LessonsDetail />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -285,7 +285,7 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/announcement_create",
     component: <CreateAnnouncement />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -295,7 +295,7 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/announcement_detail/:id",
     component: <DetailAnnouncement />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -305,7 +305,7 @@ const routes = [
     icon: <LocalLibraryIcon />,
     route: "/courseTypes",
     component: <CourseType />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -315,7 +315,7 @@ const routes = [
     icon: <TableRestaurantIcon />,
     route: "/classes",
     component: <Classes />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -325,7 +325,7 @@ const routes = [
     icon: <AccountTreeIcon />,
     route: "/oneonone",
     component: <Oneonone />,
-    role: "admin1",
+    role: "Admin",
     isActive: true,
   },
   {
@@ -335,7 +335,7 @@ const routes = [
     icon: <AccountTreeIcon />,
     route: "/oneonone_create",
     component: <OneononeCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -345,7 +345,7 @@ const routes = [
     icon: <TableRestaurantIcon />,
     route: "/classes_create",
     component: <CreateClasses />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -355,7 +355,7 @@ const routes = [
     icon: <TableRestaurantIcon />,
     route: "/classes_detail/:id",
     component: <DetailClasses />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -365,7 +365,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/courseType_create",
     component: <CreateCourseType />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -375,7 +375,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/courseType_detail/:id",
     component: <DetailCourseType />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -385,7 +385,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/finance_create",
     component: <CreateFinance />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -395,7 +395,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/branch_create",
     component: <BranchsCreate />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -405,7 +405,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/user_create",
     component: <CreateUser />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -415,7 +415,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/user_detail/:id",
     component: <DetailUser />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -425,7 +425,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/unauthorization",
     component: <UnAuthorization />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -435,7 +435,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/finance_detail/:id",
     component: <DetailFinance />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -445,7 +445,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/branch_detail/:id",
     component: <DetailBranch />,
-    role: "admin1",
+    role: "Admin",
     isActive: false,
   },
   {
@@ -455,7 +455,7 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
     component: <Billing />,
-    role: "admin11",
+    role: "Admin",
     isActive: false,
   },
 ];

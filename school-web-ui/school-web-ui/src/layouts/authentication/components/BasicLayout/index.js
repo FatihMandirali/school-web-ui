@@ -26,9 +26,6 @@ import MDBox from "components/MDBox";
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
-// Authentication pages components
-import Footer from "layouts/authentication/components/Footer";
-
 function BasicLayout({ children }) {
   return (
     <PageLayout>
@@ -47,7 +44,6 @@ function BasicLayout({ children }) {
           color: "dark",
         }}
       />
-      <Footer light />
     </PageLayout>
   );
 }

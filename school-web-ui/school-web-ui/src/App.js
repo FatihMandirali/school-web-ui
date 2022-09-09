@@ -43,6 +43,7 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
 import { sessionStorageService } from "./httpservice/sessionStorageService";
+import { jwtDecode } from "./httpservice/jwtDecode";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -99,20 +100,41 @@ export default function App() {
     });
 
   const currentRoles = () => {
-    const rolee = "admin";
-    const setRole = sessionStorageService.returnSetCurrentRole(rolee);
-    // SetRole login olduktan sonra response'de atanacak denemek amaçlı yapıldı şimdi
-    const getRole = sessionStorageService.returnGetCurrentRole(setRole);
-    const result = routes.filter(({ role }) => role.includes(getRole));
+    if (window.location.pathname === "/authentication/sign-in") {
+      const result = routes.filter(({ role }) => role.includes("SignIn"));
+      return result;
+    }
+    const token = sessionStorageService.returnGetAccessToken();
+    if (token === null) {
+      sessionStorageService.returnClearToken();
+      window.location.href = "/authentication/sign-in";
+    }
+    const res = jwtDecode.returnGetJwtDecode(token);
+    if (res === null) {
+      sessionStorageService.returnClearToken();
+      window.location.href = "/authentication/sign-in";
+    }
+    const result = routes.filter(({ role }) => role.includes(res.AccountRole));
     return result;
   };
 
   const currentMenuRoles = () => {
-    const rolee = "admin";
-    const setRole = sessionStorageService.returnSetCurrentRole(rolee);
-    // SetRole login olduktan sonra response'de atanacak denemek amaçlı yapıldı şimdi
-    const getRole = sessionStorageService.returnGetCurrentRole(setRole);
-    let result = routes.filter(({ role }) => role.includes(getRole));
+    if (window.location.pathname === "/authentication/sign-in") {
+      let result = routes.filter(({ role }) => role.includes("SignIn"));
+      result = result.filter(({ isActive }) => isActive === true);
+      return result;
+    }
+    const token = sessionStorageService.returnGetAccessToken();
+    if (token === null) {
+      sessionStorageService.returnClearToken();
+      window.location.href = "/authentication/sign-in";
+    }
+    const res = jwtDecode.returnGetJwtDecode(token);
+    if (res === null) {
+      sessionStorageService.returnClearToken();
+      window.location.href = "/authentication/sign-in";
+    }
+    let result = routes.filter(({ role }) => role.includes(res.AccountRole));
     result = result.filter(({ isActive }) => isActive === true);
     return result;
   };
@@ -134,7 +156,6 @@ export default function App() {
       <Routes>
         {getRoutes(currentRoles())}
         <Route path="/user-create" element={<Navigate to="/user-create" />} />
-        <Route path="*" element={<Navigate to="/users" />} />
       </Routes>
     </ThemeProvider>
   );
