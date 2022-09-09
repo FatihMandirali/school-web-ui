@@ -73,6 +73,8 @@ import LessonProgram from "layouts/classes/lessonProgram";
 import RollCall from "layouts/classes/rollcall";
 import Oneonone from "layouts/oneonone";
 import OneononeCreate from "layouts/oneonone/createOneOnOne";
+import CoverStudents from "layouts/covermenu/coverstudents";
+import CoverPayments from "layouts/covermenu/coverpayments";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -86,6 +88,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import FaceIcon from "@mui/icons-material/Face";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import PaymentIcon from "@mui/icons-material/Payment";
 
 const routes = [
   {
@@ -106,6 +109,26 @@ const routes = [
     route: "/users",
     component: <Users />,
     role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Çocuklar",
+    key: "coverStudents",
+    icon: <EscalatorWarningIcon />,
+    route: "/coverStudents",
+    component: <CoverStudents />,
+    role: "Cover",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödeme Planı",
+    key: "coverPayments",
+    icon: <PaymentIcon />,
+    route: "/coverPayments",
+    component: <CoverPayments />,
+    role: "Cover",
     isActive: true,
   },
   {
