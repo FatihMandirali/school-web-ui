@@ -39,6 +39,7 @@ const useCreate = () => {
           studentPerId2,
           studentPerId3,
           isAnswered: isActiveRecord ? 1 : 0,
+          password: studentNo,
         };
         console.log(request);
         const res = await httpservice.post(`Students/Add`, request, {
