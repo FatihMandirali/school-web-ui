@@ -75,6 +75,8 @@ import Oneonone from "layouts/oneonone";
 import OneononeCreate from "layouts/oneonone/createOneOnOne";
 import CoverStudents from "layouts/covermenu/coverstudents";
 import CoverPayments from "layouts/covermenu/coverpayments";
+import FaceStudent from "layouts/faceStudent";
+import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -89,6 +91,7 @@ import EditOffIcon from "@mui/icons-material/EditOff";
 import FaceIcon from "@mui/icons-material/Face";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import PaymentIcon from "@mui/icons-material/Payment";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 
 const routes = [
   {
@@ -478,6 +481,26 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
     component: <Billing />,
+    role: "Admin",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Birebir Öğrenciler",
+    key: "faceStudent",
+    icon: <SupervisorAccountIcon />,
+    route: "/faceStudent",
+    component: <FaceStudent />,
+    role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Birebir Öğrenciler",
+    key: "faceStudent_create",
+    icon: <SupervisorAccountIcon />,
+    route: "/faceStudent_create",
+    component: <FaceStudentCreate />,
     role: "Admin",
     isActive: false,
   },
