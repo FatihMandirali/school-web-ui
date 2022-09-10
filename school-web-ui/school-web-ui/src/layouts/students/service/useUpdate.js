@@ -56,7 +56,7 @@ const useUpdate = () => {
         resolve(value);
       } catch (error) {
         setService({ serviceStatus: "failed" });
-        resolve({ serviceStatus: "loaded", errorMessage: error.response.data });
+        resolve({ serviceStatus: "failed", errorMessage: error.response.data });
       }
     });
 
