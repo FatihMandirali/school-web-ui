@@ -4,20 +4,44 @@ import httpservice from "../../../httpservice/httpservice";
 const useUpdate = () => {
   const [serviceUpdate, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (totalAmount, firstPaymentDate, advanceAmount, installment, paymentType) =>
+  const post = async (
+    studentId,
+    studentNo,
+    studentName,
+    studentSurName,
+    studentIdName,
+    adress,
+    country,
+    email,
+    classId,
+    branchId,
+    studentPhoneNumber,
+    studentPerId,
+    studentPerId2,
+    studentPerId3
+  ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
         const request = {
-          totalAmount,
-          firstPaymentDate,
-          advanceAmount,
-          installment,
-          paymentType,
+          studentId,
+          studentNo,
+          studentName,
+          studentSurName,
+          studentIdName,
+          classId,
+          branchId,
+          studentPerId,
+          email,
+          phoneNumber: studentPhoneNumber,
+          studentPerId2,
+          studentPerId3,
+          adress,
+          country,
         };
         console.log(request);
-        const res = await httpservice.post(`Admins/AddOrUpdate`, request, {
+        const res = await httpservice.put(`Students/Update`, request, {
           headers: { "content-type": "application/json" },
         });
 

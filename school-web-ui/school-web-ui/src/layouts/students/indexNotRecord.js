@@ -88,7 +88,7 @@ function Tables() {
   const closeErrorSB = () => setErrorSB(false);
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/user_detail/${id}`;
+    window.location.href = `/student_detail/${id}`;
   };
 
   const handleChangeStatusClick = (id) => () => {

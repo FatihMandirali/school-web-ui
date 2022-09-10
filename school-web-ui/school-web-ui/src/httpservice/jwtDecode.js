@@ -7,10 +7,8 @@ export const jwtDecode = (() => {
   function getJwtDecode(tokenObj) {
     try {
       const decoded = jwt_decode(tokenObj);
-      console.log(decoded);
       return decoded;
     } catch (e) {
-      console.log(e);
       return null;
     }
   }

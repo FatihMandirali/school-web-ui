@@ -1,39 +1,68 @@
-import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import Card from "@mui/material/Card";
 import MuiPhoneNumber from "material-ui-phone-number";
-import MDInput from "../../components/MDInput";
-import MDButton from "../../components/MDButton";
-import MDBox from "../../components/MDBox";
+import MDInput from "../MDInput";
+import MDBox from "../MDBox";
+import MDButton from "../MDButton";
+import { validationSchema } from "../../layouts/students/validations/studentValidation";
+import useBranchList from "../../layouts/students/service/useBranchList";
+import MDSnackbar from "../MDSnackbar";
+import useCountryList from "../../layouts/students/service/useCountryList";
+import useClassList from "../../layouts/students/service/useClassList";
+import useCoverList from "../../layouts/students/service/useCoverList";
+import useUpdate from "../../layouts/students/service/useUpdate";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import useCountryList from "./service/useCountryList";
-import useCreate from "./service/useCreate";
-import useBranchList from "./service/useBranchList";
-import useClassList from "./service/useClassList";
-import useCoverList from "./service/useCoverList";
-import { validationSchema } from "./validations/studentValidation";
-import MDSnackbar from "../../components/MDSnackbar";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import useDelete from "../../layouts/students/service/useDelete";
 
-function CreateStudent() {
+function DetailStudentComponent(props) {
+  console.log(props);
+  const { serviceDelete, postDelete } = useDelete();
   const { service, get } = useCountryList();
   const { serviceBranch, getBranch } = useBranchList();
   const { serviceClass, getClass } = useClassList();
   const { serviceCover, getCover } = useCoverList();
-  const { service: postService, post } = useCreate();
+  const { postService, post } = useUpdate();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [phone, setPhone] = useState("");
-  const [studentPerId2, setStudentPerId2] = useState(0);
-  const [studentPerId3, setStudentPerId3] = useState(0);
   const [isActiveRecord] = useState(false);
+
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentId] = useState(props.studentId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentNo] = useState(props.studentNo);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentName] = useState(props.studentName);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentSurname] = useState(props.studentSurname);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentTcOrPassNo] = useState(props.studentTcOrPassNo);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [adress] = useState(props.adress);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentEmail] = useState(props.studentEmail);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [branchId] = useState(props.branchId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [country] = useState(props.country);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentPerId] = useState(props.studentPerId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentPerId2, setStudentPerId2] = useState(props.studentPerId2);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentPerId3, setStudentPerId3] = useState(props.studentPerId3);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentPhoneNumber, setStudentPhoneNumber] = useState(props.studentPhoneNumber);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentClass] = useState(props.studentClass);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -45,7 +74,7 @@ function CreateStudent() {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Öğrenci başarılı bir şekilde eklendi."
+      content="Tebrikler, Öğrenci başarılı bir şekilde güncellendi."
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -71,25 +100,27 @@ function CreateStudent() {
     await get();
     await getBranch();
     await getCover();
+    await getClass(branchId);
   }, []);
 
   const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
-      studentNo: "",
-      studentName: "",
-      studentSurName: "",
-      studentIdName: "",
-      adress: "",
-      country: 0,
-      email: "",
-      classId: 0,
-      branchId: 0,
-      studentPerId: 0,
+      studentNo,
+      studentName,
+      studentSurName: studentSurname,
+      studentIdName: studentTcOrPassNo,
+      adress,
+      country,
+      email: studentEmail,
+      classId: studentClass,
+      branchId,
+      studentPerId,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
       const res = await post(
+        studentId,
         values.studentNo,
         values.studentName,
         values.studentSurName,
@@ -99,7 +130,7 @@ function CreateStudent() {
         values.email,
         values.classId,
         values.branchId,
-        phone,
+        studentPhoneNumber,
         values.studentPerId,
         studentPerId2,
         studentPerId3,
@@ -120,9 +151,19 @@ function CreateStudent() {
     await getClass(values.branchId);
   }, [values.branchId]);
 
+  const btnDeleteStudent = async () => {
+    const res = await postDelete(studentId);
+    if (res.serviceStatus === "loaded") {
+      window.location.href = `/student_records`;
+    } else {
+      setErrorMsg(res.errorMessage);
+      openErrorSB();
+    }
+  };
+
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Öğrenci Oluştur" />
+      <DashboardNavbar pageName="Öğrenci Detay" />
       <MDBox>
         <Card>
           <form onSubmit={handleSubmit}>
@@ -134,6 +175,7 @@ function CreateStudent() {
                   label="Öğrenci Numarası"
                   fullWidth
                   name="studentNo"
+                  value={values.studentNo}
                 />
                 {sendForm === true && errors.studentNo && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -148,6 +190,7 @@ function CreateStudent() {
                   label="Adı"
                   fullWidth
                   name="studentName"
+                  value={values.studentName}
                 />
                 {sendForm === true && errors.studentName && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -162,6 +205,7 @@ function CreateStudent() {
                   onChange={handleChange}
                   label="Soyadı"
                   fullWidth
+                  value={values.studentSurName}
                 />
                 {sendForm === true && errors.studentSurName && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -176,6 +220,7 @@ function CreateStudent() {
                   onChange={handleChange}
                   label="Kimlik Bilgisi"
                   fullWidth
+                  value={values.studentIdName}
                 />
                 {sendForm === true && errors.studentIdName && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -190,6 +235,7 @@ function CreateStudent() {
                   label="Adres"
                   fullWidth
                   name="adress"
+                  value={values.adress}
                 />
                 {sendForm === true && errors.adress && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -198,7 +244,14 @@ function CreateStudent() {
                 )}
               </MDBox>
               <MDBox mb={2}>
-                <MDInput type="text" onChange={handleChange} label="Email" fullWidth name="email" />
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Email"
+                  fullWidth
+                  name="email"
+                  value={values.email}
+                />
                 {sendForm === true && errors.email && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
                     <Alert severity="error">{errors.email}</Alert>
@@ -221,6 +274,7 @@ function CreateStudent() {
                     defaultValue={0}
                     name="branchId"
                     className="specificSelectBox"
+                    value={values.branchId}
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -234,39 +288,6 @@ function CreateStudent() {
                   {sendForm === true && errors.branchId && (
                     <Stack sx={{ width: "100%" }} spacing={2}>
                       <Alert severity="error">{errors.branchId}</Alert>
-                    </Stack>
-                  )}
-                </FormControl>
-              )}
-
-              {service.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Ülkesi</InputLabel>
-                  <Select
-                    label="Ülkesi"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={handleChange}
-                    defaultValue={0}
-                    name="country"
-                    className="specificSelectBox"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {service.data.map((u) => (
-                      <MenuItem key={u.Id} value={u.Id}>
-                        {u.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {sendForm === true && errors.country && (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert severity="error">{errors.country}</Alert>
                     </Stack>
                   )}
                 </FormControl>
@@ -287,6 +308,7 @@ function CreateStudent() {
                     defaultValue={0}
                     name="classId"
                     className="specificSelectBox"
+                    value={values.classId}
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -300,6 +322,40 @@ function CreateStudent() {
                   {sendForm === true && errors.classId && (
                     <Stack sx={{ width: "100%" }} spacing={2}>
                       <Alert severity="error">{errors.classId}</Alert>
+                    </Stack>
+                  )}
+                </FormControl>
+              )}
+
+              {service.serviceStatus === "loaded" && (
+                <FormControl mb={5} fullWidth>
+                  <InputLabel id="demo-simple-select-filled-label">Ülkesi</InputLabel>
+                  <Select
+                    label="Ülkesi"
+                    displayEmpty
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    onChange={handleChange}
+                    defaultValue={0}
+                    name="country"
+                    className="specificSelectBox"
+                    value={values.country}
+                  >
+                    <MenuItem key={0} value={0}>
+                      Seçiniz
+                    </MenuItem>
+                    {service.data.map((u) => (
+                      <MenuItem key={u.Id} value={u.Id}>
+                        {u.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {sendForm === true && errors.country && (
+                    <Stack sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="error">{errors.country}</Alert>
                     </Stack>
                   )}
                 </FormControl>
@@ -320,6 +376,7 @@ function CreateStudent() {
                     defaultValue={0}
                     name="studentPerId"
                     className="specificSelectBox"
+                    value={values.studentPerId}
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -353,6 +410,7 @@ function CreateStudent() {
                     defaultValue={0}
                     name="studentPerId2"
                     className="specificSelectBox"
+                    value={studentPerId2}
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -381,6 +439,7 @@ function CreateStudent() {
                     defaultValue={0}
                     name="studentPerId3"
                     className="specificSelectBox"
+                    value={studentPerId3}
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -396,10 +455,11 @@ function CreateStudent() {
 
               <MDBox mb={2}>
                 <MuiPhoneNumber
-                  onChange={(e) => setPhone(e)}
+                  onChange={(e) => setStudentPhoneNumber(e)}
                   defaultCountry="tr"
                   name="coverPhoneNumber"
                   fullWidth
+                  value={studentPhoneNumber}
                 />
               </MDBox>
               {postService.serviceStatus === "loading" ? (
@@ -409,7 +469,24 @@ function CreateStudent() {
               ) : (
                 <MDBox mt={4} mb={1}>
                   <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
-                    Oluştur
+                    Güncelle
+                  </MDButton>
+                </MDBox>
+              )}
+
+              {serviceDelete.serviceStatus === "loading" ? (
+                <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                  <CircularProgress color="secondary" />
+                </Stack>
+              ) : (
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    type="button"
+                    onClick={() => btnDeleteStudent()}
+                    color="error"
+                    fullWidth
+                  >
+                    SİL
                   </MDButton>
                 </MDBox>
               )}
@@ -423,4 +500,4 @@ function CreateStudent() {
   );
 }
 
-export default CreateStudent;
+export default DetailStudentComponent;

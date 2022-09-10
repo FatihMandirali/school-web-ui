@@ -63,6 +63,7 @@ import Lessons from "layouts/lessons";
 import LessonsCreate from "layouts/lessons/craeteLesson";
 import LessonsDetail from "layouts/lessons/detailLesson";
 import StudentRecord from "layouts/students/index";
+import StudentDetail from "layouts/students/detailStudentRecord";
 import StudentCreate from "layouts/students/createStudent";
 import StudentNotRecord from "layouts/students/indexNotRecord";
 import Teacher from "layouts/teacher";
@@ -201,6 +202,16 @@ const routes = [
     icon: <FaceIcon />,
     route: "/teacher_detail/:id",
     component: <TeacherDetail />,
+    role: "Admin",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İşlemleri",
+    key: "student_detail",
+    icon: <FaceIcon />,
+    route: "/student_detail/:id",
+    component: <StudentDetail />,
     role: "Admin",
     isActive: false,
   },

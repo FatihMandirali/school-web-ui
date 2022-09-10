@@ -6,8 +6,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MDInput from "../MDInput";
 import MDButton from "../MDButton";
 import MDBox from "../MDBox";
-import useUpdate from "../../layouts/coursetype/service/useUpdate";
-import useDelete from "../../layouts/coursetype/service/useDelete";
+import useUpdate from "../../layouts/lessons/service/useUpdate";
+import useDelete from "../../layouts/lessons/service/useDelete";
 import { validationSchema } from "../../layouts/lessons/validations/lessonValidation";
 import MDSnackbar from "../MDSnackbar";
 
