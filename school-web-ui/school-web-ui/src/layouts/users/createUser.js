@@ -69,7 +69,7 @@ function CreateUser() {
       firstName: "",
       surname: "",
       userName: "",
-      roleId: 0,
+      roleId: 1,
       branchId: 0,
       pass: "",
       tc: "",
@@ -88,6 +88,7 @@ function CreateUser() {
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/users";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
@@ -166,38 +167,6 @@ function CreateUser() {
                   </Stack>
                 )}
               </MDBox>
-              {service.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Rolü</InputLabel>
-                  <Select
-                    label="Rolü"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={handleChange}
-                    defaultValue={0}
-                    name="roleId"
-                    className="specificSelectBox"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {service.data.map((u) => (
-                      <MenuItem key={u.RoleId} value={u.RoleId}>
-                        {u.RoleName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {sendForm === true && errors.roleId && (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert severity="error">{errors.roleId}</Alert>
-                    </Stack>
-                  )}
-                </FormControl>
-              )}
 
               {serviceBranch.serviceStatus === "loaded" && (
                 <FormControl mb={5} fullWidth>

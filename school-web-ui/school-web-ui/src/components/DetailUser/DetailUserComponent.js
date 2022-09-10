@@ -59,7 +59,7 @@ function CreateUserComponent(props) {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Kullanıcı başarılı bir şekilde eklendi."
+      content="Tebrikler, Kullanıcı başarılı bir şekilde güncellendi."
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -103,7 +103,7 @@ function CreateUserComponent(props) {
         values.pass,
         values.branchId,
         values.tc,
-        1
+        adminId
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -156,6 +156,7 @@ function CreateUserComponent(props) {
               label="Kullanıcı Adı"
               fullWidth
               value={values.userName}
+              disabled
             />
             {sendForm === true && errors.userName && (
               <Stack sx={{ width: "100%" }} spacing={2}>
@@ -171,6 +172,7 @@ function CreateUserComponent(props) {
               value={values.tc}
               label="TC"
               fullWidth
+              disabled
             />
             {sendForm === true && errors.tc && (
               <Stack sx={{ width: "100%" }} spacing={2}>
@@ -178,53 +180,6 @@ function CreateUserComponent(props) {
               </Stack>
             )}
           </MDBox>
-          <MDBox mb={2}>
-            <MDInput
-              type="password"
-              onChange={handleChange}
-              label="Şifre"
-              fullWidth
-              name="pass"
-              value={values.pass}
-            />
-            {sendForm === true && errors.pass && (
-              <Stack sx={{ width: "100%" }} spacing={2}>
-                <Alert severity="error">{errors.pass}</Alert>
-              </Stack>
-            )}
-          </MDBox>
-          {service.serviceStatus === "loaded" && (
-            <FormControl mb={5} fullWidth>
-              <InputLabel id="demo-simple-select-filled-label">Rolü</InputLabel>
-              <Select
-                label="Rolü"
-                displayEmpty
-                variant="outlined"
-                margin="dense"
-                fullWidth
-                labelId="demo-simple-select-autowidth-label"
-                id="demo-simple-select-autowidth"
-                onChange={handleChange}
-                defaultValue={values.roleId}
-                name="roleId"
-                className="specificSelectBox"
-              >
-                <MenuItem key={0} value={0}>
-                  Seçiniz
-                </MenuItem>
-                {service.data.map((u) => (
-                  <MenuItem key={u.RoleId} value={u.RoleId}>
-                    {u.RoleName}
-                  </MenuItem>
-                ))}
-              </Select>
-              {sendForm === true && errors.roleId && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">{errors.roleId}</Alert>
-                </Stack>
-              )}
-            </FormControl>
-          )}
 
           {serviceBranch.serviceStatus === "loaded" && (
             <FormControl mb={5} fullWidth>

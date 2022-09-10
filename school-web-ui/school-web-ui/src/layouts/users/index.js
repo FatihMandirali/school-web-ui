@@ -20,7 +20,6 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import Footer from "examples/Footer";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -43,13 +42,7 @@ function Tables() {
 
   const columns = [
     { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 400 },
-    {
-      field: "RoleName",
-      headerName: "Admin Rolü",
-      minWidth: 200,
-      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
-    },
+    { field: "AdminSurname", headerName: "Admin Soyadı", minWidth: 200 },
     {
       field: "username",
       headerName: "Kullanıcı Adı",
@@ -58,7 +51,7 @@ function Tables() {
     {
       field: "BranchName",
       headerName: "Bölgesi",
-      minWidth: 200,
+      minWidth: 300,
     },
     {
       field: "actions",
@@ -94,22 +87,21 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Yöneticiler" />
       <MDBox>
-        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+        <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium" />
           <Link to="/user_create" style={{ color: "#FFF" }}>
-            <MDButton variant="gradient" color="dark">
+            <MDButton size="small" variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
             </MDButton>
           </Link>
         </MDBox>
-        <br />
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
+          <div style={{ height: 550, width: "100%" }}>
             <DataGrid
               rows={service.data}
               columns={columns}
-              pageSize={100}
+              pageSize={8}
               pagination
               getRowId={(row) => row.AdminId}
               rowsPerPageOptions={[5, 10, 15]}
@@ -119,7 +111,6 @@ function Tables() {
           </div>
         )}
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
