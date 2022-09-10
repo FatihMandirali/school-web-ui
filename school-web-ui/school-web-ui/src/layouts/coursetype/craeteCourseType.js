@@ -63,6 +63,7 @@ function CreateCourseType() {
       const res = await post(values.courseName);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/courseTypes";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
