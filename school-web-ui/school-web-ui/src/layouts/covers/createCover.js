@@ -67,6 +67,7 @@ function CreateCover() {
       const res = await post(values.coverName, values.coverSurname, values.coverEmail, phone);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/covers";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
