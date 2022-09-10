@@ -6,6 +6,7 @@ const useClassList = () => {
   const getData = async (branchId) => {
     try {
       setService({ serviceStatus: "loading" });
+      if (branchId === undefined) return;
       const res = await httpservice.get(`Classes/GetClassesByBranchId/${branchId}`);
       console.log(res);
       const value = {

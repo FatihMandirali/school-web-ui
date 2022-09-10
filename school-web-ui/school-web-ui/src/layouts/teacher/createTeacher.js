@@ -93,6 +93,7 @@ function CreateTeacher() {
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/teacher";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
@@ -258,6 +259,7 @@ function CreateTeacher() {
                     onChange={handleChange}
                     defaultValue={0}
                     name="classId"
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz

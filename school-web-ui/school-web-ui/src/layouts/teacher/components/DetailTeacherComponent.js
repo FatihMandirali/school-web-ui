@@ -87,7 +87,7 @@ function CreateTeacher(props) {
   );
   useEffect(async () => {
     await getLesson();
-    await getClass();
+    await getClass(branchId);
     await getBranch();
   }, []);
 
@@ -297,6 +297,7 @@ function CreateTeacher(props) {
                   onChange={handleChange}
                   defaultValue={values.classId}
                   name="classId"
+                  className="specificSelectBox"
                 >
                   {serviceClass.data.map((u) => (
                     <MenuItem key={u.ClassId} value={u.ClassId}>
