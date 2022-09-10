@@ -78,6 +78,7 @@ function CreateAnnouncement() {
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/announcements";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();

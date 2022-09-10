@@ -245,7 +245,7 @@ function CreateAnnouncement(props) {
           ) : (
             <MDBox mt={4} mb={1}>
               <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
-                Oluştur
+                Güncelle
               </MDButton>
             </MDBox>
           )}
