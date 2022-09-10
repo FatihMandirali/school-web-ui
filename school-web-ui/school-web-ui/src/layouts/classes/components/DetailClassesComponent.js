@@ -43,11 +43,6 @@ function CreateClasses(props) {
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
 
-  const btnDeleteBranch = async () => {
-    await postDelete(classId);
-    window.location.href = `/classes`;
-  };
-
   const renderSuccessSB = (
     <MDSnackbar
       color="success"
@@ -79,6 +74,16 @@ function CreateClasses(props) {
     await getBranch();
     await getCourse();
   }, []);
+
+  const btnDeleteBranch = async () => {
+    const res = await postDelete(classId);
+    if (res.serviceStatus === "loaded") {
+      window.location.href = `/classes`;
+    } else {
+      setErrorMsg(res.errorMessage);
+      openErrorSB();
+    }
+  };
 
   const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
