@@ -229,7 +229,7 @@ function CreateAnnouncement(props) {
               fullWidth
               name="sharingEndDate"
               onChange={handleChange}
-              value={values.createdDate}
+              value={values.sharingEndDate}
             />
             {sendForm === true && errors.sharingEndDate && (
               <Stack sx={{ width: "100%" }} spacing={2}>

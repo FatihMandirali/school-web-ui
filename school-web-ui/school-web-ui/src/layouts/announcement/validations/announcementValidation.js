@@ -5,9 +5,7 @@ export const validationSchema = Yup.object({
   title: Yup.string().required("Lütfen başlık girin."),
   text: Yup.string().required("Lütfen açıklama girin."),
   locationId: Yup.number().min(1, "Lütfen paylaşılacak yeri seçin"),
-  createdDate: Yup.date()
-    .required("Lütfen başlangıç tarihi seçiniz.")
-    .min(new Date(), "Lütfen bugünden önceki bir tarihi seçmeyiniz."),
+  createdDate: Yup.date().required("Lütfen başlangıç tarihi seçiniz."),
   sharingEndDate: Yup.date()
     .required("Lütfen bitiş tarihini seçiniz.")
     .min(

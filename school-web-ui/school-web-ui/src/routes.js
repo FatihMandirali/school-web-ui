@@ -76,6 +76,7 @@ import Oneonone from "layouts/oneonone";
 import OneononeCreate from "layouts/oneonone/createOneOnOne";
 import CoverStudents from "layouts/covermenu/coverstudents";
 import CoverPayments from "layouts/covermenu/coverpayments";
+import CoverAnnouncement from "layouts/covermenu/coverannouncement";
 import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 // @mui icons
@@ -113,6 +114,16 @@ const routes = [
     route: "/users",
     component: <Users />,
     role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Duyurular",
+    key: "announcements",
+    icon: <CampaignIcon />,
+    route: "/coverAnnouncement",
+    component: <CoverAnnouncement />,
+    role: "Cover",
     isActive: true,
   },
   {
