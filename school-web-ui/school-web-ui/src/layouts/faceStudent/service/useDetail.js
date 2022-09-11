@@ -9,7 +9,8 @@ const useDetail = (id) => {
     new Promise(async (resolve) => {
       try {
         setServiceDetail({ serviceStatus: "loading" });
-        const res = await httpservice.get(`FinansType/${id}`);
+        if (id === undefined) return;
+        const res = await httpservice.get(`FaceStudent/Details?studentId=${id}`);
         const value = {
           data: res.data,
           serviceStatus: "loaded",

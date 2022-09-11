@@ -81,6 +81,7 @@ import TeacherAnnouncement from "layouts/teachermenu/teacherannouncement";
 import StudentAnnouncement from "layouts/studentsmenu/studentannouncement";
 import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
+import FaceStudentDetail from "layouts/faceStudent/detailFaceStudent";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -545,6 +546,16 @@ const routes = [
     icon: <SupervisorAccountIcon />,
     route: "/faceStudent_create",
     component: <FaceStudentCreate />,
+    role: "Admin",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Birebir Öğrenciler",
+    key: "faceStudent_detail",
+    icon: <SupervisorAccountIcon />,
+    route: "/faceStudent_detail/:id",
+    component: <FaceStudentDetail />,
     role: "Admin",
     isActive: false,
   },

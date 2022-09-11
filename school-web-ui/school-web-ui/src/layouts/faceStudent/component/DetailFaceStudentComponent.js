@@ -1,9 +1,8 @@
-import Card from "@mui/material/Card";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import Alert from "@mui/material/Alert";
+import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,27 +10,41 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
-import MDInput from "../../components/MDInput";
-import MDButton from "../../components/MDButton";
-import MDBox from "../../components/MDBox";
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import useCreate from "./service/useCreate";
-import { validationSchema } from "./validations/faceStudentValidation";
-import MDSnackbar from "../../components/MDSnackbar";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import useLessonList from "./service/useLessonList";
+import CircularProgress from "@mui/material/CircularProgress";
+import MDInput from "../../../components/MDInput";
+import MDBox from "../../../components/MDBox";
+import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
+import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
+import { validationSchema } from "../validations/faceStudentValidation";
+import MDSnackbar from "../../../components/MDSnackbar";
+import useCreate from "../service/useCreate";
+import useLessonList from "../service/useLessonList";
+import MDButton from "../../../components/MDButton";
 
-function CreateFinance() {
+function DetailFaceStudentComponent(props) {
+  console.log(props);
   const { getLesson } = useLessonList();
   const { service: postService, post } = useCreate();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [phone, setPhone] = useState("");
   const [lessons, setLessons] = useState([]);
   const [subLessons, setSubLessons] = useState([]);
   const [chooseLesson, setChooseLessons] = useState([]);
+
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentId] = useState(props.data[0].StudentId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentName] = useState(props.data[0].StudentName);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentSurname] = useState(props.data[0].StudentSurname);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentTcOrPassNo] = useState(props.data[0].StudentTcOrPassNo);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [studentEmail] = useState(props.data[0].StudentEmail);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [phone, setPhone] = useState(props.data[0].StudentPhoneNumber);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -40,8 +53,21 @@ function CreateFinance() {
 
   useEffect(async () => {
     const res = await getLesson();
+    const notChooseLesson = [];
+    const chooseLessonList = [];
     if (res.serviceStatus === "loaded") {
-      setLessons(res.data);
+      // eslint-disable-next-line array-callback-return
+      res.data.map((x) => {
+        console.log(x);
+        // eslint-disable-next-line react/prop-types,react/destructuring-assignment,no-empty
+        if (props.data.find((y) => y.LessonId === x.LessonId)) {
+          // eslint-disable-next-line react/prop-types,react/destructuring-assignment
+          chooseLessonList.push(props.data.find((y) => y.LessonId === x.LessonId));
+        } else notChooseLesson.push(x);
+      });
+      console.log(notChooseLesson);
+      setLessons(notChooseLesson);
+      setChooseLessons(chooseLessonList);
       setSubLessons(res.data);
     }
   }, []);
@@ -51,7 +77,7 @@ function CreateFinance() {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Birebir öğrenci başarılı bir şekilde eklendi."
+      content="Tebrikler, Birebir öğrenci başarılı bir şekilde güncellendi."
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -74,22 +100,23 @@ function CreateFinance() {
     />
   );
 
-  const { handleSubmit, handleChange, errors } = useFormik({
+  const { handleSubmit, handleChange, values, errors } = useFormik({
     initialValues: {
-      name: "",
-      surName: "",
-      idNo: "",
-      email: "",
+      StudentName: studentName,
+      StudentSurname: studentSurname,
+      StudentTcOrPassNo: studentTcOrPassNo,
+      StudentEmail: studentEmail,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
       if (chooseLesson.length <= 0) return;
       const res = await post(
-        values.name,
-        values.surName,
-        values.idNo,
-        values.email,
+        studentId,
+        values.StudentName,
+        values.StudentSurName,
+        values.StudentTcOrPassNo,
+        values.StudentEmail,
         phone,
         chooseLesson
       );
@@ -107,9 +134,9 @@ function CreateFinance() {
     setChooseLessons([
       ...chooseLesson,
       {
-        lessonId: event.target.value,
-        name: lessons.find((x) => x.LessonId === event.target.value).LessonName,
-        count: 0,
+        LessonId: event.target.value,
+        LessonName: lessons.find((x) => x.LessonId === event.target.value).LessonName,
+        LessonCount: 0,
       },
     ]);
     const newLesson = lessons.filter((x) => x.LessonId !== event.target.value);
@@ -119,25 +146,32 @@ function CreateFinance() {
   const lessonSelectedDelete = (id) => {
     const deletedLesson = subLessons.find((x) => x.LessonId === id);
     setLessons([...lessons, deletedLesson]);
-    setChooseLessons(chooseLesson.filter((x) => x.lessonId !== id));
+    setChooseLessons(chooseLesson.filter((x) => x.LessonId !== id));
   };
 
   const onChangeLessonCount = (count, id) => {
-    chooseLesson.find((x) => x.lessonId === id).count = parseInt(count, 10);
+    chooseLesson.find((x) => x.LessonId === id).LessonCount = parseInt(count, 10);
   };
 
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Birebir Öğrenci Oluştur" />
+      <DashboardNavbar pageName="Birebir Öğrenci Detay" />
       <MDBox>
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox pt={4} pb={3} px={3}>
               <MDBox mb={2}>
-                <MDInput type="text" onChange={handleChange} label="Adı" fullWidth name="name" />
-                {sendForm === true && errors.name && (
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Adı"
+                  fullWidth
+                  name="StudentName"
+                  value={values.StudentName}
+                />
+                {sendForm === true && errors.StudentName && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.name}</Alert>
+                    <Alert severity="error">{errors.StudentName}</Alert>
                   </Stack>
                 )}
               </MDBox>
@@ -147,11 +181,12 @@ function CreateFinance() {
                   onChange={handleChange}
                   label="Soyadı"
                   fullWidth
-                  name="surName"
+                  name="StudentSurname"
+                  value={values.StudentSurname}
                 />
-                {sendForm === true && errors.surName && (
+                {sendForm === true && errors.StudentSurname && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.surName}</Alert>
+                    <Alert severity="error">{errors.StudentSurname}</Alert>
                   </Stack>
                 )}
               </MDBox>
@@ -161,19 +196,27 @@ function CreateFinance() {
                   onChange={handleChange}
                   label="Tc"
                   fullWidth
-                  name="idNo"
+                  name="StudentTcOrPassNo"
+                  value={values.StudentTcOrPassNo}
                 />
-                {sendForm === true && errors.idNo && (
+                {sendForm === true && errors.StudentTcOrPassNo && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.idNo}</Alert>
+                    <Alert severity="error">{errors.StudentTcOrPassNo}</Alert>
                   </Stack>
                 )}
               </MDBox>
               <MDBox mb={2}>
-                <MDInput type="text" onChange={handleChange} label="Mail" fullWidth name="email" />
-                {sendForm === true && errors.email && (
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Mail"
+                  fullWidth
+                  name="StudentEmail"
+                  value={values.StudentEmail}
+                />
+                {sendForm === true && errors.StudentEmail && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.email}</Alert>
+                    <Alert severity="error">{errors.StudentEmail}</Alert>
                   </Stack>
                 )}
               </MDBox>
@@ -183,6 +226,7 @@ function CreateFinance() {
                   defaultCountry="tr"
                   name="phone"
                   fullWidth
+                  value={phone}
                 />
                 {sendForm === true && phone.length <= 0 && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
@@ -231,19 +275,26 @@ function CreateFinance() {
                 style={{ justifyContent: "center", textAlign: "center" }}
               >
                 {chooseLesson.map((item) => (
-                  <Box component="span" ml={1} mb={1} sx={{ border: "1px dashed grey" }}>
+                  <Box
+                    key={item.LessonId}
+                    component="span"
+                    ml={1}
+                    mb={1}
+                    sx={{ border: "1px dashed grey" }}
+                  >
                     <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>
-                      {item.name}
+                      {item.LessonName}
                     </b>
                     <MDInput
                       type="number"
-                      onChange={(event) => onChangeLessonCount(event.target.value, item.lessonId)}
+                      onChange={(event) => onChangeLessonCount(event.target.value, item.LessonId)}
                       label="Ders Sayısı"
                       fullWidth
+                      value={item.LessonCount}
                     />
                     <Button>
                       <ClearIcon
-                        onClick={() => lessonSelectedDelete(item.lessonId)}
+                        onClick={() => lessonSelectedDelete(item.LessonId)}
                         style={{ margin: "auto", alignContent: "center", textAlign: "center" }}
                       />
                     </Button>
@@ -258,7 +309,7 @@ function CreateFinance() {
               ) : (
                 <MDBox mt={4} mb={1}>
                   <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
-                    Oluştur
+                    Güncelle
                   </MDButton>
                 </MDBox>
               )}
@@ -272,4 +323,4 @@ function CreateFinance() {
   );
 }
 
-export default CreateFinance;
+export default DetailFaceStudentComponent;

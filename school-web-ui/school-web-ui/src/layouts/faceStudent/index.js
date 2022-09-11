@@ -36,7 +36,7 @@ function Tables() {
   const { service, get } = useList(email);
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/finance_detail/${id}`;
+    window.location.href = `/faceStudent_detail/${id}`;
   };
 
   const columns = [
