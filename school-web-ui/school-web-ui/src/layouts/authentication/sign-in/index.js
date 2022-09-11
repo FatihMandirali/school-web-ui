@@ -111,9 +111,17 @@ function Basic() {
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
         jwtDecode.returnSetTokeSave(res.token);
-        window.location.href = "/users";
+        if (values.roleName === "Admin") {
+          window.location.href = "/users";
+        } else if (values.roleName === "Cover") {
+          window.location.href = "/coverAnnouncement";
+        } else if (values.roleName === "Teacher") {
+          window.location.href = "/teacherAnnouncement";
+        } else if (values.roleName === "Student") {
+          window.location.href = "/studentAnnouncement";
+        }
       } else {
-        setErrorMsg(res.errorMessage);
+        setErrorMsg("Giriş bilgilerinizi kontrol edin.");
         openErrorSB();
       }
     },

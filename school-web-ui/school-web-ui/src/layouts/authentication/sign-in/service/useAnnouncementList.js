@@ -3,13 +3,10 @@ import httpservice from "../../../../httpservice/httpservice";
 
 const useList = () => {
   const [service, setService] = useState({ serviceStatus: "loading" });
-  const getData = async (locationId) => {
+  const getData = async () => {
     try {
       setService({ serviceStatus: "loading" });
-      console.log(locationId);
-      const res = await httpservice.get(
-        `Announcements/List?locationId=${locationId === undefined ? 0 : locationId}`
-      );
+      const res = await httpservice.get(`Announcements/List?locationId=1`);
       console.log(res);
       const value = {
         data: res.data,

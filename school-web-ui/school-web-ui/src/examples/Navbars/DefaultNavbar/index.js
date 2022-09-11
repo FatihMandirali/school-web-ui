@@ -25,6 +25,8 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 import { useEffect } from "react";
+import Alert from "@mui/material/Alert";
+import { AlertTitle } from "@mui/material";
 import useAnnouncementList from "../../../layouts/authentication/sign-in/service/useAnnouncementList";
 
 function DefaultNavbar({ transparent, light }) {
@@ -65,13 +67,22 @@ function DefaultNavbar({ transparent, light }) {
         {service.serviceStatus === "loaded" && (
           <div style={{ marginLeft: "30px" }}>
             <h4>Duyurular</h4>
-            <ul>
-              {/* eslint-disable-next-line array-callback-return */}
-              {service.data.map((item, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <li key={i}>{item.AnnouncementText}</li>
-              ))}
-            </ul>
+            {service.data.length <= 0 ? (
+              <Alert style={{ width: "100% !important" }} severity="warning">
+                <AlertTitle>Duyuru bulunmamaktadır.</AlertTitle>
+              </Alert>
+            ) : (
+              service.data.map((item) => (
+                <Alert
+                  style={{ marginBottom: "10px" }}
+                  key={item.AnnouncementId}
+                  severity="info"
+                >
+                  <AlertTitle>{item.AnnouncementTitle}</AlertTitle>
+                  {item.AnnouncementText}
+                </Alert>
+              ))
+            )}
           </div>
         )}
       </MDBox>
