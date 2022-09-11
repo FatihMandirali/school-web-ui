@@ -20,7 +20,6 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import Footer from "examples/Footer";
 
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -77,10 +76,10 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Bire bir dersler" />
       <MDBox>
-        <MDBox display="flex" justifyContent="space-between" alignItems="center">
+        <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium" />
           <Link to="/oneonone_create" style={{ color: "#FFF" }}>
-            <MDButton variant="gradient" color="dark">
+            <MDButton size="small" variant="gradient" color="dark">
               <Icon sx={{ fontWeight: "bold" }}>add</Icon>
               &nbsp;ekle
             </MDButton>
@@ -88,11 +87,11 @@ function Tables() {
         </MDBox>
         <br />
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
+          <div style={{ height: 550, width: "100%" }}>
             <DataGrid
               rows={data}
               columns={columns}
-              pageSize={100}
+              pageSize={8}
               pagination
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
@@ -101,7 +100,6 @@ function Tables() {
           </div>
         )}
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
