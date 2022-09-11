@@ -57,13 +57,12 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Çocuklar" />
       <MDBox>
-        <br />
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
+          <div style={{ height: 600, width: "100%" }}>
             <DataGrid
               rows={service.data}
               columns={columns}
-              pageSize={10}
+              pageSize={9}
               pagination
               getRowId={(row) => row.StudentId}
               rowsPerPageOptions={[5, 10, 15]}
