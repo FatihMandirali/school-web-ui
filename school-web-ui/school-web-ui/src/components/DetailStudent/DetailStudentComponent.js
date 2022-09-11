@@ -28,7 +28,7 @@ function DetailStudentComponent(props) {
   const { serviceBranch, getBranch } = useBranchList();
   const { serviceClass, getClass } = useClassList();
   const { serviceCover, getCover } = useCoverList();
-  const { postService, post } = useUpdate();
+  const { serviceUpdate, post } = useUpdate();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
@@ -406,7 +406,7 @@ function DetailStudentComponent(props) {
                     fullWidth
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId2()}
+                    onChange={(event) => setStudentPerId2(event.target.value)}
                     defaultValue={0}
                     name="studentPerId2"
                     className="specificSelectBox"
@@ -435,7 +435,7 @@ function DetailStudentComponent(props) {
                     fullWidth
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId3()}
+                    onChange={(event) => setStudentPerId3(event.target.value)}
                     defaultValue={0}
                     name="studentPerId3"
                     className="specificSelectBox"
@@ -462,7 +462,7 @@ function DetailStudentComponent(props) {
                   value={studentPhoneNumber}
                 />
               </MDBox>
-              {postService.serviceStatus === "loading" ? (
+              {serviceUpdate.serviceStatus === "loading" ? (
                 <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
                   <CircularProgress color="secondary" />
                 </Stack>
