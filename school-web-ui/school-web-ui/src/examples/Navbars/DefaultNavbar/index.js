@@ -73,11 +73,7 @@ function DefaultNavbar({ transparent, light }) {
               </Alert>
             ) : (
               service.data.map((item) => (
-                <Alert
-                  style={{ marginBottom: "10px" }}
-                  key={item.AnnouncementId}
-                  severity="info"
-                >
+                <Alert style={{ marginBottom: "10px" }} key={item.AnnouncementId} severity="info">
                   <AlertTitle>{item.AnnouncementTitle}</AlertTitle>
                   {item.AnnouncementText}
                 </Alert>
