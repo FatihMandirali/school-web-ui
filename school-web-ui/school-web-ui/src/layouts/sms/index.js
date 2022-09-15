@@ -96,6 +96,7 @@ function Tables() {
     const resCover = await getCover();
     if (resCover.serviceStatus === "loaded") {
       const coversArray = [];
+      coversArray.push({ id: 0, label: "Tümü" });
       setCovers(resCover.data);
       // eslint-disable-next-line array-callback-return
       resCover.data.map((item) => {
@@ -111,24 +112,48 @@ function Tables() {
 
   const coverSelectedDelete = (item) => {
     console.log(item);
-    setSelectedCovers(selectedCovers.filter((x) => x.id !== item.id));
-    setAutoSelecetCovers([...autoSelecetCovers, item]);
+    if (item.id === 0) {
+      const coversArray = [];
+      coversArray.push({ id: 0, label: "Tümü" });
+      // eslint-disable-next-line array-callback-return
+      covers.map((cover) => {
+        coversArray.push({ id: cover.CoverId, label: `${cover.CoverName} ${cover.CoverSurname}` });
+      });
+      setAutoSelecetCovers(coversArray);
+      setSelectedCovers([]);
+    } else {
+      setSelectedCovers(selectedCovers.filter((x) => x.id !== item.id));
+      setAutoSelecetCovers([...autoSelecetCovers, item]);
+    }
   };
 
   const coverSelected = (event) => {
     if (event === null) return;
     console.log(event);
-    setAutoSelecetCovers(autoSelecetCovers.filter((x) => x.id !== event.id));
-    setSelectedCovers([...selectedCovers, autoSelecetCovers.find((x) => x.id === event.id)]);
+    if (event.id === 0) {
+      setAutoSelecetCovers([]);
+      setSelectedCovers([autoSelecetCovers.find((x) => x.id === event.id)]);
+    } else {
+      setAutoSelecetCovers(autoSelecetCovers.filter((x) => x.id !== event.id));
+      setSelectedCovers([...selectedCovers, autoSelecetCovers.find((x) => x.id === event.id)]);
+    }
   };
   const ApplySendForm = async () => {
     setSendForm(true);
     if (message === "" || message === " " || selectedCovers.length <= 0) return;
     const phones = [];
-    // eslint-disable-next-line array-callback-return
-    selectedCovers.map((item) => {
-      phones.push(covers.find((x) => x.CoverId === item.id).CoverPhoneNumber);
-    });
+
+    if (selectedCovers[0].id === 0) {
+      // eslint-disable-next-line array-callback-return
+      covers.map((item) => {
+        phones.push(item.CoverPhoneNumber);
+      });
+    } else {
+      // eslint-disable-next-line array-callback-return
+      selectedCovers.map((item) => {
+        phones.push(covers.find((x) => x.CoverId === item.id).CoverPhoneNumber);
+      });
+    }
 
     const res = await post(phones, message);
     if (res.serviceStatus === "loaded") {
