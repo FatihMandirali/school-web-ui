@@ -15,16 +15,17 @@ import MDInput from "../../../components/MDInput";
 import MDBox from "../../../components/MDBox";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
-import { validationSchema } from "../validations/faceStudentValidation";
+import { validationSchema } from "../validations/updateFaceStudentValidation";
 import MDSnackbar from "../../../components/MDSnackbar";
-import useCreate from "../service/useCreate";
+import useUpdate from "../service/useUpdate";
+import useDelete from "../service/useDelete";
 import useLessonList from "../service/useLessonList";
 import MDButton from "../../../components/MDButton";
 
 function DetailFaceStudentComponent(props) {
-  console.log(props);
   const { getLesson } = useLessonList();
-  const { service: postService, post } = useCreate();
+  const { service: postService, post } = useUpdate();
+  const { serviceDelete, postDelete } = useDelete();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
@@ -114,7 +115,7 @@ function DetailFaceStudentComponent(props) {
       const res = await post(
         studentId,
         values.StudentName,
-        values.StudentSurName,
+        values.StudentSurname,
         values.StudentTcOrPassNo,
         values.StudentEmail,
         phone,
@@ -137,6 +138,7 @@ function DetailFaceStudentComponent(props) {
         LessonId: event.target.value,
         LessonName: lessons.find((x) => x.LessonId === event.target.value).LessonName,
         LessonCount: 0,
+        LessonRemainder: 0,
       },
     ]);
     const newLesson = lessons.filter((x) => x.LessonId !== event.target.value);
@@ -149,8 +151,38 @@ function DetailFaceStudentComponent(props) {
     setChooseLessons(chooseLesson.filter((x) => x.LessonId !== id));
   };
 
-  const onChangeLessonCount = (count, id) => {
-    chooseLesson.find((x) => x.LessonId === id).LessonCount = parseInt(count, 10);
+  const onChangeLessonCount = (count, id, remainderCount) => {
+    setChooseLessons([
+      ...chooseLesson.filter((x) => x.LessonId !== id),
+      {
+        LessonId: id,
+        LessonName: subLessons.find((x) => x.LessonId === id).LessonName,
+        LessonCount: parseInt(count, 10),
+        LessonRemainder: remainderCount,
+      },
+    ]);
+  };
+
+  const onChangeLessonRemainderCount = (count, id, lessonCount) => {
+    setChooseLessons([
+      ...chooseLesson.filter((x) => x.LessonId !== id),
+      {
+        LessonId: id,
+        LessonName: subLessons.find((x) => x.LessonId === id).LessonName,
+        LessonCount: lessonCount,
+        LessonRemainder: count,
+      },
+    ]);
+  };
+
+  const btnDeleteBranch = async () => {
+    const res = await postDelete(studentId);
+    if (res.serviceStatus === "loaded") {
+      window.location.href = `/faceStudent`;
+    } else {
+      setErrorMsg("Silme yapılırken bir hata oluştu");
+      openErrorSB();
+    }
   };
 
   return (
@@ -247,7 +279,6 @@ function DetailFaceStudentComponent(props) {
                   id="demo-simple-select-autowidth"
                   onChange={(event) => lessonChoose(event)}
                   defaultValue={0}
-                  name="lessonId"
                   className="specificSelectBox"
                 >
                   <MenuItem key={0} value={0}>
@@ -287,10 +318,28 @@ function DetailFaceStudentComponent(props) {
                     </b>
                     <MDInput
                       type="number"
-                      onChange={(event) => onChangeLessonCount(event.target.value, item.LessonId)}
-                      label="Ders Sayısı"
+                      onChange={(event) =>
+                        onChangeLessonCount(event.target.value, item.LessonId, item.LessonRemainder)
+                      }
+                      label="Toplam Ders Sayısı"
                       fullWidth
                       value={item.LessonCount}
+                    />
+                    <br />
+                    <br />
+                    <MDInput
+                      type="number"
+                      onChange={(event) =>
+                        onChangeLessonRemainderCount(
+                          event.target.value,
+                          item.LessonId,
+                          item.LessonCount
+                        )
+                      }
+                      label="Kalan Ders Sayısı"
+                      disabled
+                      fullWidth
+                      value={item.LessonRemainder}
                     />
                     <Button>
                       <ClearIcon
@@ -310,6 +359,18 @@ function DetailFaceStudentComponent(props) {
                 <MDBox mt={4} mb={1}>
                   <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
                     Güncelle
+                  </MDButton>
+                </MDBox>
+              )}
+
+              {serviceDelete.serviceStatus === "loading" ? (
+                <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                  <CircularProgress color="secondary" />
+                </Stack>
+              ) : (
+                <MDBox mt={4} mb={1}>
+                  <MDButton type="button" onClick={() => btnDeleteBranch()} color="error" fullWidth>
+                    SİL
                   </MDButton>
                 </MDBox>
               )}

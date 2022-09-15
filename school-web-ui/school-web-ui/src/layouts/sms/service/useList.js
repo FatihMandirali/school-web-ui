@@ -1,35 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import httpservice from "../../../httpservice/httpservice";
 
-const useDelete = () => {
-  const [serviceDelete, setService] = useState({ serviceStatus: "idle" });
-
-  const postDelete = async (studentId) =>
+const useList = (page1) => {
+  const [service, setService] = useState({ serviceStatus: "loading" });
+  const getData = async (
+    page // eslint-disable-next-line no-async-promise-executor
+  ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-
-        const res = await httpservice.delete(`Students/Delete?studentId=${studentId}`, {
-          headers: { "content-type": "application/json" },
-        });
-
+        console.log(page);
+        const res = await httpservice.post(`Sms/AskBalance`);
         console.log(res);
-
         const value = {
-          ...res.data,
+          data: res.data,
           serviceStatus: "loaded",
         };
-
+        console.log(value);
         setService(value);
         resolve(value);
       } catch (error) {
+        console.log("errorr", error);
         setService({ serviceStatus: "failed" });
         resolve({ serviceStatus: "failed", errorMessage: error.response.data });
       }
     });
 
-  return { serviceDelete, postDelete };
+  useEffect(() => {
+    getData(page1);
+  }, []);
+
+  return { service, get: getData };
 };
 
-export default useDelete;
+export default useList;

@@ -109,7 +109,7 @@ function CreateFinance() {
       {
         lessonId: event.target.value,
         name: lessons.find((x) => x.LessonId === event.target.value).LessonName,
-        count: 0,
+        lessonCount: 0,
       },
     ]);
     const newLesson = lessons.filter((x) => x.LessonId !== event.target.value);
@@ -123,7 +123,7 @@ function CreateFinance() {
   };
 
   const onChangeLessonCount = (count, id) => {
-    chooseLesson.find((x) => x.lessonId === id).count = parseInt(count, 10);
+    chooseLesson.find((x) => x.lessonId === id).lessonCount = parseInt(count, 10);
   };
 
   return (
@@ -156,13 +156,7 @@ function CreateFinance() {
                 )}
               </MDBox>
               <MDBox mb={2}>
-                <MDInput
-                  type="text"
-                  onChange={handleChange}
-                  label="Tc"
-                  fullWidth
-                  name="idNo"
-                />
+                <MDInput type="text" onChange={handleChange} label="Tc" fullWidth name="idNo" />
                 {sendForm === true && errors.idNo && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
                     <Alert severity="error">{errors.idNo}</Alert>

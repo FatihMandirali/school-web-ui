@@ -4,21 +4,13 @@ import httpservice from "../../../httpservice/httpservice";
 const useCreate = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = (name, surName, idNo, email, phone, chooseLesson) =>
+  const post = (phones, message) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        const request = {
-          name,
-          surName,
-          idNo,
-          email,
-          phone,
-          lessonCountDetails: chooseLesson,
-        };
-        console.log(request);
-        const res = await httpservice.post(`FaceStudent/AddFaceStudent`, request, {
+        console.log(phones);
+        const res = await httpservice.post(`Sms/SendSms?Message=${message}`, phones, {
           headers: { "content-type": "application/json" },
         });
 

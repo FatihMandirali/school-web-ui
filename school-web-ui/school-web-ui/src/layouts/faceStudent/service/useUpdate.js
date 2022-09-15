@@ -1,33 +1,38 @@
 import { useState } from "react";
 import httpservice from "../../../httpservice/httpservice";
 
-const useUpdate = () => {
+const useCreate = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (finansTypeId, finansTypeName) =>
+  const post = (studentId, name, surName, idNo, email, phone, chooseLesson) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        console.log(finansTypeId, finansTypeName);
         const request = {
-          finansTypeId,
-          finansTypeName,
+          studentId,
+          name,
+          surName,
+          idNo,
+          email,
+          phone,
+          lessonCountDetails: chooseLesson,
         };
-        const res = await httpservice.post(`FinansType/AddOrUpdate`, request, {
+        console.log(request);
+        const res = await httpservice.post(`FaceStudent/AddFaceStudent`, request, {
           headers: { "content-type": "application/json" },
         });
-
-        console.log(res);
 
         const value = {
           ...res.data,
           serviceStatus: "loaded",
         };
+        console.log(value);
 
         setService(value);
         resolve(value);
       } catch (error) {
+        console.log(error);
         setService({ serviceStatus: "failed" });
         resolve({ serviceStatus: "failed", errorMessage: error.response.data });
       }
@@ -36,4 +41,4 @@ const useUpdate = () => {
   return { service, post };
 };
 
-export default useUpdate;
+export default useCreate;

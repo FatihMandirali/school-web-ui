@@ -82,6 +82,7 @@ import StudentAnnouncement from "layouts/studentsmenu/studentannouncement";
 import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 import FaceStudentDetail from "layouts/faceStudent/detailFaceStudent";
+import Sms from "layouts/sms";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -97,6 +98,7 @@ import FaceIcon from "@mui/icons-material/Face";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import PaymentIcon from "@mui/icons-material/Payment";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import SmsIcon from "@mui/icons-material/Sms";
 
 const routes = [
   {
@@ -251,7 +253,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Kayıtlı Öğrenci İşlemleri",
+    name: "Kayıtlı Öğrenciler",
     key: "student_records",
     icon: <SchoolIcon />,
     route: "/student_records",
@@ -261,7 +263,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Kayıtsız Öğrenci İşlemleri",
+    name: "Kayıtsız Öğrenciler",
     key: "student_notrecords",
     icon: <EditOffIcon />,
     route: "/student_notrecords",
@@ -558,6 +560,16 @@ const routes = [
     component: <FaceStudentDetail />,
     role: "Admin",
     isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Sms İşlemleri",
+    key: "sms",
+    icon: <SmsIcon />,
+    route: "/sms",
+    component: <Sms />,
+    role: "Admin",
+    isActive: true,
   },
 ];
 
