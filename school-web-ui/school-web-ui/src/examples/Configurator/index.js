@@ -42,7 +42,12 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Modal from "@mui/material/Modal";
 import * as React from "react";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { sessionStorageService } from "../../httpservice/sessionStorageService";
+import MDInput from "../../components/MDInput";
+import useUpdate from "./services/useUpdate";
+import MDSnackbar from "../../components/MDSnackbar";
 
 const style = {
   position: "absolute",
@@ -68,6 +73,50 @@ function Configurator() {
   } = controller;
   const [disabled, setDisabled] = useState(false);
   const [opening, setOpening] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [sendForm, setSendForm] = useState(false);
+  const [availablePassword, setAvailablePassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
+  const { post } = useUpdate();
+
+  const [successSB, setSuccessSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="İşlem Başarılı"
+      content="Tebrikler, Şifre başarıyla güncellendi."
+      dateTime="şimdi"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Hata"
+      content={errorMsg}
+      dateTime="now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
+
   const sidenavColors = ["primary", "dark", "info", "success", "warning", "error"];
 
   // Use the useEffect hook to change the button state for the sidenav type based on window size.
@@ -141,6 +190,34 @@ function Configurator() {
       color: darkMode ? background.sidenav : white.main,
     },
   });
+
+  const btnChangePassword = async () => {
+    setSendForm(true);
+    if (
+      availablePassword === "" ||
+      availablePassword === " " ||
+      newPasswordRepeat === "" ||
+      newPasswordRepeat === " " ||
+      newPassword === "" ||
+      newPassword === " " ||
+      newPassword !== newPasswordRepeat
+    ) {
+      return;
+    }
+    const res = await post(availablePassword, newPassword);
+    if (res.serviceStatus === "loaded") {
+      openSuccessSB();
+      setOpenDialog(false);
+      sessionStorageService.returnClearToken();
+      window.location.href = "/authentication/sign-in";
+    } else {
+      setErrorMsg("Şifre güncellenirken bir hata oluştu");
+      openErrorSB();
+    }
+  };
+  const changePasswordDialog = () => {
+    setOpenDialog(true);
+  };
 
   return (
     <ConfiguratorRoot variant="permanent" ownerState={{ openConfigurator }}>
@@ -300,11 +377,27 @@ function Configurator() {
           mt={3}
           lineHeight={1}
         >
+          <MDButton
+            color="info"
+            variant="gradient"
+            onClick={() => changePasswordDialog()}
+            fullWidth
+          >
+            ŞİFRE DEĞİŞTİR
+          </MDButton>
+        </MDBox>
+        <Divider />
+        <MDBox
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={3}
+          lineHeight={1}
+        >
           <MDButton color="dark" variant="gradient" onClick={() => logOut()} fullWidth>
             Çıkış Yap
           </MDButton>
         </MDBox>
-        <Divider />
       </MDBox>
       <Modal
         open={opening}
@@ -332,6 +425,61 @@ function Configurator() {
           </Stack>
         </Box>
       </Modal>
+      <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Şifre Değiştir</DialogTitle>
+        <DialogContent>
+          <MDBox mt={2} mb={2}>
+            <MDInput
+              type="password"
+              onChange={(event) => setAvailablePassword(event.target.value)}
+              label="Mevcut Şifre"
+              fullWidth
+              name="availablePassword"
+            />
+            {sendForm === true && availablePassword === "" && (
+              <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="error">Lütfen mevcut şifrenizi girin</Alert>
+              </Stack>
+            )}
+          </MDBox>
+          <MDBox mb={2}>
+            <MDInput
+              type="password"
+              onChange={(event) => setNewPassword(event.target.value)}
+              label="Yeni Şifre"
+              fullWidth
+              name="newPassword"
+            />
+            {sendForm === true && newPassword === "" && (
+              <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="error">Lütfen yeni şifrenizi girin</Alert>
+              </Stack>
+            )}
+          </MDBox>
+          <MDBox mb={2}>
+            <MDInput
+              type="password"
+              onChange={(event) => setNewPasswordRepeat(event.target.value)}
+              label="Yeni Şifre Tekrar"
+              fullWidth
+              name="newPasswordRepeat"
+            />
+            {sendForm === true && (newPasswordRepeat === "" || newPasswordRepeat !== newPassword) && (
+              <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="error">Lütfen yeni şifrenizi tekrar girin</Alert>
+              </Stack>
+            )}
+          </MDBox>
+          <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+            <MDTypography variant="h6" fontWeight="medium" />
+            <MDButton onClick={() => btnChangePassword()} variant="gradient" color="dark">
+              &nbsp;ŞİFRE DEĞİŞTİR
+            </MDButton>
+          </MDBox>
+        </DialogContent>
+      </Dialog>
+      {renderSuccessSB}
+      {renderErrorSB}
     </ConfiguratorRoot>
   );
 }

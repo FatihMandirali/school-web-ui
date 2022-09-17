@@ -11,7 +11,7 @@ const useList = (page1) => {
       try {
         setService({ serviceStatus: "loading" });
         console.log(page);
-        const res = await httpservice.post(`Sms/AskBalance`);
+        const res = await httpservice.get(`Sms/AskBalance`);
         console.log(res);
         const value = {
           data: res.data,
