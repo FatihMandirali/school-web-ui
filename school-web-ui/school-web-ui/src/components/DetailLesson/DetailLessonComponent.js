@@ -12,7 +12,6 @@ import { validationSchema } from "../../layouts/lessons/validations/lessonValida
 import MDSnackbar from "../MDSnackbar";
 
 function DetailCourseType(props) {
-  console.log(props);
   const { post, service } = useUpdate();
   const { postDelete, serviceDelete } = useDelete();
   const [sendForm, setSendForm] = useState(false);

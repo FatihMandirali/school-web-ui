@@ -17,8 +17,6 @@ const useDelete = () => {
           }
         );
 
-        console.log(res);
-
         const value = {
           ...res.data,
           serviceStatus: "loaded",

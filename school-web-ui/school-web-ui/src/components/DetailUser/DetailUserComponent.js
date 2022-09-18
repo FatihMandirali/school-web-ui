@@ -17,7 +17,6 @@ import MDSnackbar from "../MDSnackbar";
 
 function CreateUserComponent(props) {
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  console.log(props);
   const { service: postService, post } = useUpdate();
   const { serviceDelete, postDelete } = useDelete();
   const { serviceBranch } = useBranchList();

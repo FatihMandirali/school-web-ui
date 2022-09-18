@@ -14,7 +14,6 @@ const useDetail = (id) => {
           data: res.data,
           serviceStatus: "loaded",
         };
-        console.log(value);
         setServiceDetail(value);
         resolve(value);
       } catch (error) {

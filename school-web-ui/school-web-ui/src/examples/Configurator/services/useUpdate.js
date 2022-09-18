@@ -20,7 +20,6 @@ const useUpdate = () => {
         const value = {
           serviceStatus: "loaded",
         };
-        console.log(value);
         setService(value);
         resolve(value);
       } catch (error) {

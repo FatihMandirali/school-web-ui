@@ -19,7 +19,6 @@ import useClassList from "../../students/service/useClassList";
 import useLessonList from "../service/useLessonList";
 
 function CreateTeacher(props) {
-  console.log(props);
   const { serviceLesson, getLesson } = useLessonList();
   const { serviceClass, getClass } = useClassList();
   const { serviceBranch, getBranch } = useBranchList();

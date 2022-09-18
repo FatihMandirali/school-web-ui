@@ -1,6 +1,4 @@
 const prepareRequestData = async (data, classId) => {
-  console.log(data);
-
   const rq = [];
 
   // eslint-disable-next-line array-callback-return

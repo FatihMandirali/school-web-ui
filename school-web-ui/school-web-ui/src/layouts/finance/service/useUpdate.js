@@ -9,7 +9,6 @@ const useUpdate = () => {
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        console.log(finansTypeId, finansTypeName);
         const request = {
           finansTypeId,
           finansTypeName,
@@ -17,8 +16,6 @@ const useUpdate = () => {
         const res = await httpservice.post(`FinansType/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },
         });
-
-        console.log(res);
 
         const value = {
           ...res.data,

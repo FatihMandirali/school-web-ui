@@ -66,7 +66,6 @@ function Tables({ id, lessons, teachers }) {
   useEffect(async () => {
     const res = await getLessonProgram(id);
     if (res.serviceStatus === "loaded") {
-      console.log(res.data);
       setProgram(res.data);
     }
   }, []);
@@ -139,11 +138,9 @@ function Tables({ id, lessons, teachers }) {
     setOpenDialog(false);
   };
   const onChangeTeacher = (event) => {
-    console.log(event);
     setTeacherId(event.target.value);
   };
   const onChangeLesson = (event) => {
-    console.log(`lesson ${event.target.value}`);
     setLessonId(event.target.value);
   };
 
@@ -159,7 +156,6 @@ function Tables({ id, lessons, teachers }) {
   };
 
   const saveLessonProgram = async () => {
-    console.log(program);
     const res = await post(program, id);
     if (res.serviceStatus === "loaded") {
       openSuccessSB();

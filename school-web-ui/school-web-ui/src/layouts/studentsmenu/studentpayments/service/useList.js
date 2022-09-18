@@ -8,12 +8,10 @@ const useList = (page1) => {
       setService({ serviceStatus: "loading" });
       if (id === undefined) return;
       const res = await httpservice.get(`StudentPayment/StudentPaymentList?studentId=${id}`);
-      console.log(res);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
       };
-      console.log(value);
       setService(value);
     } catch (error) {
       console.log("errorr", error);

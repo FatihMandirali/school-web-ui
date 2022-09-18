@@ -35,12 +35,10 @@ const handleTokenValidity = () =>
       logout();
       // eslint-disable-next-line prefer-promise-reject-errors
       reject(true);
-      console.log("ACCESS_TOKEN == null || STATE == null");
     } else {
       const isTokenValid = checkAccessTokenIsValid();
 
       if (!isTokenValid) {
-        console.log("!isTokenValid");
         logout();
         // eslint-disable-next-line prefer-promise-reject-errors
         reject(false);

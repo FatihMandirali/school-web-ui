@@ -16,7 +16,6 @@ const useLessonByProgramList = () => {
           data: res.data,
           serviceStatus: "loaded",
         };
-        console.log(value);
         setService(value);
         resolve(value);
       } catch (error) {

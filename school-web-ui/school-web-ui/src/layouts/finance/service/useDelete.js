@@ -14,8 +14,6 @@ const useDelete = () => {
           headers: { "content-type": "application/json" },
         });
 
-        console.log(res);
-
         const value = {
           ...res.data,
           serviceStatus: "loaded",

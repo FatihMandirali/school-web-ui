@@ -15,12 +15,10 @@ const useCreate = () => {
           coverEmail,
           coverPhoneNumber: coverPhoneNumber.replace(/\s/g, "").substring(1),
         };
-        console.log(request);
         const res = await httpservice.post(`Cover/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },
         });
 
-        console.log(res);
 
         const value = {
           ...res.data,

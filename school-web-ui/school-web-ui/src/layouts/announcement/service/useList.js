@@ -6,14 +6,11 @@ const useList = () => {
   const getData = async (locationId) => {
     try {
       setService({ serviceStatus: "loading" });
-      console.log(locationId);
       const res = await httpservice.get(`Announcements/AllList`);
-      console.log(res);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
       };
-      console.log(value);
       setService(value);
     } catch (error) {
       console.log("errorr", error);

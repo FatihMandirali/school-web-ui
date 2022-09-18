@@ -20,7 +20,6 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import Footer from "examples/Footer";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -199,7 +198,6 @@ function Tables() {
       </Modal>
       {renderSuccessSB}
       {renderErrorSB}
-      <Footer />
     </DashboardLayout>
   );
 }

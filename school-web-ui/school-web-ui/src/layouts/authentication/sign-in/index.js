@@ -107,7 +107,6 @@ function Basic() {
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
       const res = await post(values.email, values.password, values.roleName);
-      console.log(res);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
         jwtDecode.returnSetTokeSave(res.token);

@@ -7,12 +7,10 @@ const useList = () => {
     try {
       setService({ serviceStatus: "loading" });
       const res = await httpservice.get(`Announcements/List?locationId=1`);
-      console.log(res);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
       };
-      console.log(value);
       setService(value);
     } catch (error) {
       console.log("errorr", error);

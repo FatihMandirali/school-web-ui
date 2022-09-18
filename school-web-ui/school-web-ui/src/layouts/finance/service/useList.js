@@ -6,14 +6,11 @@ const useList = (page1) => {
   const getData = async (page) => {
     try {
       setService({ serviceStatus: "loading" });
-      console.log(page);
       const res = await httpservice.get(`FinansType/List`);
-      console.log(res);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
       };
-      console.log(value);
       setService(value);
     } catch (error) {
       console.log("errorr", error);

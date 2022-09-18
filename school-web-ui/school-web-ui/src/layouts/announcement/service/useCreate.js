@@ -17,7 +17,6 @@ const useCreate = () => {
           relaseDate: createdDate,
           endDate: sharingEndDate,
         };
-        console.log(request);
         const res = await httpservice.post(`Announcements/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },
         });
@@ -26,12 +25,10 @@ const useCreate = () => {
           ...res.data,
           serviceStatus: "loaded",
         };
-        console.log(value);
 
         setService(value);
         resolve(value);
       } catch (error) {
-        console.log(error);
         setService({ serviceStatus: "failed" });
         resolve({ serviceStatus: "failed", errorMessage: error.response.data });
       }

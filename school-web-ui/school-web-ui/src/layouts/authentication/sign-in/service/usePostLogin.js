@@ -8,14 +8,12 @@ const usePost = () => {
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
-        console.log(userName, password);
         setService({ serviceStatus: "loading" });
         const request = {
           userName,
           password,
           roleName,
         };
-        console.log(request);
         const res = await httpservice.post(`Login`, request, {
           headers: { "content-type": "application/json" },
         });

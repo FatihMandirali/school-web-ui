@@ -11,12 +11,9 @@ const useUpdate = () => {
       try {
         setService({ serviceStatus: "loading" });
         const request = await lessonProgram(data, id);
-        console.log(request);
         const res = await httpservice.post(`LessonPrograming/ProgramAddOrUpdate`, request, {
           headers: { "content-type": "application/json" },
         });
-
-        console.log(res);
 
         const value = {
           ...res.data,
