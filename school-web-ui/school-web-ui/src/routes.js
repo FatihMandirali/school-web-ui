@@ -76,6 +76,7 @@ import Oneonone from "layouts/oneonone";
 import OneononeCreate from "layouts/oneonone/createOneOnOne";
 import CoverStudents from "layouts/covermenu/coverstudents";
 import CoverPayments from "layouts/covermenu/coverpayments";
+import CoverNotJoin from "layouts/covermenu/covernotjoin";
 import CoverAnnouncement from "layouts/covermenu/coverannouncement";
 import TeacherAnnouncement from "layouts/teachermenu/teacherannouncement";
 import TeacherOneOnOne from "layouts/teachermenu/teacheroneonone";
@@ -103,6 +104,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import SmsIcon from "@mui/icons-material/Sms";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
 
 const routes = [
   {
@@ -202,6 +204,16 @@ const routes = [
     icon: <PaymentIcon />,
     route: "/coverPayments",
     component: <CoverPayments />,
+    role: "Cover",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Devamsızlıklar",
+    key: "coverNotJoin",
+    icon: <RemoveDoneIcon />,
+    route: "/coverNotJoin",
+    component: <CoverNotJoin />,
     role: "Cover",
     isActive: true,
   },

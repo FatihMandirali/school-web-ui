@@ -107,6 +107,7 @@ function CreateStudent() {
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = "/student_notrecords";
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
