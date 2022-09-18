@@ -8,6 +8,7 @@ axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(`error => => ${error}`);
     if (error.response.status === 401) {
       window.location.href = "/authentication/sign-in";
     }
