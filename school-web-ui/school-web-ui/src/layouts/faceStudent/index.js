@@ -205,7 +205,6 @@ function Tables() {
             </MDButton>
           </Link>
         </MDBox>
-        <br />
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 550, width: "100%" }}>
             <DataGrid
