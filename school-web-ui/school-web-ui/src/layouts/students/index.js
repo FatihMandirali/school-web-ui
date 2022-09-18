@@ -32,6 +32,7 @@ import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import localizedTextsMap from "../../tableContentLanguage";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -135,6 +136,7 @@ function Tables() {
               columns={columns}
               pageSize={8}
               pagination
+              localeText={localizedTextsMap}
               getRowId={(row) => row.StudentId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}

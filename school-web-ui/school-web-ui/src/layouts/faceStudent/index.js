@@ -52,6 +52,7 @@ import { validationSchema } from "../students/validations/studentPaymentValidati
 import MDSnackbar from "../../components/MDSnackbar";
 import usePostPaymentPlan from "../students/service/usePostPaymentPlan";
 import useChangeStatus from "../students/service/useChangeStatus";
+import localizedTextsMap from "../../tableContentLanguage";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -212,6 +213,7 @@ function Tables() {
               columns={columns}
               pageSize={8}
               pagination
+              localeText={localizedTextsMap}
               getRowId={(row) => row.StudentId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}

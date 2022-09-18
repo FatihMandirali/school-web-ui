@@ -27,6 +27,7 @@ import useList from "./service/useList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import { jwtDecode } from "../../../httpservice/jwtDecode";
 import { sessionStorageService } from "../../../httpservice/sessionStorageService";
+import localizedTextsMap from "../../../tableContentLanguage";
 
 function Tables() {
   const { service, get } = useList();
@@ -77,6 +78,7 @@ function Tables() {
               columns={columns}
               pageSize={9}
               pagination
+              localeText={localizedTextsMap}
               getRowId={(row) => row.PaymentStudentId}
               rowsPerPageOptions={[5, 10, 15]}
               loading={service.serviceStatus === "loading"}

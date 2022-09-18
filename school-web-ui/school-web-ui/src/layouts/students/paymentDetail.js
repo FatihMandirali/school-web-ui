@@ -34,6 +34,7 @@ import MDButton from "../../components/MDButton";
 import usePutPaymentId from "./service/usePutPaymentId";
 import MDSnackbar from "../../components/MDSnackbar";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import localizedTextsMap from "../../tableContentLanguage";
 
 const style = {
   position: "absolute",
@@ -163,6 +164,7 @@ function Tables() {
               columns={columns}
               pageSize={100}
               pagination
+              localeText={localizedTextsMap}
               getRowId={(row) => row.PaymentStudentId}
               rowsPerPageOptions={[5, 10, 15]}
               loading={service.serviceStatus === "loading"}

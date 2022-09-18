@@ -36,6 +36,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import useRollCallList from "./service/useRollCallList";
 import useRollCallStudentList from "./service/useRollCallStudentList";
 import useMakeRollCall from "./service/useMakeRollCall";
+import localizedTextsMap from "../../tableContentLanguage";
 
 const style = {
   position: "absolute",
@@ -228,6 +229,7 @@ function Tables() {
               columns={columns}
               pageSize={15}
               pagination
+              localeText={localizedTextsMap}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
               checkboxSelection

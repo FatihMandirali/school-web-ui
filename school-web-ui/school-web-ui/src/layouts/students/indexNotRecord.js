@@ -53,6 +53,7 @@ import MDSnackbar from "../../components/MDSnackbar";
 import MDInput from "../../components/MDInput";
 import { validationSchema } from "./validations/studentPaymentValidation";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import localizedTextsMap from "../../tableContentLanguage";
 
 const style = {
   position: "absolute",
@@ -243,6 +244,7 @@ function Tables() {
               columns={columns}
               pageSize={8}
               pagination
+              localeText={localizedTextsMap}
               getRowId={(row) => row.StudentId}
               rowsPerPageOptions={[5, 10, 15]}
               onPageChange={(newPage) => changePage(newPage)}
