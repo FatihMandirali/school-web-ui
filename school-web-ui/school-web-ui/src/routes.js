@@ -78,6 +78,8 @@ import CoverStudents from "layouts/covermenu/coverstudents";
 import CoverPayments from "layouts/covermenu/coverpayments";
 import CoverAnnouncement from "layouts/covermenu/coverannouncement";
 import TeacherAnnouncement from "layouts/teachermenu/teacherannouncement";
+import TeacherOneOnOne from "layouts/teachermenu/teacheroneonone";
+import TeacherLessonProgram from "layouts/teachermenu/teacherLessonProgram";
 import StudentAnnouncement from "layouts/studentsmenu/studentannouncement";
 import StudentPayment from "layouts/studentsmenu/studentpayments";
 import FaceStudent from "layouts/faceStudent";
@@ -100,6 +102,7 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import PaymentIcon from "@mui/icons-material/Payment";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import SmsIcon from "@mui/icons-material/Sms";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 const routes = [
   {
@@ -149,6 +152,26 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/teacherAnnouncement",
     component: <TeacherAnnouncement />,
+    role: "Teacher",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Bire Bir Dersler",
+    key: "teacherOneOnOne",
+    icon: <SupervisorAccountIcon />,
+    route: "/teacherOneOnOne",
+    component: <TeacherOneOnOne />,
+    role: "Teacher",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ders Programı",
+    key: "teacherLessonProgram",
+    icon: <HistoryEduIcon />,
+    route: "/teacherLessonProgram",
+    component: <TeacherLessonProgram />,
     role: "Teacher",
     isActive: true,
   },
