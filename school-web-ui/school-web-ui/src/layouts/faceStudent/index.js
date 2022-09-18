@@ -51,6 +51,7 @@ import MDButton from "../../components/MDButton";
 import { validationSchema } from "../students/validations/studentPaymentValidation";
 import MDSnackbar from "../../components/MDSnackbar";
 import usePostPaymentPlan from "../students/service/usePostPaymentPlan";
+import useChangeStatus from "../students/service/useChangeStatus";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -63,7 +64,7 @@ function Tables() {
   const [sendForm, setSendForm] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
   const [installment, setInstallment] = useState(0);
-  const [isPaymentList] = useState(true);
+  const { postStatus } = useChangeStatus();
   const { serviceUpdate, post } = usePostPaymentPlan();
 
   const openSuccessSB = () => setSuccessSB(true);
@@ -97,27 +98,29 @@ function Tables() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Detay",
+      headerName: "İşlemler",
       width: 100,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
+      getActions: (params) => [
         <Tooltip title="Detay">
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(id)}
+            onClick={handleEditClick(params.row.StudentId)}
             color="inherit"
           />
         </Tooltip>,
-        <Tooltip title={isPaymentList ? "Ödeme Detay" : "Ödeme Planı Oluştur"}>
+        <Tooltip title={params.row.IsAnswered === 1 ? "Ödeme Detay" : "Ödeme Planı Oluştur"}>
           <GridActionsCellItem
-            icon={isPaymentList ? <PaymentIcon /> : <AddCardIcon />}
+            icon={params.row.IsAnswered === 1 ? <PaymentIcon /> : <AddCardIcon />}
             label="PaymentCreate"
             className="textPrimary"
             onClick={
-              isPaymentList ? handleStudentPaymentDetailClick(id) : handleNewPaymentClick(id)
+              params.row.IsAnswered === 1
+                ? handleStudentPaymentDetailClick(params.row.StudentId)
+                : handleNewPaymentClick(params.row.StudentId)
             }
             color="inherit"
           />
@@ -173,6 +176,7 @@ function Tables() {
 
       console.log(res);
       if (res.serviceStatus === "loaded") {
+        await postStatus(selectedId);
         openSuccessSB();
         window.location.href = "/faceStudent";
       } else {

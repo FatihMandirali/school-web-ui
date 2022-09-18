@@ -6,6 +6,8 @@ const usePaymentList = (page1) => {
   const getData = async (id) => {
     try {
       setService({ serviceStatus: "loading" });
+      console.log(id);
+      if (id === undefined) return;
       const res = await httpservice.get(`StudentPayment/StudentPaymentList?studentId=${id}`);
       const value = {
         data: res.data,
