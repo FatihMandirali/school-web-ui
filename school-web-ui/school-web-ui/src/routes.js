@@ -79,6 +79,7 @@ import CoverPayments from "layouts/covermenu/coverpayments";
 import CoverAnnouncement from "layouts/covermenu/coverannouncement";
 import TeacherAnnouncement from "layouts/teachermenu/teacherannouncement";
 import StudentAnnouncement from "layouts/studentsmenu/studentannouncement";
+import StudentPayment from "layouts/studentsmenu/studentpayments";
 import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 import FaceStudentDetail from "layouts/faceStudent/detailFaceStudent";
@@ -128,6 +129,16 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/studentAnnouncement",
     component: <StudentAnnouncement />,
+    role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödeme Planı",
+    key: "studentPaymentPlan",
+    icon: <PaymentIcon />,
+    route: "/studentPaymentPlan",
+    component: <StudentPayment />,
     role: "Student",
     isActive: true,
   },
