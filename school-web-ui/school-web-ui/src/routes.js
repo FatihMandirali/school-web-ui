@@ -385,7 +385,7 @@ const routes = [
   {
     type: "collapse",
     name: "Kurs İşlemleri",
-    key: "courseType",
+    key: "courseTypes",
     icon: <LocalLibraryIcon />,
     route: "/courseTypes",
     component: <CourseType />,
