@@ -6,49 +6,36 @@ import { useFormik } from "formik";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
-import MuiPhoneNumber from "material-ui-phone-number";
-import MDInput from "../../../components/MDInput";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import MDButton from "../../../components/MDButton";
 import MDBox from "../../../components/MDBox";
 import useUpdate from "../service/useUpdate";
-import useDelete from "../service/useDelete";
-import useBranchList from "../service/useBranchList";
 import { validationSchema } from "../validations/userValidation";
 import MDSnackbar from "../../../components/MDSnackbar";
-import useClassList from "../../students/service/useClassList";
-import useLessonList from "../service/useLessonList";
+import useTeacherList from "../service/useTeacherList";
 
 function CreateTeacher(props) {
-  const { serviceLesson, getLesson } = useLessonList();
-  const { serviceClass, getClass } = useClassList();
-  const { serviceBranch, getBranch } = useBranchList();
+  const { service, get } = useTeacherList();
   const { service: postService, post } = useUpdate();
-  const { serviceDelete, postDelete } = useDelete();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [allowTeacherId] = useState(props.allowTeacherId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [branchId] = useState(props.branchId);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [classId] = useState(props.classId);
+  const [startClock, setStartClock] = useState(props.startClock);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [emailAdress] = useState(props.emailAdress);
+  const [endClock, setEndClock] = useState(props.endClock);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [allowDay] = useState(props.allowDay);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [lessonId] = useState(props.lessonId);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [teacherName] = useState(props.teacherName);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [teacherSurname] = useState(props.teacherSurname);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [teacherPhone, setTeacherPhone] = useState(props.teacherPhone);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [tcOrPasaportNo] = useState(props.tcOrPasaportNo);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [adminName] = useState(props.adminName);
-  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
-  const [adminSurname] = useState(props.adminSurname);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [teacherId] = useState(props.teacherId);
 
@@ -85,37 +72,18 @@ function CreateTeacher(props) {
     />
   );
   useEffect(async () => {
-    await getLesson();
-    await getClass(branchId);
-    await getBranch();
+    await get();
   }, []);
 
-  const { handleSubmit, handleChange, values, errors } = useFormik({
+  const { handleSubmit, handleChange, errors } = useFormik({
     initialValues: {
-      teacherName,
-      teacherSurname,
-      tcPaspNo: tcOrPasaportNo,
-      emailAdress,
-      branchId,
-      lessonId,
-      classId,
       teacherId,
-      teacherPhone,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(
-        teacherId,
-        values.teacherName,
-        values.teacherSurname,
-        values.tcPaspNo,
-        values.emailAdress,
-        values.branchId,
-        teacherPhone,
-        values.lessonId,
-        values.classId
-      );
+      console.log(values);
+      const res = await post(allowTeacherId,values.teacherId, `${startClock}-${endClock}`, values.dayId);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
       } else {
@@ -125,136 +93,14 @@ function CreateTeacher(props) {
     },
   });
 
-  useEffect(async () => {
-    console.log(values.branchId);
-    if (values.branchId <= 0) return;
-    await getClass(values.branchId);
-  }, [values.branchId]);
-
-  const btnDeleteTeacher = async () => {
-    await postDelete(teacherId);
-    window.location.href = `/teacher`;
-  };
-
   return (
     <>
       <Card>
         <form onSubmit={handleSubmit}>
-          <MDBox pt={4} pb={3} px={3}>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                onChange={handleChange}
-                label="Adı"
-                fullWidth
-                name="teacherName"
-                value={values.teacherName}
-              />
-              {sendForm === true && errors.teacherName && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">{errors.teacherName}</Alert>
-                </Stack>
-              )}
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                onChange={handleChange}
-                label="Soyad"
-                fullWidth
-                name="teacherSurname"
-                value={values.teacherSurname}
-              />
-              {sendForm === true && errors.teacherSurname && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">{errors.teacherSurname}</Alert>
-                </Stack>
-              )}
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                name="tcPaspNo"
-                type="text"
-                onChange={handleChange}
-                label="TC ve Pasaport Numarası"
-                fullWidth
-                value={values.tcPaspNo}
-              />
-              {sendForm === true && errors.tcPaspNo && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">{errors.tcPaspNo}</Alert>
-                </Stack>
-              )}
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                name="emailAdress"
-                type="text"
-                onChange={handleChange}
-                label="Mail"
-                fullWidth
-                value={values.emailAdress}
-              />
-              {sendForm === true && errors.emailAdress && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">{errors.emailAdress}</Alert>
-                </Stack>
-              )}
-            </MDBox>
-            <MDBox mb={2}>
-              <MuiPhoneNumber
-                onChange={(e) => setTeacherPhone(e)}
-                defaultCountry="tr"
-                name="coverPhoneNumber"
-                fullWidth
-                value={teacherPhone}
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                name="admininfo"
-                disabled
-                type="text"
-                onChange={handleChange}
-                label="Admin"
-                fullWidth
-                value={`${adminName} ${adminSurname}`}
-              />
-            </MDBox>
-
-            {serviceLesson.serviceStatus === "loaded" && (
+          <MDBox pt={5} pb={3} px={3}>
+            {service.serviceStatus === "loaded" && (
               <FormControl mb={5} fullWidth>
-                <InputLabel id="demo-simple-select-filled-label">Ders</InputLabel>
-                <Select
-                  label="Ders"
-                  displayEmpty
-                  variant="outlined"
-                  margin="dense"
-                  fullWidth
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  onChange={handleChange}
-                  defaultValue={values.lessonId}
-                  name="lessonId"
-                  className="specificSelectBox"
-                >
-                  {serviceLesson.data.map((u) => (
-                    <MenuItem key={u.LessonId} value={u.LessonId}>
-                      {u.LessonName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {sendForm === true && errors.lessonId && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.lessonId}</Alert>
-                  </Stack>
-                )}
-              </FormControl>
-            )}
-
-            {serviceBranch.serviceStatus === "loaded" && (
-              <FormControl mb={5} fullWidth>
-                <InputLabel id="demo-simple-select-filled-label">Şube</InputLabel>
+                <InputLabel id="demo-simple-select-filled-label">Öğretmenler</InputLabel>
                 <Select
                   label="Şube"
                   displayEmpty
@@ -264,53 +110,113 @@ function CreateTeacher(props) {
                   labelId="demo-simple-select-autowidth-label"
                   id="demo-simple-select-autowidth"
                   onChange={handleChange}
-                  defaultValue={values.branchId}
-                  name="branchId"
+                  defaultValue={teacherId}
+                  name="teacherId"
                   className="specificSelectBox"
                 >
-                  {serviceBranch.data.map((u) => (
-                    <MenuItem key={u.BranchId} value={u.BranchId}>
-                      {u.BranchName}
+                  <MenuItem key={0} value={0}>
+                    Seçiniz
+                  </MenuItem>
+                  {service.data.map((u) => (
+                    <MenuItem key={u.TeacherId} value={u.TeacherId}>
+                      {u.TeacherName} {u.TeacherSurname}
                     </MenuItem>
                   ))}
                 </Select>
-                {sendForm === true && errors.branchId && (
+                {sendForm === true && errors.teacherId && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.branchId}</Alert>
+                    <Alert severity="error">{errors.teacherId}</Alert>
                   </Stack>
                 )}
               </FormControl>
             )}
 
-            {serviceClass.serviceStatus === "loaded" && (
-              <FormControl mb={5} fullWidth>
-                <InputLabel id="demo-simple-select-filled-label">Sınıfı</InputLabel>
-                <Select
-                  label="Sınıfı"
-                  displayEmpty
-                  variant="outlined"
-                  margin="dense"
-                  fullWidth
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  onChange={handleChange}
-                  defaultValue={values.classId}
-                  name="classId"
-                  className="specificSelectBox"
-                >
-                  {serviceClass.data.map((u) => (
-                    <MenuItem key={u.ClassId} value={u.ClassId}>
-                      {u.ClassName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {sendForm === true && errors.classId && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.classId}</Alert>
-                  </Stack>
-                )}
-              </FormControl>
-            )}
+            <FormControl mb={5} fullWidth>
+              <InputLabel id="demo-simple-select-filled-label">Günler</InputLabel>
+              <Select
+                label="Şube"
+                displayEmpty
+                variant="outlined"
+                margin="dense"
+                fullWidth
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                onChange={handleChange}
+                defaultValue={allowDay}
+                name="dayId"
+                className="specificSelectBox"
+              >
+                <MenuItem key={1} value={1}>
+                  Pazartesi
+                </MenuItem>
+                <MenuItem key={2} value={2}>
+                  Salı
+                </MenuItem>
+                <MenuItem key={3} value={3}>
+                  Çarşamba
+                </MenuItem>
+                <MenuItem key={4} value={4}>
+                  Perşembe
+                </MenuItem>
+                <MenuItem key={5} value={5}>
+                  Cuma
+                </MenuItem>
+                <MenuItem key={6} value={6}>
+                  Cumartesi
+                </MenuItem>
+                <MenuItem key={7} value={7}>
+                  Pazar
+                </MenuItem>
+              </Select>
+              {sendForm === true && errors.teacherId && (
+                <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Alert severity="error">{errors.teacherId}</Alert>
+                </Stack>
+              )}
+            </FormControl>
+
+            <Grid container spacing={0.5}>
+              <Grid textAlign="center" bgcolor="white" item xs={6}>
+                <Box mt={2}>
+                  <TextField
+                    id="time"
+                    label="Başlama Saati"
+                    type="time"
+                    defaultValue="07:30"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                    sx={{ width: 150 }}
+                    fullWidth
+                    value={startClock}
+                    onChange={(event) => setStartClock(event.target.value)}
+                  />
+                </Box>
+              </Grid>
+              <Grid textAlign="center" bgcolor="white" item xs={6}>
+                <Box mt={2}>
+                  <TextField
+                    id="time"
+                    label="Bitiş Saati"
+                    type="time"
+                    defaultValue="07:30"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                    sx={{ width: 150 }}
+                    fullWidth
+                    value={endClock}
+                    onChange={(event) => setEndClock(event.target.value)}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
 
             {postService.serviceStatus === "loading" ? (
               <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
@@ -320,17 +226,6 @@ function CreateTeacher(props) {
               <MDBox mt={4} mb={1}>
                 <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
                   Güncelle
-                </MDButton>
-              </MDBox>
-            )}
-            {serviceDelete.serviceStatus === "loading" ? (
-              <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
-                <CircularProgress color="secondary" />
-              </Stack>
-            ) : (
-              <MDBox mt={4} mb={1}>
-                <MDButton type="button" onClick={() => btnDeleteTeacher()} color="error" fullWidth>
-                  SİL
                 </MDButton>
               </MDBox>
             )}

@@ -9,7 +9,7 @@ const useList = (id) => {
     new Promise(async (resolve) => {
       try {
         setServiceDetail({ serviceStatus: "loading" });
-        const res = await httpservice.get(`Teachers/${id}`);
+        const res = await httpservice.get(`TeacherAllow/${id}`);
         const value = {
           data: res.data,
           serviceStatus: "loaded",

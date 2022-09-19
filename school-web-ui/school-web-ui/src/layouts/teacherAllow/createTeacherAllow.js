@@ -71,7 +71,7 @@ function CreateTeacherAllow() {
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(values.teacherId, `${startClock} - ${endClock}`, values.dayId);
+      const res = await post(values.teacherId, `${startClock}-${endClock}`, values.dayId);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
         window.location.href = "/teacher_allow";

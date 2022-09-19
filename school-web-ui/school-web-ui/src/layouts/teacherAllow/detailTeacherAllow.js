@@ -12,21 +12,17 @@ function CreateUser() {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Öğretmen Detay" />
+      <DashboardNavbar pageName="Öğretmen İzin Detay" />
       <MDBox>
         <Card>
           {serviceDetail.serviceStatus === "loaded" && (
             <DetailTeacherComponent
+              allowTeacherId={serviceDetail.data.AllowTeacherId}
               branchId={serviceDetail.data.BranchId}
-              classId={serviceDetail.data.ClassId}
-              emailAdress={serviceDetail.data.EmailAdress}
               lessonId={serviceDetail.data.LessonId}
-              teacherName={serviceDetail.data.TeacherName}
-              teacherSurname={serviceDetail.data.TeacherSurname}
-              teacherPhone={serviceDetail.data.TeacherPhone}
-              tcOrPasaportNo={serviceDetail.data.TcOrPasaportNo}
-              adminName={serviceDetail.data.AdminName}
-              adminSurname={serviceDetail.data.AdminSurname}
+              startClock={serviceDetail.data.Clock.split("-")[0]}
+              endClock={serviceDetail.data.Clock.split("-")[1]}
+              allowDay={serviceDetail.data.AllowDay}
               teacherId={serviceDetail.data.TeacherId}
             />
           )}
