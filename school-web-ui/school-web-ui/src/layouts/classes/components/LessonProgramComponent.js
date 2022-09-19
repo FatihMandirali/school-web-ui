@@ -527,6 +527,7 @@ function Tables({ id, lessons, teachers }) {
                     defaultValue={0}
                     name="teacherId"
                     onChange={onChangeTeacher}
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz
@@ -561,6 +562,7 @@ function Tables({ id, lessons, teachers }) {
                     defaultValue={0}
                     name="lessonId"
                     onChange={onChangeLesson}
+                    className="specificSelectBox"
                   >
                     <MenuItem key={0} value={0}>
                       Seçiniz

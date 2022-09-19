@@ -87,6 +87,8 @@ import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 import FaceStudentDetail from "layouts/faceStudent/detailFaceStudent";
 import Sms from "layouts/sms";
+import TeacherAllow from "layouts/teacherAllow";
+import TeacherAllowCreate from "layouts/teacherAllow/createTeacherAllow";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -105,6 +107,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import SmsIcon from "@mui/icons-material/Sms";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
+import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
 
 const routes = [
   {
@@ -616,6 +619,26 @@ const routes = [
     component: <Sms />,
     role: "Admin",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İzinleri",
+    key: "teacher_allow",
+    icon: <AirlineSeatIndividualSuiteIcon />,
+    route: "/teacher_allow",
+    component: <TeacherAllow />,
+    role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğretmen İzinleri",
+    key: "teacher_allow",
+    icon: <AirlineSeatIndividualSuiteIcon />,
+    route: "/teacher_allow_create",
+    component: <TeacherAllowCreate />,
+    role: "Admin",
+    isActive: false,
   },
 ];
 
