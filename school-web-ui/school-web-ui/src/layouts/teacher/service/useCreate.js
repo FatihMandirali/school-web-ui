@@ -12,7 +12,8 @@ const useCreate = () => {
     branchId,
     phone,
     lessonId,
-    classId
+    classId,
+    isOneOnOne
   ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
@@ -27,6 +28,7 @@ const useCreate = () => {
           teacherPhone: phone,
           lessonId,
           classId,
+          isBusy: isOneOnOne ? 1 : 0,
         };
         const res = await httpservice.post(`Teachers/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },

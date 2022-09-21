@@ -91,7 +91,8 @@ function CreateTeacher() {
         values.branchId,
         phone,
         values.lessonId,
-        values.classId
+        values.classId,
+        isOneOnOne
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();

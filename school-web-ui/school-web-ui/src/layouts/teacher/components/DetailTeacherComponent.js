@@ -29,7 +29,6 @@ function CreateTeacher(props) {
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isOneOnOne, setIsOneOnOne] = useState(false);
 
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [branchId] = useState(props.branchId);
@@ -53,6 +52,8 @@ function CreateTeacher(props) {
   const [adminSurname] = useState(props.adminSurname);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [teacherId] = useState(props.teacherId);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [isBusy, setIsBusy] = useState(props.isBusy !== 0);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -116,7 +117,8 @@ function CreateTeacher(props) {
         values.branchId,
         teacherPhone,
         values.lessonId,
-        values.classId
+        values.classId,
+        isBusy
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -318,9 +320,9 @@ function CreateTeacher(props) {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={isOneOnOne}
+                    checked={isBusy}
                     onChange={(e) => {
-                      setIsOneOnOne(e.target.checked);
+                      setIsBusy(e.target.checked);
                     }}
                   />
                 }

@@ -13,7 +13,8 @@ const useUpdate = () => {
     branchId,
     teacherPhone,
     lessonId,
-    classId
+    classId,
+    isBusy
   ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
@@ -29,6 +30,7 @@ const useUpdate = () => {
           classId,
           teacherId,
           teacherPhone,
+          isBusy: isBusy ? 1 : 0,
         };
         const res = await httpservice.post(`Teachers/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },

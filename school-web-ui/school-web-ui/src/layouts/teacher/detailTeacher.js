@@ -18,6 +18,7 @@ function CreateUser() {
           {serviceDetail.serviceStatus === "loaded" && (
             <DetailTeacherComponent
               branchId={serviceDetail.data.BranchId}
+              isBusy={serviceDetail.data.IsBusy}
               classId={serviceDetail.data.ClassId}
               emailAdress={serviceDetail.data.EmailAdress}
               lessonId={serviceDetail.data.LessonId}
