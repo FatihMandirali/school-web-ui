@@ -298,6 +298,9 @@ function Tables() {
               )}
             </Box>
             <Box mt={2}>
+              <MDInput type="number" label="İlk Ödenecek Tutar" fullWidth name="firstAmount" />
+            </Box>
+            <Box mt={2}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Ödeme Türü</InputLabel>
                 <Select

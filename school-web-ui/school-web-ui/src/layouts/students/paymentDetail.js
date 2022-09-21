@@ -28,13 +28,19 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { Modal } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Modal } from "@mui/material";
+import Icon from "@mui/material/Icon";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 import usePaymentList from "./service/usePaymentDetailList";
 import MDButton from "../../components/MDButton";
 import usePutPaymentId from "./service/usePutPaymentId";
+import useSupplementarypayment from "./service/useSupplementarypayment";
 import MDSnackbar from "../../components/MDSnackbar";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../tableContentLanguage";
+import MDTypography from "../../components/MDTypography";
+import MDInput from "../../components/MDInput";
 
 const style = {
   position: "absolute",
@@ -52,11 +58,15 @@ function Tables() {
   const { id } = useParams();
   const { service, get } = usePaymentList();
   const { post } = usePutPaymentId();
+  const { servicePayment, postPayment } = useSupplementarypayment();
   const [paymentId, setPaymentId] = useState();
   const [paymentPopup, setPaymentPopup] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [amount, setAmount] = useState("");
+  const [sendForm, setSendForm] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -151,12 +161,37 @@ function Tables() {
       openErrorSB();
     }
   };
+  const supplementaryPayment = () => {
+    setOpenDialog(true);
+  };
+  const confirmSupplementaryPayment = async () => {
+    setSendForm(true);
+    if (amount <= 0) return;
+    const res = await postPayment(id, amount);
+    if (res.serviceStatus === "loaded") {
+      window.location.reload();
+    } else {
+      setErrorMsg("Ek ödeme yapılırken bir hata oluştu");
+      openErrorSB();
+    }
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Öğrenci Ücret Ödeme" />
+      <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
+        <MDTypography variant="h6" fontWeight="medium" />
+        <MDButton
+          onClick={() => supplementaryPayment()}
+          size="small"
+          variant="gradient"
+          color="dark"
+        >
+          <Icon sx={{ fontWeight: "bold" }}>add</Icon>
+          &nbsp;Ek Ödeme
+        </MDButton>
+      </MDBox>
       <MDBox>
-        <br />
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
@@ -198,6 +233,50 @@ function Tables() {
           </Stack>
         </Box>
       </Modal>
+      <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Ek Ödeme</DialogTitle>
+        <DialogContent>
+          <Box mt={2}>
+            <MDInput
+              onChange={(event) => setAmount(event.target.value)}
+              type="number"
+              label="Ek Ödenecek Tutar"
+              fullWidth
+              name="totalAmount"
+            />
+            {sendForm === true && amount <= 0 && (
+              <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="error">Lütfen sıfırdan yüksek değer girin</Alert>
+              </Stack>
+            )}
+          </Box>
+
+          {servicePayment.serviceStatus === "loading" ? (
+            <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+              <CircularProgress color="secondary" />
+            </Stack>
+          ) : (
+            <MDBox
+              pt={2}
+              py={2}
+              px={2}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <MDTypography variant="h6" fontWeight="medium" />
+              <MDButton
+                type="submit"
+                onClick={() => confirmSupplementaryPayment()}
+                variant="gradient"
+                color="dark"
+              >
+                &nbsp;Onayla
+              </MDButton>
+            </MDBox>
+          )}
+        </DialogContent>
+      </Dialog>
       {renderSuccessSB}
       {renderErrorSB}
     </DashboardLayout>

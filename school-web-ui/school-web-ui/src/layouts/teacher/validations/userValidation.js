@@ -7,6 +7,5 @@ export const validationSchema = Yup.object({
   tcPaspNo: Yup.string().required("Lütfen kimlik bilgisini girin."),
   emailAdress: Yup.string().email("Email formatına dikkat edin.").required("Lütfen email girin."),
   lessonId: Yup.number().min(1, "Lütfen ders seçin"),
-  classId: Yup.number().min(1, "Lütfen sınıf seçin"),
   branchId: Yup.number().min(1, "Lütfen bölge seçin"),
 });

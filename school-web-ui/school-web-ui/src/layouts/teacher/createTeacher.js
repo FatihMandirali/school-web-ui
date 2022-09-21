@@ -1,5 +1,5 @@
 import Card from "@mui/material/Card";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { FormControl, FormControlLabel, FormGroup, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -7,6 +7,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiPhoneNumber from "material-ui-phone-number";
+import Checkbox from "@mui/material/Checkbox";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
@@ -29,6 +30,7 @@ function CreateTeacher() {
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [phone, setPhone] = useState("");
+  const [isOneOnOne, setIsOneOnOne] = useState(false);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -277,6 +279,20 @@ function CreateTeacher() {
                   )}
                 </FormControl>
               )}
+
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isOneOnOne}
+                      onChange={(e) => {
+                        setIsOneOnOne(e.target.checked);
+                      }}
+                    />
+                  }
+                  label="Bire bir öğretmeni"
+                />
+              </FormGroup>
 
               {postService.serviceStatus === "loading" ? (
                 <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">

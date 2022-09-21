@@ -1,5 +1,5 @@
 import Card from "@mui/material/Card";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { FormControl, FormControlLabel, FormGroup, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -7,6 +7,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiPhoneNumber from "material-ui-phone-number";
+import Checkbox from "@mui/material/Checkbox";
 import MDInput from "../../../components/MDInput";
 import MDButton from "../../../components/MDButton";
 import MDBox from "../../../components/MDBox";
@@ -28,6 +29,7 @@ function CreateTeacher(props) {
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isOneOnOne, setIsOneOnOne] = useState(false);
 
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [branchId] = useState(props.branchId);
@@ -311,6 +313,20 @@ function CreateTeacher(props) {
                 )}
               </FormControl>
             )}
+
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isOneOnOne}
+                    onChange={(e) => {
+                      setIsOneOnOne(e.target.checked);
+                    }}
+                  />
+                }
+                label="Bire bir öğretmeni"
+              />
+            </FormGroup>
 
             {postService.serviceStatus === "loading" ? (
               <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
