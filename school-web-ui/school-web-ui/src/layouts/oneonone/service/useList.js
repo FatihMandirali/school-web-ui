@@ -6,7 +6,7 @@ const useList = (page1) => {
   const getData = async () => {
     try {
       setService({ serviceStatus: "loading" });
-      const res = await httpservice.get(`Classes/List`);
+      const res = await httpservice.get(`OneOnOne/List`);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
