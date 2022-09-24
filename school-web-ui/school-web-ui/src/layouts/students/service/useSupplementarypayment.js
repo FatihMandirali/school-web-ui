@@ -14,9 +14,13 @@ const useUpdate = () => {
           amount,
         };
         console.log(request);
-        const res = await httpservice.put(`Students/Updatesdfsdfsdf`, request, {
-          headers: { "content-type": "application/json" },
-        });
+        const res = await httpservice.post(
+          `StudentPayment/DownPayment?studentId=${id}&amount=${amount}`,
+          request,
+          {
+            headers: { "content-type": "application/json" },
+          }
+        );
 
         console.log(res);
 

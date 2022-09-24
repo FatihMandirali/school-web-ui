@@ -71,6 +71,7 @@ function Tables() {
   const [email, setEmail] = useState(0);
   const [installment, setInstallment] = useState(1);
   const [paymentType, setPaymentType] = useState(1);
+  const [firstPayment, setFirstPayment] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [openChangePopup, setOpenChangePopup] = useState(false);
   const { service, get } = useList(email);
@@ -205,7 +206,7 @@ function Tables() {
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(selectedId, values.totalAmount, values.firstPaymentDate, installment);
+      const res = await post(selectedId, values.totalAmount, values.firstPaymentDate, installment, firstPayment);
 
       console.log(res);
       if (res.serviceStatus === "loaded") {
@@ -298,7 +299,13 @@ function Tables() {
               )}
             </Box>
             <Box mt={2}>
-              <MDInput type="number" label="İlk Ödenecek Tutar" fullWidth name="firstAmount" />
+              <MDInput
+                type="number"
+                label="İlk Ödenecek Tutar"
+                fullWidth
+                name="firstAmount"
+                onChange={(event) => setFirstPayment(event.target.value)}
+              />
             </Box>
             <Box mt={2}>
               <FormControl fullWidth>

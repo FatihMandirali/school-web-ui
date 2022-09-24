@@ -4,7 +4,7 @@ import httpservice from "../../../httpservice/httpservice";
 const usePaymentPlan = () => {
   const [serviceUpdate, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (studentId, totalAmount, firstPaymentDate, installment) =>
+  const post = async (studentId, totalAmount, firstPaymentDate, installment, firstAmount) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
@@ -14,6 +14,7 @@ const usePaymentPlan = () => {
           amount: totalAmount,
           endDate: firstPaymentDate,
           period: installment,
+          firstAmount,
         };
         console.log(request);
         const res = await httpservice.post(`StudentPayment/AddPaymentFirst`, request, {
