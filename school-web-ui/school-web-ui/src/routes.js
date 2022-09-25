@@ -83,6 +83,8 @@ import TeacherOneOnOne from "layouts/teachermenu/teacheroneonone";
 import TeacherLessonProgram from "layouts/teachermenu/teacherLessonProgram";
 import StudentAnnouncement from "layouts/studentsmenu/studentannouncement";
 import StudentPayment from "layouts/studentsmenu/studentpayments";
+import StudentOneOnOne from "layouts/studentsmenu/studentoneonone";
+import StudentLessonProgram from "layouts/studentsmenu/studentLessonProgram";
 import FaceStudent from "layouts/faceStudent";
 import FaceStudentCreate from "layouts/faceStudent/craeteFaceStudent";
 import FaceStudentDetail from "layouts/faceStudent/detailFaceStudent";
@@ -148,6 +150,26 @@ const routes = [
     icon: <PaymentIcon />,
     route: "/studentPaymentPlan",
     component: <StudentPayment />,
+    role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Birebir dersler",
+    key: "studentOneOnOne",
+    icon: <SupervisorAccountIcon />,
+    route: "/studentOneOnOne",
+    component: <StudentOneOnOne />,
+    role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ders Programı",
+    key: "studentLessonProgram",
+    icon: <HistoryEduIcon />,
+    route: "/studentLessonProgram",
+    component: <StudentLessonProgram />,
     role: "Student",
     isActive: true,
   },
