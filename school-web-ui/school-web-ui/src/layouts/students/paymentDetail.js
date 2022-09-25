@@ -67,6 +67,11 @@ function Tables() {
   const [amount, setAmount] = useState("");
   const [sendForm, setSendForm] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [paymentData, setPaymentData] = useState({
+    studentPayment: [],
+    totalPaymentPlan: [],
+    totalFee: [],
+  });
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -100,7 +105,10 @@ function Tables() {
   );
 
   useEffect(async () => {
-    await get(id);
+    const res = await get(id);
+    if (res.serviceStatus === "loaded") {
+      setPaymentData(res.data);
+    }
   }, []);
 
   const handleEditClick = (selectedPaymentId) => () => {
@@ -109,8 +117,8 @@ function Tables() {
   };
 
   const columns = [
-    { field: "StudentName", headerName: "Adı", width: 100 },
-    { field: "StudentSurname", headerName: "Soyadı", minWidth: 100 },
+    { field: "StudentName", headerName: "Adı", width: 200 },
+    { field: "StudentSurname", headerName: "Soyadı", minWidth: 200 },
     {
       field: "EndDate",
       headerName: "Ödeme Tarihi",
@@ -132,7 +140,7 @@ function Tables() {
       field: "actions",
       type: "actions",
       headerName: "Ödeme Yap",
-      width: 100,
+      width: 150,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
       getActions: (params) => [
@@ -148,6 +156,21 @@ function Tables() {
           <span />
         ),
       ],
+    },
+  ];
+  const columnsSupplementaryPayment = [
+    { field: "DownAmount", headerName: "Ek Ödenen Tutarı", width: 200 },
+    {
+      field: "DownType",
+      headerName: "Ek Ödeme Tipi",
+      minWidth: 200,
+      valueGetter: (params) => (params.value === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme"),
+    },
+    {
+      field: "PaymentDate",
+      headerName: "Ek Ödeme Tarihi",
+      minWidth: 200,
+      valueGetter: (params) => new Date(params.value).toLocaleDateString(),
     },
   ];
 
@@ -180,7 +203,11 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Öğrenci Ücret Ödeme" />
       <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
-        <MDTypography variant="h6" fontWeight="medium" />
+        <MDTypography variant="h6" fontWeight="medium">
+          {`Toplam Ödenecek Tutar : ${
+            paymentData.totalFee.length > 0 ? paymentData.totalFee[0].TotalFee : 0
+          }`}
+        </MDTypography>
         <MDButton
           onClick={() => supplementaryPayment()}
           size="small"
@@ -192,20 +219,30 @@ function Tables() {
         </MDButton>
       </MDBox>
       <MDBox>
-        {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={100}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.PaymentStudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
-        )}
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={paymentData.studentPayment}
+            columns={columns}
+            pageSize={5}
+            pagination
+            localeText={localizedTextsMap}
+            getRowId={(row) => row.PaymentStudentId}
+            loading={service.serviceStatus === "loading"}
+          />
+        </div>
+      </MDBox>
+      <MDBox mt={2}>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={paymentData?.totalPaymentPlan}
+            columns={columnsSupplementaryPayment}
+            pageSize={5}
+            pagination
+            localeText={localizedTextsMap}
+            getRowId={(row) => row.DownPaymentId}
+            loading={service.serviceStatus === "loading"}
+          />
+        </div>
       </MDBox>
       <Modal
         open={paymentPopup}
