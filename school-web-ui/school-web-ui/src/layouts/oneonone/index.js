@@ -115,10 +115,15 @@ function Tables() {
     { field: "TeacherSurname", headerName: "Öğretmen Soyadı", minWidth: 200 },
     { field: "LessonName", headerName: "Ders Adı", minWidth: 150 },
     {
-      field: "clock",
-      headerName: "Ders Saati",
+      field: "Times",
+      headerName: "Ders Tarihi",
       minWidth: 200,
       valueGetter: (params) => new Date(params.row.Times).toLocaleString(),
+    },
+    {
+      field: "ClockTime",
+      headerName: "Ders Saati",
+      minWidth: 150,
     },
     {
       field: "actions",
