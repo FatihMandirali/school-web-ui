@@ -146,7 +146,7 @@ export default function App() {
         <Sidenav
           color={sidenavColor}
           brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-          brandName="Okul Yönetimi"
+          brandName="Galata Okul Yönetimi"
           routes={currentMenuRoles()}
           onMouseEnter={handleOnMouseEnter}
           onMouseLeave={handleOnMouseLeave}

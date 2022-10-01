@@ -13,7 +13,7 @@ import useDelete from "../service/useDelete";
 import useBranchList from "../service/useBranchList";
 import useTeacherList from "../service/useTeacherList";
 import useCourseList from "../service/useCourseList";
-import { validationSchema } from "../validations/classValidation";
+import { validationSchema } from "../validations/oneOnOneValidation";
 import MDSnackbar from "../../../components/MDSnackbar";
 
 function CreateClasses(props) {

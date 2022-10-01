@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import httpservice from "../../../httpservice/httpservice";
 
-const useTeacherList = () => {
-  const [serviceTeacher, setService] = useState({ serviceStatus: "loading" });
+const useList = (page1) => {
+  const [serviceStudent, setService] = useState({ serviceStatus: "loading" });
   const getData = async () => {
     try {
       setService({ serviceStatus: "loading" });
-      const res = await httpservice.get(`Teachers/OneOnOneTeacherList`);
+      const res = await httpservice.get(`Students/AllStudents`);
       const value = {
         data: res.data,
         serviceStatus: "loaded",
@@ -19,10 +19,10 @@ const useTeacherList = () => {
   };
 
   useEffect(() => {
-    getData();
+    getData(page1);
   }, []);
 
-  return { serviceTeacher, getTeacher: getData };
+  return { serviceStudent, getStudent: getData };
 };
 
-export default useTeacherList;
+export default useList;

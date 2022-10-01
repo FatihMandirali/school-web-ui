@@ -22,8 +22,9 @@ import MuiLink from "@mui/material/Link";
 
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -140,24 +141,38 @@ function Basic() {
           mb={1}
           textAlign="center"
         >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Giriş Yap
-          </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
+          <img
+            style={{ margin: "auto", height: "100px", width: "270px" }}
+            src={require("../../../assets/images/logos/galata.png")}
+          />
+          <Grid container spacing={3} justifyContent="center" sx={{ mb: 2 }}>
             <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
+              <a
+                href="https://tr-tr.facebook.com/galataegitimkurumlari/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FacebookIcon color="white" />
+              </a>
             </Grid>
             <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
+              <a href="https://www.instagram.com/galatayosegitim/" target="_blank" rel="noreferrer">
+                <InstagramIcon color="white" />
+              </a>
             </Grid>
             <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
+              <a
+                href="https://www.youtube.com/channel/UCUNReVhspcILQHox0PimdhA"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <YouTubeIcon color="white" />
+              </a>
+            </Grid>
+            <Grid item xs={2}>
+              <a href="https://galataegitimrehberlik.com/" target="_blank" rel="noreferrer">
+                <GoogleIcon color="white" />
+              </a>
             </Grid>
           </Grid>
         </MDBox>

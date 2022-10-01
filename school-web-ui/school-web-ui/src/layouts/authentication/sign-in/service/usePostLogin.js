@@ -14,6 +14,7 @@ const usePost = () => {
           password,
           roleName,
         };
+        console.log(request);
         const res = await httpservice.post(`Login`, request, {
           headers: { "content-type": "application/json" },
         });

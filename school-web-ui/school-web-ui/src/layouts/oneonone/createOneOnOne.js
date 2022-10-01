@@ -1,14 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  CardActionArea,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  Modal,
-  Select,
-} from "@mui/material";
+import { FormControl, InputLabel, Modal, Select } from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert";
@@ -16,15 +7,20 @@ import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import MDTypography from "../../components/MDTypography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useFormik } from "formik";
+import TextField from "@mui/material/TextField";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useLessonByProgramList from "./service/useLessonByProgramList";
-import useFindOneOnOneQuery from "./service/useFindOneOnOneQuery";
+import useTeacherList from "./service/useTeacherList";
+import useStudentList from "./service/useStudentList";
+import useCreate from "./service/useCreate";
 import MDSnackbar from "../../components/MDSnackbar";
 import MDButton from "../../components/MDButton";
 import MDInput from "../../components/MDInput";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import { validationSchema } from "./validations/oneOnOneValidation";
 
 const style = {
   position: "absolute",
@@ -39,41 +35,27 @@ const style = {
 };
 
 function CreateOneOnOne() {
-  const { serviceLessonList, getLesson } = useLessonByProgramList();
-  const { getOneonOne } = useFindOneOnOneQuery();
-  const [sendForm, setSendForm] = useState(false);
-  const [openDialog, setOpenDialog] = useState(true);
+  const { serviceLessonList } = useLessonByProgramList();
+  const { serviceTeacher } = useTeacherList();
+  const { serviceStudent } = useStudentList();
+  const { serviceCreate, postCreate } = useCreate();
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [errorMsg] = useState("");
-  const [lesson, setLesson] = useState("");
-  const [date, setDate] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [sendForm, setSendForm] = useState(false);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
-  // const openErrorSB = () => setErrorSB(true);
+  const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
-
-  const data = [
-    {
-      clock: "09:00-09:40",
-      teacherName: "fatih mandıralı",
-      lessonName: "Matematik",
-    },
-    {
-      clock: "10:00-10:40",
-      teacherName: "fatih mandıralı",
-      lessonName: "Fen",
-    },
-  ];
 
   const renderSuccessSB = (
     <MDSnackbar
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Bire bir ders başarıyla seçildi."
+      content="Tebrikler, Bire bir ders başarıyla eklendi."
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -95,132 +77,243 @@ function CreateOneOnOne() {
       bgWhite
     />
   );
-  useEffect(async () => {
-    await getLesson();
-  }, []);
+  useEffect(async () => {}, []);
 
-  const searchOneofOne = async () => {
-    // todo: lesson seçildi ve tarih kontrolü yap
-    const res = await getOneonOne(lesson, date);
-    console.log(res);
-    setOpenDialog(false);
-    setSendForm(true);
-  };
-  const chooseOneonOne = async () => {
-    setOpenModal(true);
-  };
   const btnSaveOneonOne = async () => {
     openSuccessSB();
     setOpenModal(false);
   };
 
+  const { handleSubmit, handleChange, errors } = useFormik({
+    initialValues: {
+      lessonId: 0,
+      teacherId: 0,
+      studentId: 0,
+      times: "",
+      startTime: "",
+      endTime: "",
+    },
+    validationSchema,
+    // eslint-disable-next-line no-shadow
+    onSubmit: async (values) => {
+      const res = await postCreate(
+        values.studentId,
+        values.lessonId,
+        values.teacherId,
+        `${values.startTime}-${values.endTime}`,
+        values.times
+      );
+      if (res.serviceStatus === "loaded") {
+        openSuccessSB();
+        window.location.href = "/oneonone";
+      } else {
+        setErrorMsg(res.errorMessage);
+        openErrorSB();
+      }
+    },
+  });
+
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Bire Bir Ders Oluştur" />
-      {openDialog === false && (
-        <Box>
-          <Grid container spacing={1}>
-            {data.map((item) => (
-              <Grid
-                textAlign="center"
-                mt={1}
-                fontSize={13}
-                item
-                xs={3}
-                onClick={() => chooseOneonOne()}
-              >
-                <CardActionArea>
-                  <Card>
-                    <span>
-                      <b>Saat :</b> {item.clock}
-                    </span>
-                    <span>
-                      <b>Ders :</b> {item.lessonName}
-                    </span>
-                    <span>
-                      <b>Öğretmen :</b> {item.teacherName}
-                    </span>
-                  </Card>
-                </CardActionArea>
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox mb={2}>
+              <MDInput
+                id="datetime-local"
+                label="Tarih"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                name="times"
+                onChange={handleChange}
+              />
+              {sendForm === true && errors.times && (
+                <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Alert severity="error">{errors.times}</Alert>
+                </Stack>
+              )}
+            </MDBox>
+            <MDBox mb={2}>
+              <Grid container spacing={0.5}>
+                <Grid textAlign="center" bgcolor="white" item xs={6}>
+                  <Box>
+                    <TextField
+                      id="time"
+                      label="Başlama Saati"
+                      type="time"
+                      defaultValue="07:30"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      fullWidth
+                      onChange={handleChange}
+                      name="startTime"
+                    />
+                    {sendForm === true && errors.startTime && (
+                      <Stack sx={{ width: "100%" }} spacing={2}>
+                        <Alert severity="error">{errors.startTime}</Alert>
+                      </Stack>
+                    )}
+                  </Box>
+                </Grid>
+                <Grid textAlign="center" bgcolor="white" item xs={6}>
+                  <Box>
+                    <TextField
+                      id="time"
+                      label="Bitiş Saati"
+                      type="time"
+                      defaultValue="07:30"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      fullWidth
+                      onChange={handleChange}
+                      name="endTime"
+                    />
+                    {sendForm === true && errors.endTime && (
+                      <Stack sx={{ width: "100%" }} spacing={2}>
+                        <Alert severity="error">{errors.endTime}</Alert>
+                      </Stack>
+                    )}
+                  </Box>
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
+            </MDBox>
+            <MDBox>
+              {serviceLessonList.serviceStatus === "loaded" && (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-filled-label">Ders</InputLabel>
+                  <Select
+                    label="Ders"
+                    displayEmpty
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    onChange={handleChange}
+                    defaultValue={0}
+                    name="lessonId"
+                    className="specificSelectBox"
+                  >
+                    <MenuItem key={0} value={0}>
+                      Seçiniz
+                    </MenuItem>
+                    {serviceLessonList.data.map((u) => (
+                      <MenuItem key={u.LessonId} value={u.LessonId}>
+                        {u.LessonName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {sendForm === true && errors.lessonId && (
+                    <Stack sx={{ width: "100%" }}>
+                      <Alert severity="error">{errors.lessonId}</Alert>
+                    </Stack>
+                  )}
+                </FormControl>
+              )}
+            </MDBox>
+            <MDBox>
+              {serviceTeacher.serviceStatus === "loaded" && (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-filled-label">Öğretmen</InputLabel>
+                  <Select
+                    label="Öğretmen"
+                    displayEmpty
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    onChange={handleChange}
+                    defaultValue={0}
+                    name="teacherId"
+                    className="specificSelectBox"
+                  >
+                    <MenuItem key={0} value={0}>
+                      Seçiniz
+                    </MenuItem>
+                    {serviceTeacher.data.map((u) => (
+                      <MenuItem key={u.TeacherId} value={u.TeacherId}>
+                        {u.TeacherName} {u.TeacherSurname}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {sendForm === true && errors.teacherId && (
+                    <Stack sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="error">{errors.teacherId}</Alert>
+                    </Stack>
+                  )}
+                </FormControl>
+              )}
+            </MDBox>
+            <MDBox mb={2}>
+              {serviceStudent.serviceStatus === "loaded" && (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-filled-label">Öğrenci</InputLabel>
+                  <Select
+                    label="Öğrenci"
+                    displayEmpty
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    onChange={handleChange}
+                    defaultValue={0}
+                    name="studentId"
+                    className="specificSelectBox"
+                  >
+                    <MenuItem key={0} value={0}>
+                      Seçiniz
+                    </MenuItem>
+                    {serviceStudent.data.studentList.map((u) => (
+                      <MenuItem key={u.StudentId} value={u.StudentId}>
+                        {u.StudentName} {u.StudentSurname}
+                      </MenuItem>
+                    ))}
+                    {serviceStudent.data.faceStudentList.map((u) => (
+                      <MenuItem key={u.StudentId} value={u.StudentId}>
+                        {u.StudentName} {u.StudentSurname}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {sendForm === true && errors.studentId && (
+                    <Stack sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="error">{errors.studentId}</Alert>
+                    </Stack>
+                  )}
+                </FormControl>
+              )}
+
+              {sendForm === true && errors.lessonName && (
+                <Stack sx={{ width: "100%" }} spacing={2}>
+                  <Alert severity="error">{errors.lessonName}</Alert>
+                </Stack>
+              )}
+            </MDBox>
+            <MDBox mb={2}>
+              {serviceCreate.serviceStatus === "loading" ? (
+                <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                  <CircularProgress color="secondary" />
+                </Stack>
+              ) : (
+                <MDBox mt={4} mb={1}>
+                  <MDButton type="submit" onClick={() => setSendForm(true)} color="dark" fullWidth>
+                    Oluştur
+                  </MDButton>
+                </MDBox>
+              )}
+            </MDBox>
+          </MDBox>
+        </form>
+      </Card>
       {renderSuccessSB}
       {renderErrorSB}
-      <Dialog maxWidth="xl" fullWidth open={openDialog}>
-        <DialogTitle>Bire bir ders sorgula</DialogTitle>
-        <DialogContent>
-          <Box mt={2}>
-            <MDInput
-              id="datetime-local"
-              label="Bitiş Tarihi"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              fullWidth
-              name="sharingEndDate"
-              onChange={(event) => setDate(event.target.value)}
-              value={date}
-            />
-          </Box>
-
-          <Box mt={2}>
-            {serviceLessonList.serviceStatus === "loaded" && (
-              <FormControl mb={5} fullWidth>
-                <InputLabel id="demo-simple-select-filled-label">Ders</InputLabel>
-                <Select
-                  label="Ders"
-                  displayEmpty
-                  variant="outlined"
-                  margin="dense"
-                  fullWidth
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  onChange={(event) => setLesson(event.target.value)}
-                  defaultValue={0}
-                  name="lessonId"
-                  className="specificSelectBox"
-                >
-                  <MenuItem key={0} value={0}>
-                    Seçiniz
-                  </MenuItem>
-                  {serviceLessonList.data.map((u) => (
-                    <MenuItem key={u.LessonId} value={u.LessonId}>
-                      {u.LessonName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {sendForm === true && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">Lütfen ders seçiniz.</Alert>
-                  </Stack>
-                )}
-              </FormControl>
-            )}
-          </Box>
-          <MDBox
-            pt={2}
-            py={2}
-            px={2}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <MDTypography variant="h6" fontWeight="medium" />
-            <MDButton
-              type="submit"
-              onClick={() => searchOneofOne()}
-              variant="gradient"
-              color="dark"
-            >
-              &nbsp;Sorgula
-            </MDButton>
-          </MDBox>
-        </DialogContent>
-      </Dialog>
       <Modal
         open={openModal}
         onClose={() => setOpenModal(false)}
