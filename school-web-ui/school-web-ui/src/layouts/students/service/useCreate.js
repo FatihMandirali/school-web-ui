@@ -18,7 +18,8 @@ const useCreate = () => {
     studentPerId,
     studentPerId2,
     studentPerId3,
-    isActiveRecord
+    isActiveRecord,
+    schoolName
   ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
@@ -40,6 +41,7 @@ const useCreate = () => {
           studentPerId3,
           isAnswered: isActiveRecord ? 1 : 0,
           password: studentNo,
+          schoolName,
         };
         console.log(request);
         const res = await httpservice.post(`Students/Add`, request, {

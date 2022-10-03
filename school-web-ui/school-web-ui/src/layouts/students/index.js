@@ -70,6 +70,11 @@ function Tables() {
       minWidth: 200,
     },
     {
+      field: "BranchName",
+      headerName: "Şube",
+      minWidth: 200,
+    },
+    {
       field: "ClassName",
       headerName: "Sınıf",
       minWidth: 200,

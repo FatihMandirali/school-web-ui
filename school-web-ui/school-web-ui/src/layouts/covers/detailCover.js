@@ -22,6 +22,7 @@ function DetailCover() {
               coverSurname={serviceDetail.data.CoverSurname}
               coverEmail={serviceDetail.data.CoverEmail}
               coverPhoneNumber={serviceDetail.data.CoverPhoneNumber}
+              coverPhoneNumber2={serviceDetail.data.CoverPhoneNumber2}
             />
           )}
         </Card>

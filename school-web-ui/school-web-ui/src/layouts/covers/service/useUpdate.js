@@ -4,7 +4,14 @@ import httpservice from "../../../httpservice/httpservice";
 const useUpdate = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (coverName, coverId, coverSurname, coverEmail, coverPhoneNumber) =>
+  const post = async (
+    coverName,
+    coverId,
+    coverSurname,
+    coverEmail,
+    coverPhoneNumber,
+    coverPhoneNumber2
+  ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
@@ -15,6 +22,7 @@ const useUpdate = () => {
           coverSurname,
           coverEmail,
           coverPhoneNumber: coverPhoneNumber.replace(/\s/g, "").substring(1),
+          coverPhoneNumber2: coverPhoneNumber2.replace(/\s/g, "").substring(1),
         };
         const res = await httpservice.post(`Cover/AddOrUpdate`, request, {
           headers: { "content-type": "application/json" },

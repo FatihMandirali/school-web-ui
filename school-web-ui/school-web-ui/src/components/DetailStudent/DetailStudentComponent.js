@@ -22,7 +22,6 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import useDelete from "../../layouts/students/service/useDelete";
 
 function DetailStudentComponent(props) {
-  console.log(props);
   const { serviceDelete, postDelete } = useDelete();
   const { service, get } = useCountryList();
   const { serviceBranch, getBranch } = useBranchList();
@@ -63,6 +62,8 @@ function DetailStudentComponent(props) {
   const [studentPhoneNumber, setStudentPhoneNumber] = useState(props.studentPhoneNumber);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [studentClass] = useState(props.studentClass);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [schoolName] = useState(props.schoolName);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -115,6 +116,7 @@ function DetailStudentComponent(props) {
       classId: studentClass,
       branchId,
       studentPerId,
+      schoolName,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
@@ -134,7 +136,8 @@ function DetailStudentComponent(props) {
         values.studentPerId,
         studentPerId2,
         studentPerId3,
-        isActiveRecord
+        isActiveRecord,
+        values.schoolName
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -257,6 +260,16 @@ function DetailStudentComponent(props) {
                     <Alert severity="error">{errors.email}</Alert>
                   </Stack>
                 )}
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Okulu"
+                  fullWidth
+                  name="schoolName"
+                  value={values.schoolName}
+                />
               </MDBox>
 
               {serviceBranch.serviceStatus === "loaded" && (

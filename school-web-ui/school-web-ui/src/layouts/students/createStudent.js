@@ -85,6 +85,7 @@ function CreateStudent() {
       classId: 0,
       branchId: 0,
       studentPerId: 0,
+      schoolName: "",
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
@@ -103,7 +104,8 @@ function CreateStudent() {
         values.studentPerId,
         studentPerId2,
         studentPerId3,
-        isActiveRecord
+        isActiveRecord,
+        values.schoolName
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -205,6 +207,15 @@ function CreateStudent() {
                     <Alert severity="error">{errors.email}</Alert>
                   </Stack>
                 )}
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Okulu"
+                  fullWidth
+                  name="schoolName"
+                />
               </MDBox>
 
               {serviceBranch.serviceStatus === "loaded" && (

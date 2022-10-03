@@ -25,6 +25,7 @@ function CreateUser() {
           studentPerId3={serviceDetail.data.StudentPerId3}
           studentPhoneNumber={serviceDetail.data.StudentPhoneNumber}
           studentClass={serviceDetail.data.StudentClass}
+          schoolName={serviceDetail.data.SchoolName}
         />
       )}
     </>

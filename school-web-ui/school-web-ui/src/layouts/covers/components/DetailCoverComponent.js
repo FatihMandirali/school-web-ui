@@ -30,6 +30,8 @@ function CreateClasses(props) {
   const [coverEmail] = useState(props.coverEmail);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [coverPhoneNumber, setCoverPhoneNumber] = useState(props.coverPhoneNumber);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [coverPhoneNumber2, setCoverPhoneNumber2] = useState(props.coverPhoneNumber2);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -84,7 +86,8 @@ function CreateClasses(props) {
         values.coverId,
         values.coverSurname,
         values.coverEmail,
-        coverPhoneNumber
+        coverPhoneNumber,
+        coverPhoneNumber2
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -152,6 +155,16 @@ function CreateClasses(props) {
               name="coverPhoneNumber"
               fullWidth
               value={coverPhoneNumber}
+            />
+          </MDBox>
+
+          <MDBox mb={2}>
+            <MuiPhoneNumber
+              onChange={(e) => setCoverPhoneNumber2(e)}
+              defaultCountry="tr"
+              name="coverPhoneNumber"
+              fullWidth
+              value={coverPhoneNumber2}
             />
           </MDBox>
 

@@ -21,6 +21,7 @@ function CreateCover() {
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [phone, setPhone] = useState("");
+  const [phone2, setPhone2] = useState("");
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -64,7 +65,13 @@ function CreateCover() {
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(values.coverName, values.coverSurname, values.coverEmail, phone);
+      const res = await post(
+        values.coverName,
+        values.coverSurname,
+        values.coverEmail,
+        phone,
+        phone2
+      );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
         window.location.href = "/covers";
@@ -127,6 +134,14 @@ function CreateCover() {
               <MDBox mb={2}>
                 <MuiPhoneNumber
                   onChange={(e) => setPhone(e)}
+                  defaultCountry="tr"
+                  name="coverPhoneNumber"
+                  fullWidth
+                />
+              </MDBox>
+              <MDBox mb={2}>
+                <MuiPhoneNumber
+                  onChange={(e) => setPhone2(e)}
                   defaultCountry="tr"
                   name="coverPhoneNumber"
                   fullWidth
