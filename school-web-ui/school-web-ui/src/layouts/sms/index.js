@@ -40,6 +40,7 @@ import MDSnackbar from "../../components/MDSnackbar";
 function Tables() {
   const [data, setData] = useState("");
   const [message, setMessage] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [covers, setCovers] = useState([]);
   const [autoSelecetCovers, setAutoSelecetCovers] = useState([]);
   const [selectedCovers, setSelectedCovers] = useState([]);
@@ -96,12 +97,16 @@ function Tables() {
     const resCover = await getCover();
     if (resCover.serviceStatus === "loaded") {
       const coversArray = [];
-      coversArray.push({ id: 0, label: "Tümü" });
-      setCovers(resCover.data);
+      coversArray.push({ id: 0, label: "Tümü", type: "COVER" });
       // eslint-disable-next-line array-callback-return
       resCover.data.map((item) => {
-        coversArray.push({ id: item.CoverId, label: `${item.CoverName} ${item.CoverSurname}` });
+        coversArray.push({
+          id: item.CoverId,
+          label: `${item.CoverName} ${item.CoverSurname}`,
+          type: "COVER",
+        });
       });
+      setCovers(coversArray);
       setAutoSelecetCovers(coversArray);
     }
   }, []);
@@ -111,49 +116,61 @@ function Tables() {
   };
 
   const coverSelectedDelete = (item) => {
-    console.log(item);
-    if (item.id === 0) {
-      const coversArray = [];
-      coversArray.push({ id: 0, label: "Tümü" });
-      // eslint-disable-next-line array-callback-return
-      covers.map((cover) => {
-        coversArray.push({ id: cover.CoverId, label: `${cover.CoverName} ${cover.CoverSurname}` });
-      });
-      setAutoSelecetCovers(coversArray);
-      setSelectedCovers([]);
-    } else {
-      setSelectedCovers(selectedCovers.filter((x) => x.id !== item.id));
-      setAutoSelecetCovers([...autoSelecetCovers, item]);
+    if (item.type === "COVER") {
+      if (item.id === 0) {
+        setAutoSelecetCovers(covers);
+        setSelectedCovers([]);
+      } else {
+        setSelectedCovers(selectedCovers.filter((x) => x.id !== item.id));
+        setAutoSelecetCovers([...autoSelecetCovers, item]);
+      }
+    } else if (item.type === "PHONE_NUMBER") {
+      setSelectedCovers(selectedCovers.filter((x) => x.label !== item.label));
     }
   };
 
-  const coverSelected = (event) => {
+  const coverSelected = (event, type) => {
     if (event === null) return;
-    console.log(event);
-    if (event.id === 0) {
-      setAutoSelecetCovers([]);
-      setSelectedCovers([autoSelecetCovers.find((x) => x.id === event.id)]);
-    } else {
-      setAutoSelecetCovers(autoSelecetCovers.filter((x) => x.id !== event.id));
-      setSelectedCovers([...selectedCovers, autoSelecetCovers.find((x) => x.id === event.id)]);
+    if (type === "COVER") {
+      if (event.id === 0) {
+        setAutoSelecetCovers([]);
+        setSelectedCovers([autoSelecetCovers.find((x) => x.id === event.id)]);
+      } else {
+        setAutoSelecetCovers(autoSelecetCovers.filter((x) => x.id !== event.id));
+        setSelectedCovers([...selectedCovers, autoSelecetCovers.find((x) => x.id === event.id)]);
+      }
+    } else if (type === "PHONE_NUMBER") {
+      setSelectedCovers([...selectedCovers, { id: 0, label: event, type: "PHONE_NUMBER" }]);
     }
   };
   const ApplySendForm = async () => {
     setSendForm(true);
     if (message === "" || message === " " || selectedCovers.length <= 0) return;
     const phones = [];
+    console.log(selectedCovers);
 
-    if (selectedCovers[0].id === 0) {
-      // eslint-disable-next-line array-callback-return
-      covers.map((item) => {
-        phones.push(item.CoverPhoneNumber);
-      });
-    } else {
-      // eslint-disable-next-line array-callback-return
-      selectedCovers.map((item) => {
-        phones.push(covers.find((x) => x.CoverId === item.id).CoverPhoneNumber);
-      });
+    const selectedCoverList = selectedCovers.filter((x) => x.type === "COVER");
+    const selectedPhoneNumberList = selectedCovers.filter((x) => x.type === "PHONE_NUMBER");
+
+    if (selectedCoverList.length > 0) {
+      if (selectedCoverList[0].id === 0) {
+        // eslint-disable-next-line array-callback-return
+        covers.map((item) => {
+          phones.push(item.CoverPhoneNumber);
+        });
+      } else {
+        // eslint-disable-next-line array-callback-return
+        selectedCoverList.map((item) => {
+          phones.push(covers.find((x) => x.CoverId === item.id).CoverPhoneNumber);
+        });
+      }
     }
+
+    // eslint-disable-next-line array-callback-return
+    selectedPhoneNumberList.map((item) => {
+      phones.push(item.label);
+    });
+    console.log(phones);
 
     const res = await post(phones, message);
     if (res.serviceStatus === "loaded") {
@@ -205,13 +222,35 @@ function Tables() {
               <Alert severity="error">Lütfen mesajı girin</Alert>
             </Stack>
           )}
-          <br />
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={8}>
+              <MDInput
+                style={{ marginTop: "15px" }}
+                type="text"
+                onChange={(event) => setPhoneNumber(event.target.value)}
+                label="Numara"
+                fullWidth
+                name="phoneNumber"
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <MDButton
+                style={{ marginTop: "15px" }}
+                type="button"
+                onClick={() => coverSelected(phoneNumber, "PHONE_NUMBER")}
+                color="info"
+                fullWidth
+              >
+                Ekle
+              </MDButton>
+            </Grid>
+          </Grid>
           <Autocomplete
             fullWidth
             id="free-solo-demo"
             freeSolo
             onChange={(event, newValue) => {
-              coverSelected(newValue);
+              coverSelected(newValue, "COVER");
             }}
             options={autoSelecetCovers}
             renderInput={(params) => <TextField {...params} label="Veliler" />}
