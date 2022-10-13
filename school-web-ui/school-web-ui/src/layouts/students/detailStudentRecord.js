@@ -11,7 +11,7 @@ function CreateUser() {
     <>
       {serviceDetail.serviceStatus === "loaded" && (
         <DetailStudentComponent
-          studentId={3}
+          studentId={id}
           studentNo={serviceDetail.data.StudentNo}
           studentName={serviceDetail.data.StudentName}
           studentSurname={serviceDetail.data.StudentSurname}
