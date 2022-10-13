@@ -21,7 +21,14 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarFilterButton,
+} from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
@@ -75,6 +82,17 @@ function Tables() {
     },
   ];
 
+  // eslint-disable-next-line react/no-unstable-nested-components
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+      </GridToolbarContainer>
+    );
+  }
+
   const changePage = (page) => {
     console.log("page");
     console.log(page);
@@ -107,6 +125,7 @@ function Tables() {
               localeText={localizedTextsMap}
               getRowId={(row) => row.AdminId}
               rowsPerPageOptions={[5, 10, 15]}
+              components={{ Toolbar: CustomToolbar }}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
             />
