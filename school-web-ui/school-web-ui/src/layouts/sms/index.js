@@ -353,6 +353,12 @@ function Tables() {
     });
     console.log(phones);
 
+    if (phones.length <= 0) {
+      setErrorMsg("Lütfen herhangi bir numara girin veya seçin.");
+      openErrorSB();
+      return;
+    }
+
     const res = await post(phones, message);
     if (res.serviceStatus === "loaded") {
       openSuccessSB();
