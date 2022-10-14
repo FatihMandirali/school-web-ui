@@ -28,6 +28,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert";
 import useList from "./service/useList";
+import useTeacherList from "./service/useTeacherList";
 import useCoverList from "./service/useCoverList";
 import useCreate from "./service/useCreate";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
@@ -42,11 +43,17 @@ function Tables() {
   const [message, setMessage] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [covers, setCovers] = useState([]);
+  const [coversAll, setCoversAll] = useState([]);
+  const [teachersAll, setTeachersAll] = useState([]);
   const [autoSelecetCovers, setAutoSelecetCovers] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [autoSelecetTeachers, setAutoSelecetTeachers] = useState([]);
+  const [selectedTeachers, setSelectedTeachers] = useState([]);
   const [selectedCovers, setSelectedCovers] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [sendForm, setSendForm] = useState(false);
   const { get } = useList();
+  const { getTeacherList } = useTeacherList();
   const { getCover } = useCoverList();
   const { post } = useCreate();
 
@@ -94,10 +101,26 @@ function Tables() {
     } else {
       setData("Şuan için gösterilemiyor");
     }
+    const resTeacher = await getTeacherList();
+    if (resTeacher.serviceStatus === "loaded") {
+      const teachersArray = [];
+      teachersArray.push({ id: 0, label: "Tüm Öğretmenler", type: "TEACHER" });
+      // eslint-disable-next-line array-callback-return
+      resTeacher.data.map((item) => {
+        teachersArray.push({
+          id: item.TeacherId,
+          label: `${item.TeacherName} ${item.TeacherSurname}`,
+          type: "TEACHER",
+        });
+      });
+      setTeachers(teachersArray);
+      setTeachersAll(resTeacher.data);
+      setAutoSelecetTeachers(teachersArray);
+    }
     const resCover = await getCover();
     if (resCover.serviceStatus === "loaded") {
       const coversArray = [];
-      coversArray.push({ id: 0, label: "Tümü", type: "COVER" });
+      coversArray.push({ id: 0, label: "Tüm Veliler", type: "COVER" });
       // eslint-disable-next-line array-callback-return
       resCover.data.map((item) => {
         coversArray.push({
@@ -107,6 +130,7 @@ function Tables() {
         });
       });
       setCovers(coversArray);
+      setCoversAll(resCover.data);
       setAutoSelecetCovers(coversArray);
     }
   }, []);
@@ -124,6 +148,14 @@ function Tables() {
         setSelectedCovers(selectedCovers.filter((x) => x.id !== item.id));
         setAutoSelecetCovers([...autoSelecetCovers, item]);
       }
+    } else if (item.type === "TEACHER") {
+      if (item.id === 0) {
+        setAutoSelecetTeachers(teachers);
+        setSelectedTeachers([]);
+      } else {
+        setSelectedTeachers(selectedTeachers.filter((x) => x.id !== item.id));
+        setAutoSelecetTeachers([...autoSelecetTeachers, item]);
+      }
     } else if (item.type === "PHONE_NUMBER") {
       setSelectedCovers(selectedCovers.filter((x) => x.label !== item.label));
     }
@@ -139,29 +171,55 @@ function Tables() {
         setAutoSelecetCovers(autoSelecetCovers.filter((x) => x.id !== event.id));
         setSelectedCovers([...selectedCovers, autoSelecetCovers.find((x) => x.id === event.id)]);
       }
+    } else if (type === "TEACHER") {
+      if (event.id === 0) {
+        setAutoSelecetTeachers([]);
+        setSelectedTeachers([autoSelecetTeachers.find((x) => x.id === event.id)]);
+      } else {
+        setAutoSelecetTeachers(autoSelecetTeachers.filter((x) => x.id !== event.id));
+        setSelectedTeachers([
+          ...selectedTeachers,
+          autoSelecetTeachers.find((x) => x.id === event.id),
+        ]);
+      }
     } else if (type === "PHONE_NUMBER") {
       setSelectedCovers([...selectedCovers, { id: 0, label: event, type: "PHONE_NUMBER" }]);
     }
   };
   const ApplySendForm = async () => {
     setSendForm(true);
-    if (message === "" || message === " " || selectedCovers.length <= 0) return;
+    if (message === "" || message === " ") return;
     const phones = [];
     console.log(selectedCovers);
 
     const selectedCoverList = selectedCovers.filter((x) => x.type === "COVER");
     const selectedPhoneNumberList = selectedCovers.filter((x) => x.type === "PHONE_NUMBER");
+    const selectedTeacherList = selectedTeachers.filter((x) => x.type === "TEACHER");
+
+    if (selectedTeacherList.length > 0) {
+      if (selectedTeacherList[0].id === 0) {
+        // eslint-disable-next-line array-callback-return
+        teachersAll.map((item) => {
+          phones.push(item.TeacherPhone);
+        });
+      } else {
+        // eslint-disable-next-line array-callback-return
+        selectedTeacherList.map((item) => {
+          phones.push(teachersAll.find((x) => x.TeacherId === item.id).TeacherPhone);
+        });
+      }
+    }
 
     if (selectedCoverList.length > 0) {
       if (selectedCoverList[0].id === 0) {
         // eslint-disable-next-line array-callback-return
-        covers.map((item) => {
+        coversAll.map((item) => {
           phones.push(item.CoverPhoneNumber);
         });
       } else {
         // eslint-disable-next-line array-callback-return
         selectedCoverList.map((item) => {
-          phones.push(covers.find((x) => x.CoverId === item.id).CoverPhoneNumber);
+          phones.push(coversAll.find((x) => x.CoverId === item.id).CoverPhoneNumber);
         });
       }
     }
@@ -264,13 +322,37 @@ function Tables() {
               float: "left",
             }}
           />
-          {sendForm === true && selectedCovers.length <= 0 && (
-            <Stack sx={{ width: "100%", marginTop: "15px" }} spacing={2}>
-              <Alert severity="error">Lütfen gönderilecek veliyi</Alert>
-            </Stack>
-          )}
-          <Grid mt={10} textAlign="center" container spacing={2}>
+          <Autocomplete
+            fullWidth
+            id="free-solo-demo"
+            freeSolo
+            onChange={(event, newValue) => {
+              coverSelected(newValue, "TEACHER");
+            }}
+            options={autoSelecetTeachers}
+            renderInput={(params) => <TextField {...params} label="Öğretmenler" />}
+            style={{
+              height: "15px",
+              margin: "auto",
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: "30px",
+              float: "left",
+            }}
+          />
+          <Grid mt={20} textAlign="center" container spacing={2}>
             {selectedCovers.map((item) => (
+              <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
+                <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
+                <Button>
+                  <ClearIcon
+                    onClick={() => coverSelectedDelete(item)}
+                    style={{ margin: "auto", alignContent: "center", textAlign: "center" }}
+                  />
+                </Button>
+              </Box>
+            ))}
+            {selectedTeachers.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
                 <Button>
