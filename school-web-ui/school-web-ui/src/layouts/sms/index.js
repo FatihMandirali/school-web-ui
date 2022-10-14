@@ -30,6 +30,7 @@ import Alert from "@mui/material/Alert";
 import useList from "./service/useList";
 import useTeacherList from "./service/useTeacherList";
 import useCoverList from "./service/useCoverList";
+import useRecorStudentList from "./service/useRecorStudentList";
 import useCreate from "./service/useCreate";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import MDTypography from "../../components/MDTypography";
@@ -43,18 +44,23 @@ function Tables() {
   const [message, setMessage] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [covers, setCovers] = useState([]);
+  const [recordStudents, setRecordStudents] = useState([]);
   const [coversAll, setCoversAll] = useState([]);
+  const [recordStudentsAll, setRecordStudentsAll] = useState([]);
   const [teachersAll, setTeachersAll] = useState([]);
   const [autoSelecetCovers, setAutoSelecetCovers] = useState([]);
+  const [autoSelecetRecordStudents, setAutoSelecetRecordStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [autoSelecetTeachers, setAutoSelecetTeachers] = useState([]);
   const [selectedTeachers, setSelectedTeachers] = useState([]);
+  const [selectedRecordStudents, setSelectedRecordStudents] = useState([]);
   const [selectedCovers, setSelectedCovers] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [sendForm, setSendForm] = useState(false);
   const { get } = useList();
   const { getTeacherList } = useTeacherList();
   const { getCover } = useCoverList();
+  const { getRecordStudent } = useRecorStudentList();
   const { post } = useCreate();
 
   const [successSB, setSuccessSB] = useState(false);
@@ -100,6 +106,22 @@ function Tables() {
       setData(res.data.Response.Balance.SmsTotal);
     } else {
       setData("Şuan için gösterilemiyor");
+    }
+    const resRecordStudent = await getRecordStudent();
+    if (resRecordStudent.serviceStatus === "loaded") {
+      const recordStudentArray = [];
+      recordStudentArray.push({ id: 0, label: "Tüm Kayıtlı Öğrenciler", type: "RECORD_STUDENT" });
+      // eslint-disable-next-line array-callback-return
+      resRecordStudent.data.map((item) => {
+        recordStudentArray.push({
+          id: item.StudentId,
+          label: `${item.StudentName} ${item.StudentSurname}`,
+          type: "RECORD_STUDENT",
+        });
+      });
+      setRecordStudents(recordStudentArray);
+      setRecordStudentsAll(resRecordStudent.data);
+      setAutoSelecetRecordStudents(recordStudentArray);
     }
     const resTeacher = await getTeacherList();
     if (resTeacher.serviceStatus === "loaded") {
@@ -156,6 +178,14 @@ function Tables() {
         setSelectedTeachers(selectedTeachers.filter((x) => x.id !== item.id));
         setAutoSelecetTeachers([...autoSelecetTeachers, item]);
       }
+    } else if (item.type === "RECORD_STUDENT") {
+      if (item.id === 0) {
+        setAutoSelecetRecordStudents(recordStudents);
+        setSelectedRecordStudents([]);
+      } else {
+        setSelectedRecordStudents(selectedRecordStudents.filter((x) => x.id !== item.id));
+        setAutoSelecetRecordStudents([...autoSelecetRecordStudents, item]);
+      }
     } else if (item.type === "PHONE_NUMBER") {
       setSelectedCovers(selectedCovers.filter((x) => x.label !== item.label));
     }
@@ -182,6 +212,17 @@ function Tables() {
           autoSelecetTeachers.find((x) => x.id === event.id),
         ]);
       }
+    } else if (type === "RECORD_STUDENT") {
+      if (event.id === 0) {
+        setAutoSelecetRecordStudents([]);
+        setSelectedRecordStudents([autoSelecetRecordStudents.find((x) => x.id === event.id)]);
+      } else {
+        setAutoSelecetRecordStudents(autoSelecetRecordStudents.filter((x) => x.id !== event.id));
+        setSelectedRecordStudents([
+          ...selectedRecordStudents,
+          autoSelecetRecordStudents.find((x) => x.id === event.id),
+        ]);
+      }
     } else if (type === "PHONE_NUMBER") {
       setSelectedCovers([...selectedCovers, { id: 0, label: event, type: "PHONE_NUMBER" }]);
     }
@@ -195,6 +236,23 @@ function Tables() {
     const selectedCoverList = selectedCovers.filter((x) => x.type === "COVER");
     const selectedPhoneNumberList = selectedCovers.filter((x) => x.type === "PHONE_NUMBER");
     const selectedTeacherList = selectedTeachers.filter((x) => x.type === "TEACHER");
+    const selectedRecordStudentList = selectedRecordStudents.filter(
+      (x) => x.type === "RECORD_STUDENT"
+    );
+
+    if (selectedRecordStudentList.length > 0) {
+      if (selectedRecordStudentList[0].id === 0) {
+        // eslint-disable-next-line array-callback-return
+        recordStudentsAll.map((item) => {
+          phones.push(item.StudentPhoneNumber);
+        });
+      } else {
+        // eslint-disable-next-line array-callback-return
+        selectedRecordStudentList.map((item) => {
+          phones.push(recordStudentsAll.find((x) => x.StudentId === item.id).StudentPhoneNumber);
+        });
+      }
+    }
 
     if (selectedTeacherList.length > 0) {
       if (selectedTeacherList[0].id === 0) {
@@ -340,7 +398,25 @@ function Tables() {
               float: "left",
             }}
           />
-          <Grid mt={20} textAlign="center" container spacing={2}>
+          <Autocomplete
+            fullWidth
+            id="free-solo-demo"
+            freeSolo
+            onChange={(event, newValue) => {
+              coverSelected(newValue, "RECORD_STUDENT");
+            }}
+            options={autoSelecetRecordStudents}
+            renderInput={(params) => <TextField {...params} label="Kayıtlı Öğrenciler" />}
+            style={{
+              height: "15px",
+              margin: "auto",
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: "50px",
+              float: "left",
+            }}
+          />
+          <Grid mt={27} textAlign="center" container spacing={2}>
             {selectedCovers.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
@@ -353,6 +429,17 @@ function Tables() {
               </Box>
             ))}
             {selectedTeachers.map((item) => (
+              <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
+                <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
+                <Button>
+                  <ClearIcon
+                    onClick={() => coverSelectedDelete(item)}
+                    style={{ margin: "auto", alignContent: "center", textAlign: "center" }}
+                  />
+                </Button>
+              </Box>
+            ))}
+            {selectedRecordStudents.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
                 <Button>
