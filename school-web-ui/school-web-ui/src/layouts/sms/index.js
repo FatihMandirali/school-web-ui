@@ -31,6 +31,7 @@ import useList from "./service/useList";
 import useTeacherList from "./service/useTeacherList";
 import useCoverList from "./service/useCoverList";
 import useRecorStudentList from "./service/useRecorStudentList";
+import useNotRecordList from "./service/useNotRecordList";
 import useCreate from "./service/useCreate";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import MDTypography from "../../components/MDTypography";
@@ -45,15 +46,19 @@ function Tables() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [covers, setCovers] = useState([]);
   const [recordStudents, setRecordStudents] = useState([]);
+  const [notRecordStudents, setNotRecordStudents] = useState([]);
   const [coversAll, setCoversAll] = useState([]);
   const [recordStudentsAll, setRecordStudentsAll] = useState([]);
+  const [notRecordStudentsAll, setNotRecordStudentsAll] = useState([]);
   const [teachersAll, setTeachersAll] = useState([]);
   const [autoSelecetCovers, setAutoSelecetCovers] = useState([]);
+  const [autoSelecetNotRecordStudents, setAutoSelecetNotRecordStudents] = useState([]);
   const [autoSelecetRecordStudents, setAutoSelecetRecordStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [autoSelecetTeachers, setAutoSelecetTeachers] = useState([]);
   const [selectedTeachers, setSelectedTeachers] = useState([]);
   const [selectedRecordStudents, setSelectedRecordStudents] = useState([]);
+  const [selectedNotRecordStudents, setSelectedNotRecordStudents] = useState([]);
   const [selectedCovers, setSelectedCovers] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [sendForm, setSendForm] = useState(false);
@@ -61,6 +66,7 @@ function Tables() {
   const { getTeacherList } = useTeacherList();
   const { getCover } = useCoverList();
   const { getRecordStudent } = useRecorStudentList();
+  const { getNotRecordList } = useNotRecordList();
   const { post } = useCreate();
 
   const [successSB, setSuccessSB] = useState(false);
@@ -107,6 +113,27 @@ function Tables() {
     } else {
       setData("Şuan için gösterilemiyor");
     }
+    const resNotRecordStudent = await getNotRecordList();
+    if (resNotRecordStudent.serviceStatus === "loaded") {
+      const notRecordStudentArray = [];
+      notRecordStudentArray.push({
+        id: 0,
+        label: "Tüm Kayıtsız Öğrenciler",
+        type: "NOT_RECORD_STUDENT",
+      });
+      // eslint-disable-next-line array-callback-return
+      resNotRecordStudent.data.map((item) => {
+        notRecordStudentArray.push({
+          id: item.StudentId,
+          label: `${item.StudentName} ${item.StudentSurname}`,
+          type: "NOT_RECORD_STUDENT",
+        });
+      });
+      setNotRecordStudents(notRecordStudentArray);
+      setNotRecordStudentsAll(resNotRecordStudent.data);
+      setAutoSelecetNotRecordStudents(notRecordStudentArray);
+    }
+
     const resRecordStudent = await getRecordStudent();
     if (resRecordStudent.serviceStatus === "loaded") {
       const recordStudentArray = [];
@@ -186,6 +213,14 @@ function Tables() {
         setSelectedRecordStudents(selectedRecordStudents.filter((x) => x.id !== item.id));
         setAutoSelecetRecordStudents([...autoSelecetRecordStudents, item]);
       }
+    } else if (item.type === "NOT_RECORD_STUDENT") {
+      if (item.id === 0) {
+        setAutoSelecetNotRecordStudents(notRecordStudents);
+        setSelectedNotRecordStudents([]);
+      } else {
+        setSelectedNotRecordStudents(selectedRecordStudents.filter((x) => x.id !== item.id));
+        setAutoSelecetNotRecordStudents([...autoSelecetNotRecordStudents, item]);
+      }
     } else if (item.type === "PHONE_NUMBER") {
       setSelectedCovers(selectedCovers.filter((x) => x.label !== item.label));
     }
@@ -223,6 +258,19 @@ function Tables() {
           autoSelecetRecordStudents.find((x) => x.id === event.id),
         ]);
       }
+    } else if (type === "NOT_RECORD_STUDENT") {
+      if (event.id === 0) {
+        setAutoSelecetNotRecordStudents([]);
+        setSelectedNotRecordStudents([autoSelecetNotRecordStudents.find((x) => x.id === event.id)]);
+      } else {
+        setAutoSelecetNotRecordStudents(
+          autoSelecetNotRecordStudents.filter((x) => x.id !== event.id)
+        );
+        setSelectedNotRecordStudents([
+          ...selectedNotRecordStudents,
+          autoSelecetNotRecordStudents.find((x) => x.id === event.id),
+        ]);
+      }
     } else if (type === "PHONE_NUMBER") {
       setSelectedCovers([...selectedCovers, { id: 0, label: event, type: "PHONE_NUMBER" }]);
     }
@@ -239,6 +287,23 @@ function Tables() {
     const selectedRecordStudentList = selectedRecordStudents.filter(
       (x) => x.type === "RECORD_STUDENT"
     );
+    const selectedNotRecordStudentList = selectedNotRecordStudents.filter(
+      (x) => x.type === "NOT_RECORD_STUDENT"
+    );
+
+    if (selectedNotRecordStudentList.length > 0) {
+      if (selectedNotRecordStudentList[0].id === 0) {
+        // eslint-disable-next-line array-callback-return
+        notRecordStudentsAll.map((item) => {
+          phones.push(item.StudentPhoneNumber);
+        });
+      } else {
+        // eslint-disable-next-line array-callback-return
+        selectedNotRecordStudentList.map((item) => {
+          phones.push(notRecordStudentsAll.find((x) => x.StudentId === item.id).StudentPhoneNumber);
+        });
+      }
+    }
 
     if (selectedRecordStudentList.length > 0) {
       if (selectedRecordStudentList[0].id === 0) {
@@ -416,7 +481,25 @@ function Tables() {
               float: "left",
             }}
           />
-          <Grid mt={27} textAlign="center" container spacing={2}>
+          <Autocomplete
+            fullWidth
+            id="free-solo-demo"
+            freeSolo
+            onChange={(event, newValue) => {
+              coverSelected(newValue, "NOT_RECORD_STUDENT");
+            }}
+            options={autoSelecetNotRecordStudents}
+            renderInput={(params) => <TextField {...params} label="Kayıtsız Öğrenciler" />}
+            style={{
+              height: "15px",
+              margin: "auto",
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: "50px",
+              float: "left",
+            }}
+          />
+          <Grid mt={35} textAlign="center" container spacing={2}>
             {selectedCovers.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
@@ -440,6 +523,17 @@ function Tables() {
               </Box>
             ))}
             {selectedRecordStudents.map((item) => (
+              <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
+                <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
+                <Button>
+                  <ClearIcon
+                    onClick={() => coverSelectedDelete(item)}
+                    style={{ margin: "auto", alignContent: "center", textAlign: "center" }}
+                  />
+                </Button>
+              </Box>
+            ))}
+            {selectedNotRecordStudents.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
                 <Button>
