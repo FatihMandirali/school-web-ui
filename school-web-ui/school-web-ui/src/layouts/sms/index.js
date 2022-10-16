@@ -352,14 +352,21 @@ function Tables() {
       phones.push(item.label);
     });
     console.log(phones);
+    const newPhones = [];
+    // eslint-disable-next-line array-callback-return
+    phones.map((item) => {
+      newPhones.push(item.replaceAll(" ", "").replaceAll("+90", ""));
+    });
 
-    if (phones.length <= 0) {
+    console.log(newPhones);
+
+    if (newPhones.length <= 0) {
       setErrorMsg("Lütfen herhangi bir numara girin veya seçin.");
       openErrorSB();
       return;
     }
 
-    const res = await post(phones, message);
+    const res = await post(newPhones, message);
     if (res.serviceStatus === "loaded") {
       openSuccessSB();
       window.location.href = "/sms";
@@ -415,7 +422,7 @@ function Tables() {
                 style={{ marginTop: "15px" }}
                 type="text"
                 onChange={(event) => setPhoneNumber(event.target.value)}
-                label="Numara"
+                label="Numara*(5334445500)"
                 fullWidth
                 name="phoneNumber"
               />
