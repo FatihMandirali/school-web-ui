@@ -10,7 +10,7 @@ const useLessonByProgramList = () => {
         setService({ serviceStatus: "loading" });
         if (id === undefined) return;
         const res = await httpservice.get(
-          `LessonPrograming/ProgramingList?startDate=2022-08-24&endDate=2022-08-26&classId=${id}&type=5`
+          `LessonPrograming/ProgramingList?startDate=2022-08-24&endDate=2022-08-26&classId=${id}&q=5`
         );
         const value = {
           data: res.data,
