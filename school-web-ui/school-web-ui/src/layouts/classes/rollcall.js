@@ -211,12 +211,20 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Yoklama" />
+      <DashboardNavbar
+        pageName={`Yoklama ${rollCall.length <= 0 ? "" : `(${rollCall[0].ClassName} Sınıfı)`}`}
+      />
       <MDBox>
         <br />
         <Box>
           <Grid container spacing={0.5}>
-            {cardsRollCall()}
+            {rollCall.length <= 0 ? (
+              <b style={{ textAlign: "center", margin: "auto" }}>
+                Bugüne ait yoklama dersi bulunmamaktadır
+              </b>
+            ) : (
+              cardsRollCall()
+            )}
           </Grid>
         </Box>
       </MDBox>
@@ -224,50 +232,61 @@ function Tables() {
         <DialogTitle>Sınıf Listesi</DialogTitle>
         <DialogContent>
           <div style={{ height: 400, width: "100%" }}>
-            <DataGrid
-              rows={students}
-              columns={columns}
-              pageSize={15}
-              pagination
-              localeText={localizedTextsMap}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              checkboxSelection
-              getRowId={(row) => row.StudentId}
-              onSelectionModelChange={(ids) => {
-                const selectedIDs = new Set(ids);
-                // eslint-disable-next-line no-shadow
-                const selectedRows = serviceRollCallStudent.data.filter((row) =>
-                  selectedIDs.has(row.StudentId)
-                );
-                console.log(selectedRows);
-                console.log(ids);
+            {students.length <= 0 ? (
+              <b style={{ textAlign: "center", margin: "auto" }}>
+                Bu sınıfa ait yoklama alınacak öğrenci bulunmamaktadır
+              </b>
+            ) : (
+              <DataGrid
+                rows={students}
+                columns={columns}
+                pageSize={15}
+                pagination
+                localeText={localizedTextsMap}
+                rowsPerPageOptions={[5, 10, 15]}
+                onPageChange={(newPage) => changePage(newPage)}
+                checkboxSelection
+                getRowId={(row) => row.StudentId}
+                onSelectionModelChange={(ids) => {
+                  const selectedIDs = new Set(ids);
+                  // eslint-disable-next-line no-shadow
+                  const selectedRows = serviceRollCallStudent.data.filter((row) =>
+                    selectedIDs.has(row.StudentId)
+                  );
+                  console.log(selectedRows);
+                  console.log(ids);
 
-                setTemporarySelectedRows(ids);
-              }}
-              selectionModel={temporarySelectedRows}
-            />
+                  setTemporarySelectedRows(ids);
+                }}
+                selectionModel={temporarySelectedRows}
+              />
+            )}
           </div>
 
           <br />
-          <Grid container spacing={2}>
-            <Grid item xs={9} />
-            <Grid item xs={2}>
-              <MDButton onClick={() => btnSave()} variant="gradient" color="info">
-                Kaydet
-              </MDButton>
+          {students.length <= 0 ? (
+            // eslint-disable-next-line react/jsx-no-useless-fragment
+            <></>
+          ) : (
+            <Grid container spacing={2}>
+              <Grid item xs={9} />
+              <Grid item xs={2}>
+                <MDButton onClick={() => btnSave()} variant="gradient" color="info">
+                  Kaydet
+                </MDButton>
+              </Grid>
+              <Grid item xs={1}>
+                <MDButton
+                  onClick={() => btnSaveFinishModal()}
+                  style={{ float: "right" }}
+                  variant="gradient"
+                  color="success"
+                >
+                  BİTİR
+                </MDButton>
+              </Grid>
             </Grid>
-            <Grid item xs={1}>
-              <MDButton
-                onClick={() => btnSaveFinishModal()}
-                style={{ float: "right" }}
-                variant="gradient"
-                color="success"
-              >
-                BİTİR
-              </MDButton>
-            </Grid>
-          </Grid>
+          )}
         </DialogContent>
       </Dialog>
       {renderSuccessSB}

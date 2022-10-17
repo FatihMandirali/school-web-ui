@@ -172,7 +172,9 @@ function Tables({ id, lessons, teachers }) {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Ders Programı" />
+      <DashboardNavbar
+        pageName={`Ders Programı ${program.length <= 0 ? "" : `(${program[0].ClassName} Sınıfı)`}`}
+      />
       <MDBox>
         <MDBox display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium" />
