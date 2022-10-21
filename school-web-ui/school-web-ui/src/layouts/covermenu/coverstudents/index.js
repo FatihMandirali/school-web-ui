@@ -21,14 +21,25 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import Tooltip from "@mui/material/Tooltip";
+import PaymentIcon from "@mui/icons-material/Payment";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import useList from "./service/useList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
 
 function Tables() {
   const { service, get } = useList();
+
+  const handlePaymentClick = (id) => () => {
+    window.location.href = `/coverstudent_paymentdetail/${id}`;
+  };
+  const handleHomeworkClick = (id) => () => {
+    window.location.href = `/coverstudent_paymentdetail/${id}`;
+  };
 
   const columns = [
     { field: "StudentName", headerName: "Adı", width: 300 },
@@ -48,6 +59,34 @@ function Tables() {
       minWidth: 200,
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "İşlemler",
+      width: 100,
+      cellClassName: "actions",
+      // eslint-disable-next-line react/no-unstable-nested-components
+      getActions: ({ id }) => [
+        <Tooltip title="Ödevler">
+          <GridActionsCellItem
+            icon={<HomeWorkIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleHomeworkClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
+        <Tooltip title="Ödeme Detay">
+          <GridActionsCellItem
+            icon={<PaymentIcon />}
+            label="Payment"
+            className="textPrimary"
+            onClick={handlePaymentClick(id)}
+            color="inherit"
+          />
+        </Tooltip>,
+      ],
+    },
   ];
 
   useEffect(async () => {
@@ -56,7 +95,7 @@ function Tables() {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar pageName="Çocuklar" />
+      <DashboardNavbar pageName="Öğrenciler" />
       <MDBox>
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 600, width: "100%" }}>

@@ -95,6 +95,7 @@ import TeacherAllowDetail from "layouts/teacherAllow/detailTeacherAllow";
 import Homework from "layouts/homework";
 import TeacherHomework from "layouts/teachermenu/teacherHomework";
 import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
+import CoverPaymentDetail from "layouts/covermenu/coverpayments/paymentDetail";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -239,7 +240,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Çocuklar",
+    name: "Öğrenciler",
     key: "coverStudents",
     icon: <EscalatorWarningIcon />,
     route: "/coverStudents",
@@ -255,7 +256,7 @@ const routes = [
     route: "/coverPayments",
     component: <CoverPayments />,
     role: "Cover",
-    isActive: true,
+    isActive: false,
   },
   {
     type: "collapse",
@@ -266,6 +267,16 @@ const routes = [
     component: <CoverNotJoin />,
     role: "Cover",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Öğrenci Ödeme İşlemleri",
+    key: "coverstudent_paymentdetail",
+    icon: <GroupIcon />,
+    route: "/coverstudent_paymentdetail/:id",
+    component: <CoverPaymentDetail />,
+    role: "Cover",
+    isActive: false,
   },
   {
     type: "collapse",
