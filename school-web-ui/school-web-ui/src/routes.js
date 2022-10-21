@@ -92,6 +92,9 @@ import Sms from "layouts/sms";
 import TeacherAllow from "layouts/teacherAllow";
 import TeacherAllowCreate from "layouts/teacherAllow/createTeacherAllow";
 import TeacherAllowDetail from "layouts/teacherAllow/detailTeacherAllow";
+import Homework from "layouts/homework";
+import TeacherHomework from "layouts/teachermenu/teacherHomework";
+import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -111,6 +114,7 @@ import SmsIcon from "@mui/icons-material/Sms";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
 import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
 
 const routes = [
   {
@@ -192,6 +196,26 @@ const routes = [
     component: <TeacherOneOnOne />,
     role: "Teacher",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "teacherHomework",
+    icon: <HomeWorkIcon />,
+    route: "/teacherHomework",
+    component: <TeacherHomework />,
+    role: "Teacher",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "teacherHomework_create",
+    icon: <HomeWorkIcon />,
+    route: "/teacherHomework_create",
+    component: <TeacherHomeworkCreate />,
+    role: "Teacher",
+    isActive: false,
   },
   {
     type: "collapse",
@@ -672,6 +696,16 @@ const routes = [
     component: <TeacherAllowDetail />,
     role: "Admin",
     isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "homework",
+    icon: <HomeWorkIcon />,
+    route: "/homework",
+    component: <Homework />,
+    role: "Admin",
+    isActive: true,
   },
 ];
 
