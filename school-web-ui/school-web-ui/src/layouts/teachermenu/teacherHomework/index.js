@@ -49,7 +49,12 @@ function Tables() {
 
   const columns = [
     { field: "HomeWorkDescription", headerName: "Açıklama", width: 200 },
-    { field: "DateOfTime", headerName: "Ödev Tarihi", width: 200 },
+    {
+      field: "DateOfTime",
+      headerName: "Ödev Tarihi",
+      width: 200,
+      valueGetter: (params) => new Date(params.value).toLocaleString(),
+    },
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
     {
