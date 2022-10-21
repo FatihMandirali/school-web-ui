@@ -96,6 +96,7 @@ import Homework from "layouts/homework";
 import TeacherHomework from "layouts/teachermenu/teacherHomework";
 import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
 import CoverPaymentDetail from "layouts/covermenu/coverpayments/paymentDetail";
+import CoverHomeworkDetail from "layouts/covermenu/coverstudents/coverHomework";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -275,6 +276,16 @@ const routes = [
     icon: <GroupIcon />,
     route: "/coverstudent_paymentdetail/:id",
     component: <CoverPaymentDetail />,
+    role: "Cover",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Öğrenci Ödeme İşlemleri",
+    key: "coverstudent_homeworks",
+    icon: <GroupIcon />,
+    route: "/coverstudent_homeworks/:classId",
+    component: <CoverHomeworkDetail />,
     role: "Cover",
     isActive: false,
   },

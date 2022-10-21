@@ -23,7 +23,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect } from "react";
-import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
 import PaymentIcon from "@mui/icons-material/Payment";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
@@ -37,8 +36,8 @@ function Tables() {
   const handlePaymentClick = (id) => () => {
     window.location.href = `/coverstudent_paymentdetail/${id}`;
   };
-  const handleHomeworkClick = (id) => () => {
-    window.location.href = `/coverstudent_paymentdetail/${id}`;
+  const handleHomeworkClick = (classId) => () => {
+    window.location.href = `/coverstudent_homeworks/${classId}`;
   };
 
   const columns = [
@@ -66,13 +65,13 @@ function Tables() {
       width: 100,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
+      getActions: (params) => [
         <Tooltip title="Ödevler">
           <GridActionsCellItem
             icon={<HomeWorkIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleHomeworkClick(id)}
+            onClick={handleHomeworkClick(params.row.ClassId)}
             color="inherit"
           />
         </Tooltip>,
@@ -81,7 +80,7 @@ function Tables() {
             icon={<PaymentIcon />}
             label="Payment"
             className="textPrimary"
-            onClick={handlePaymentClick(id)}
+            onClick={handlePaymentClick(params.row.StudentId)}
             color="inherit"
           />
         </Tooltip>,
