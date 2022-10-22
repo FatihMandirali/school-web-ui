@@ -27,23 +27,20 @@ import Badge from "@mui/material/Badge";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Drawer from "@mui/material/Drawer";
 import TextField from "@mui/material/TextField";
-import { useParams } from "react-router-dom";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
 import MDButton from "../../../components/MDButton";
-import useHomeworkList from "./service/useHomeworkList";
+import useHomeworkList from "./service/useList";
 
 function Tables() {
-  const { classId } = useParams();
-  console.log(classId);
-  const { service, get } = useHomeworkList(new Date().toDateString(), classId);
+  const { service, get } = useHomeworkList(new Date().toDateString(), 1);
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
   const [homeWorks, setHomeWorks] = useState([]);
 
   useEffect(async () => {
-    const res = await get(new Date().toDateString(), classId);
+    const res = await get(new Date().toDateString(), 1);
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }
@@ -84,7 +81,7 @@ function Tables() {
   }
 
   const btnFilter = async () => {
-    const res = await get(createdDate, classId);
+    const res = await get(createdDate, 1);
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }

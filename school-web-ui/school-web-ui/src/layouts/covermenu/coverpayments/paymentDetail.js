@@ -130,7 +130,7 @@ function Tables() {
       <MDBox>
         <div style={{ height: 400, width: "100%" }}>
           <DataGrid
-            rows={paymentData.studentPayment}
+            rows={paymentData.studentPayment.filter((item) => item.Amount > 0)}
             columns={columns}
             pageSize={5}
             pagination

@@ -97,6 +97,7 @@ import TeacherHomework from "layouts/teachermenu/teacherHomework";
 import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
 import CoverPaymentDetail from "layouts/covermenu/coverpayments/paymentDetail";
 import CoverHomeworkDetail from "layouts/covermenu/coverstudents/coverHomework";
+import StudentMenuHomework from "layouts/studentsmenu/studenthomework";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -176,6 +177,16 @@ const routes = [
     icon: <HistoryEduIcon />,
     route: "/studentLessonProgram",
     component: <StudentLessonProgram />,
+    role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "studentmenuhomework",
+    icon: <HomeWorkIcon />,
+    route: "/studentmenuhomework",
+    component: <StudentMenuHomework />,
     role: "Student",
     isActive: true,
   },
