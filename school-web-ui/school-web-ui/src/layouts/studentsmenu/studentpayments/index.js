@@ -22,15 +22,21 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useList from "./service/useList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import { jwtDecode } from "../../../httpservice/jwtDecode";
 import { sessionStorageService } from "../../../httpservice/sessionStorageService";
 import localizedTextsMap from "../../../tableContentLanguage";
+import MDTypography from "../../../components/MDTypography";
 
 function Tables() {
   const { service, get } = useList();
+  const [paymentData, setPaymentData] = useState({
+    studentPayment: [],
+    totalPaymentPlan: [],
+    totalFee: [],
+  });
 
   const columns = [
     { field: "StudentName", headerName: "Adı", width: 200 },
@@ -58,33 +64,71 @@ function Tables() {
     },
   ];
 
+  const columnsSupplementaryPayment = [
+    { field: "DownAmount", headerName: "Ek Ödenen Tutarı", width: 200 },
+    {
+      field: "DownType",
+      headerName: "Ek Ödeme Tipi",
+      minWidth: 200,
+      valueGetter: (params) => (params.value === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme"),
+    },
+    {
+      field: "PaymentDate",
+      headerName: "Ek Ödeme Tarihi",
+      minWidth: 200,
+      valueGetter: (params) => new Date(params.value).toLocaleDateString(),
+    },
+  ];
+
   useEffect(async () => {
     const res = jwtDecode.returnGetJwtDecode(sessionStorageService.returnGetAccessToken());
     if (res === null) {
       sessionStorageService.returnClearToken();
       window.location.href = "/authentication/sign-in";
     }
-    await get(parseInt(res.Id, 10));
+    const resService = await get(parseInt(res.Id, 10));
+    if (resService.serviceStatus === "loaded") {
+      setPaymentData(resService.data);
+    }
   }, []);
 
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Ödeme Planı" />
+      <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
+        <MDTypography variant="h6" fontWeight="medium">
+          {`Toplam Ödenecek Tutar : ${
+            paymentData.totalFee.length > 0 ? paymentData.totalFee[0].TotalFee : 0
+          }`}
+        </MDTypography>
+      </MDBox>
       <MDBox>
-        {service.serviceStatus === "loaded" && (
-          <div style={{ height: 600, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={9}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.PaymentStudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
-        )}
+        <div style={{ height: 600, width: "100%" }}>
+          <DataGrid
+            rows={paymentData.studentPayment}
+            columns={columns}
+            pageSize={9}
+            pagination
+            localeText={localizedTextsMap}
+            getRowId={(row) => row.PaymentStudentId}
+            rowsPerPageOptions={[5, 10, 15]}
+            loading={service.serviceStatus === "loading"}
+          />
+        </div>
+      </MDBox>
+
+      <MDBox mt={2}>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={paymentData?.totalPaymentPlan}
+            columns={columnsSupplementaryPayment}
+            pageSize={5}
+            pagination
+            localeText={localizedTextsMap}
+            getRowId={(row) => row.DownPaymentId}
+            loading={service.serviceStatus === "loading"}
+          />
+        </div>
       </MDBox>
     </DashboardLayout>
   );
