@@ -3,16 +3,12 @@ import httpservice from "../../../../httpservice/httpservice";
 
 const useList = (page1) => {
   const [service, setService] = useState({ serviceStatus: "loading" });
-  const getData = async (times, classId) =>
+  const getData = async (times) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        console.log(classId);
-        if (classId === undefined) return;
-        const res = await httpservice.get(
-          `Homework/ListForStudentAndCover?times=${times}&classId=${classId}`
-        );
+        const res = await httpservice.get(`Homework/ListForStudent?times=${times}`);
         const value = {
           data: res.data,
           serviceStatus: "loaded",

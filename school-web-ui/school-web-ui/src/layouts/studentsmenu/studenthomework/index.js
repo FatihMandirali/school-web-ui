@@ -33,14 +33,14 @@ import MDButton from "../../../components/MDButton";
 import useHomeworkList from "./service/useList";
 
 function Tables() {
-  const { service, get } = useHomeworkList(new Date().toDateString(), 1);
+  const { service, get } = useHomeworkList(new Date().toDateString());
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
   const [homeWorks, setHomeWorks] = useState([]);
 
   useEffect(async () => {
-    const res = await get(new Date().toDateString(), 1);
+    const res = await get(new Date().toDateString());
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }
@@ -81,7 +81,7 @@ function Tables() {
   }
 
   const btnFilter = async () => {
-    const res = await get(createdDate, 1);
+    const res = await get(createdDate);
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }
