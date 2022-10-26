@@ -6,7 +6,10 @@ import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import MDInput from "../../../components/MDInput";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import TextField from "@mui/material/TextField";
+import EditorToolbar, { modules } from "./editor/EditorToolbar";
 import MDButton from "../../../components/MDButton";
 import MDBox from "../../../components/MDBox";
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
@@ -25,6 +28,7 @@ function CreateCourseType() {
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [description, setDescription] = useState("");
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -63,12 +67,12 @@ function CreateCourseType() {
     initialValues: {
       lessonId: 0,
       classId: 0,
-      description: "",
+      endDate: "",
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const res = await post(values.description, values.lessonId, values.classId);
+      const res = await post(description, values.lessonId, values.classId, values.endDate);
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
         window.location.href = "/teacherHomework";
@@ -86,21 +90,6 @@ function CreateCourseType() {
         <Card>
           <form onSubmit={handleSubmit}>
             <MDBox pt={4} pb={3} px={3}>
-              <MDBox mb={2}>
-                <MDInput
-                  type="text"
-                  onChange={handleChange}
-                  label="Ödev Açıklaması"
-                  fullWidth
-                  name="description"
-                />
-                {sendForm === true && errors.description && (
-                  <Stack sx={{ width: "100%" }} spacing={2}>
-                    <Alert severity="error">{errors.description}</Alert>
-                  </Stack>
-                )}
-              </MDBox>
-
               {service.serviceStatus === "loaded" && (
                 <FormControl mb={5} fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">Sınıf</InputLabel>
@@ -166,6 +155,36 @@ function CreateCourseType() {
                   )}
                 </FormControl>
               )}
+
+              <MDBox mb={2}>
+                <TextField
+                  id="datetime-local"
+                  label="Ödev Bitiş Tarihi"
+                  type="datetime-local"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  fullWidth
+                  name="endDate"
+                  onChange={handleChange}
+                />
+                {sendForm === true && errors.endDate && (
+                  <Stack sx={{ width: "100%" }} spacing={2}>
+                    <Alert severity="error">{errors.endDate}</Alert>
+                  </Stack>
+                )}
+              </MDBox>
+              <MDBox mb={2}>
+                <EditorToolbar />
+                <ReactQuill
+                  theme="snow"
+                  name="description"
+                  value={description}
+                  onChange={setDescription}
+                  placeholder="Lütfen Açıklamanızı Yazın..."
+                  modules={modules}
+                />
+              </MDBox>
 
               {postService.serviceStatus === "loading" ? (
                 <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">

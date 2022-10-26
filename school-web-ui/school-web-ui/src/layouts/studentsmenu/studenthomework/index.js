@@ -47,7 +47,12 @@ function Tables() {
   }, []);
 
   const columns = [
-    { field: "HomeWorkDescription", headerName: "Açıklama", width: 200 },
+    {
+      field: "HomeWorkDescription",
+      headerName: "Açıklama",
+      width: 200,
+      valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
+    },
     {
       field: "DateOfTime",
       headerName: "Ödev Tarihi",
@@ -56,6 +61,7 @@ function Tables() {
     },
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
+    { field: "ClassName", headerName: "Sınıf", width: 200 },
   ];
 
   const openFilterDialog = () => {

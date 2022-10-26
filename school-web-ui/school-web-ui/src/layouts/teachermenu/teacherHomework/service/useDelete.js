@@ -4,18 +4,13 @@ import httpservice from "../../../../httpservice/httpservice";
 const useCreate = () => {
   const [service, setService] = useState({ serviceStatus: "idle" });
 
-  const post = async (description, lessonId, classId, endDate) =>
+  const post = async (id) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        const request = {
-          description,
-          lessonId,
-          classId,
-          endDate,
-        };
-        const res = await httpservice.post(`Homework/Add`, request, {
+
+        const res = await httpservice.delete(`Homework/Delete?homeworkId=${id}`, {
           headers: { "content-type": "application/json" },
         });
 
@@ -34,7 +29,7 @@ const useCreate = () => {
       }
     });
 
-  return { service, post };
+  return { serviceDelete: service, postDelete: post };
 };
 
 export default useCreate;

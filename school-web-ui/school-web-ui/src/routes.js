@@ -95,6 +95,7 @@ import TeacherAllowDetail from "layouts/teacherAllow/detailTeacherAllow";
 import Homework from "layouts/homework";
 import TeacherHomework from "layouts/teachermenu/teacherHomework";
 import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
+import TeacherHomeworkDetail from "layouts/teachermenu/teacherHomework/detail";
 import CoverPaymentDetail from "layouts/covermenu/coverpayments/paymentDetail";
 import CoverHomeworkDetail from "layouts/covermenu/coverstudents/coverHomework";
 import StudentMenuHomework from "layouts/studentsmenu/studenthomework";
@@ -227,6 +228,16 @@ const routes = [
     icon: <HomeWorkIcon />,
     route: "/teacherHomework_create",
     component: <TeacherHomeworkCreate />,
+    role: "Teacher",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "teacherHomework_detail",
+    icon: <HomeWorkIcon />,
+    route: "/teacherHomework_detail/:id",
+    component: <TeacherHomeworkDetail />,
     role: "Teacher",
     isActive: false,
   },

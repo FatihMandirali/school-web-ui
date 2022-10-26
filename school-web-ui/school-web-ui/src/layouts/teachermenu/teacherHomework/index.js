@@ -44,11 +44,16 @@ function Tables() {
   const [createdDate, setCreatedDate] = useState("");
 
   const handleEditClick = (id) => () => {
-    window.location.href = `/lesson_detail/${id}`;
+    window.location.href = `/teacherHomework_detail/${id}`;
   };
 
   const columns = [
-    { field: "HomeWorkDescription", headerName: "Açıklama", width: 200 },
+    {
+      field: "HomeWorkDescription",
+      headerName: "Açıklama",
+      width: 200,
+      valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
+    },
     {
       field: "DateOfTime",
       headerName: "Ödev Tarihi",
@@ -57,6 +62,7 @@ function Tables() {
     },
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
+    { field: "ClassName", headerName: "Sınıf", width: 200 },
     {
       field: "actions",
       type: "actions",
