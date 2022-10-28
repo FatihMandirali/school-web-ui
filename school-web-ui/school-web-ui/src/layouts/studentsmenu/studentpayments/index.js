@@ -29,9 +29,12 @@ import { jwtDecode } from "../../../httpservice/jwtDecode";
 import { sessionStorageService } from "../../../httpservice/sessionStorageService";
 import localizedTextsMap from "../../../tableContentLanguage";
 import MDTypography from "../../../components/MDTypography";
+import StudentPaymentSummaryComponent from "../../../components/StudentPaymentSummary/StudentPaymentSummaryComponent";
 
 function Tables() {
   const { service, get } = useList();
+  const [remainingPayment, setRemainingPayment] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentData, setPaymentData] = useState({
     studentPayment: [],
     totalPaymentPlan: [],
@@ -89,20 +92,55 @@ function Tables() {
     const resService = await get(parseInt(res.Id, 10));
     if (resService.serviceStatus === "loaded") {
       setPaymentData(resService.data);
+      // eslint-disable-next-line no-shadow
+      let paymentAmount = 0;
+      let remainingAmount = 0;
+      // eslint-disable-next-line array-callback-return
+      resService.data.totalPaymentPlan.map((item) => {
+        paymentAmount += item.DownAmount;
+      });
+      // eslint-disable-next-line array-callback-return
+      resService.data.studentPayment
+        .filter((x) => x.Events === 1)
+        // eslint-disable-next-line array-callback-return
+        .map((item) => {
+          paymentAmount += item.Amount;
+        });
+      // eslint-disable-next-line array-callback-return
+      resService.data.studentPayment
+        .filter((x) => x.Events === 0)
+        // eslint-disable-next-line array-callback-return
+        .map((item) => {
+          remainingAmount += item.Amount;
+        });
+      setPaymentAmount(paymentAmount);
+      setRemainingPayment(remainingAmount);
     }
   }, []);
 
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Ödeme Planı" />
-      <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
+      <MDBox display="flex" justifyContent="space-between" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium">
           {`Toplam Ödenecek Tutar : ${
             paymentData.totalFee.length > 0 ? paymentData.totalFee[0].TotalFee : 0
           }`}
         </MDTypography>
       </MDBox>
-      <MDBox>
+      <StudentPaymentSummaryComponent
+        paymentAmount={paymentAmount}
+        paymentData={
+          paymentData.totalFee.length > 0
+            ? paymentData.totalFee[0].TotalFee.toLocaleString("tr-TR", {
+                style: "currency",
+                currency: "TRY",
+              })
+            : "0"
+        }
+        remainingPayment={remainingPayment}
+      />
+      <MDBox mt={2}>
         <div style={{ height: 600, width: "100%" }}>
           <DataGrid
             rows={paymentData.studentPayment.filter((item) => item.Amount > 0)}
