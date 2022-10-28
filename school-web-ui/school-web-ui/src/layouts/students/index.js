@@ -49,24 +49,8 @@ function Tables() {
     { field: "StudentName", headerName: "Adı", width: 200 },
     { field: "StudentSurname", headerName: "Soyadı", minWidth: 200 },
     {
-      field: "StudentNo",
-      headerName: "Öğrenci Numarası",
-      minWidth: 200,
-      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
-    },
-    {
       field: "StudentTcOrPassNo",
       headerName: "Kimlik Bilgisi",
-      minWidth: 200,
-    },
-    {
-      field: "StudentPhoneNumber",
-      headerName: "Telefon",
-      minWidth: 200,
-    },
-    {
-      field: "StudentEmail",
-      headerName: "Mail",
       minWidth: 200,
     },
     {
@@ -77,11 +61,6 @@ function Tables() {
     {
       field: "ClassName",
       headerName: "Sınıf",
-      minWidth: 200,
-    },
-    {
-      field: "Adress",
-      headerName: "Adres",
       minWidth: 200,
     },
     {

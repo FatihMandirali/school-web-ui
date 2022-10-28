@@ -85,8 +85,12 @@ function Tables() {
   };
 
   const columns = [
-    { field: "StudentName", headerName: "Adı", width: 200 },
-    { field: "StudentSurname", headerName: "Soyadı", width: 200 },
+    {
+      field: "StudentName",
+      headerName: "Adı",
+      width: 200,
+      valueGetter: (params) => `${params.row.StudentName} ${params.row.StudentSurname}`,
+    },
     { field: "StudentPhoneNumber", headerName: "Telefon", width: 200 },
     { field: "StudentEmail", headerName: "Mail", width: 200 },
     { field: "StudentTcOrPassNo", headerName: "Kimlik Bilgisi", width: 200 },

@@ -41,11 +41,11 @@ function Tables() {
   };
 
   const columns = [
-    { field: "StudentName", headerName: "Adı", width: 300 },
+    { field: "StudentName", headerName: "Adı", width: 200 },
     {
       field: "StudentSurname",
       headerName: "Soyadı",
-      minWidth: 300,
+      minWidth: 200,
     },
     {
       field: "ClassName",

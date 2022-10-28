@@ -109,10 +109,18 @@ function Tables() {
   };
 
   const columns = [
-    { field: "StudentName", headerName: "Öğrenci Adı", width: 150 },
-    { field: "StudentSurname", headerName: "Öğrenci Soyadı", width: 200 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", minWidth: 150 },
-    { field: "TeacherSurname", headerName: "Öğretmen Soyadı", minWidth: 200 },
+    {
+      field: "StudentName",
+      headerName: "Öğrenci Adı",
+      width: 250,
+      valueGetter: (params) => `${params.row.StudentName} ${params.row.StudentSurname}`,
+    },
+    {
+      field: "TeacherName",
+      headerName: "Öğretmen Adı",
+      minWidth: 250,
+      valueGetter: (params) => `${params.row.TeacherName} ${params.row.TeacherSurname}`,
+    },
     { field: "LessonName", headerName: "Ders Adı", minWidth: 150 },
     {
       field: "Times",

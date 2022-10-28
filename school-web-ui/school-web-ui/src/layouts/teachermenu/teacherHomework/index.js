@@ -62,7 +62,7 @@ function Tables() {
     },
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
-    { field: "ClassName", headerName: "Sınıf", width: 200 },
+    { field: "ClassName", headerName: "Sınıf", width: 150 },
     {
       field: "actions",
       type: "actions",

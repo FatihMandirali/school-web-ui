@@ -31,11 +31,11 @@ function Tables() {
   const { service, get } = useList();
 
   const columns = [
-    { field: "StudentName", headerName: "Adı", width: 300 },
+    { field: "StudentName", headerName: "Adı", width: 150 },
     {
       field: "StudentSurname",
       headerName: "Soyadı",
-      minWidth: 300,
+      minWidth: 150,
     },
     {
       field: "ClassName",

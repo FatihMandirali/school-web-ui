@@ -68,8 +68,6 @@ function Tables() {
       width: 200,
       valueGetter: (params) => shareLocation(params.row.LocationId),
     },
-    { field: "AdminName", headerName: "Admin Adı", width: 200 },
-    { field: "AdminSurname", headerName: "Admin Soyadı", width: 200 },
     {
       field: "actions",
       type: "actions",
