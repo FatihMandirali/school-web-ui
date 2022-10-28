@@ -1,9 +1,9 @@
 import Card from "@mui/material/Card";
 import { useParams } from "react-router-dom";
-import MDBox from "../../components/MDBox";
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
+import MDBox from "../../../components/MDBox";
+import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
 import useDetail from "./service/useDetail";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import HomeworkComponent from "./components/HomeworkComponent";
 
 function CreateUser() {

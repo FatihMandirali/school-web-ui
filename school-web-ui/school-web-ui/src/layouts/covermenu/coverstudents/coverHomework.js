@@ -21,13 +21,14 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridToolbarContainer } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import Badge from "@mui/material/Badge";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Drawer from "@mui/material/Drawer";
 import TextField from "@mui/material/TextField";
 import { useParams } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
 import MDButton from "../../../components/MDButton";
@@ -49,6 +50,10 @@ function Tables() {
     }
   }, []);
 
+  const handleEditClick = (id) => () => {
+    window.location.href = `/coverstudent_homeworks_detail/${id}`;
+  };
+
   const columns = [
     {
       field: "HomeWorkDescription",
@@ -65,6 +70,23 @@ function Tables() {
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
     { field: "ClassName", headerName: "Sınıf", width: 200 },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Detay",
+      width: 100,
+      cellClassName: "actions",
+      // eslint-disable-next-line react/no-unstable-nested-components
+      getActions: ({ id }) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+      ],
+    },
   ];
 
   const openFilterDialog = () => {

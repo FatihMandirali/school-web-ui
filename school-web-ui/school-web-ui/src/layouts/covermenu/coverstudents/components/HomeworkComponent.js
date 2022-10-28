@@ -4,8 +4,8 @@ import { FormControl, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import "react-quill/dist/quill.snow.css";
 import TextField from "@mui/material/TextField";
-import MDBox from "../../../components/MDBox";
-import MDSnackbar from "../../../components/MDSnackbar";
+import MDBox from "../../../../components/MDBox";
+import MDSnackbar from "../../../../components/MDSnackbar";
 import useClassList from "../service/useClassList";
 import useLessonList from "../service/useLessonList";
 

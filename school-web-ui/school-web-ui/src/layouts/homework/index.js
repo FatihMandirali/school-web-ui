@@ -40,6 +40,10 @@ function Tables() {
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
 
+  const handleEditClick = (id) => () => {
+    window.location.href = `/homework_detail/${id}`;
+  };
+
   const columns = [
     {
       field: "HomeWorkDescription",
@@ -56,6 +60,23 @@ function Tables() {
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
     { field: "ClassName", headerName: "Sınıf", width: 200 },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Detay",
+      width: 100,
+      cellClassName: "actions",
+      // eslint-disable-next-line react/no-unstable-nested-components
+      getActions: ({ id }) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+      ],
+    },
   ];
 
   const openFilterDialog = () => {

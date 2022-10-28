@@ -97,8 +97,11 @@ import TeacherHomework from "layouts/teachermenu/teacherHomework";
 import TeacherHomeworkCreate from "layouts/teachermenu/teacherHomework/craeteTeacherHomework";
 import TeacherHomeworkDetail from "layouts/teachermenu/teacherHomework/detail";
 import CoverPaymentDetail from "layouts/covermenu/coverpayments/paymentDetail";
-import CoverHomeworkDetail from "layouts/covermenu/coverstudents/coverHomework";
+import CoverHomework from "layouts/covermenu/coverstudents/coverHomework";
+import CoverHomeworkDetail from "layouts/covermenu/coverstudents/detailHomework";
 import StudentMenuHomework from "layouts/studentsmenu/studenthomework";
+import StudentMenuHomeworkDetail from "layouts/studentsmenu/studenthomework/detail";
+import HomeworkDetail from "layouts/homework/detail";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -190,6 +193,16 @@ const routes = [
     component: <StudentMenuHomework />,
     role: "Student",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "studentmenuhomework",
+    icon: <HomeWorkIcon />,
+    route: "/studentmenuhomework_detail/:id",
+    component: <StudentMenuHomeworkDetail />,
+    role: "Student",
+    isActive: false,
   },
   {
     type: "collapse",
@@ -307,6 +320,16 @@ const routes = [
     key: "coverstudent_homeworks",
     icon: <GroupIcon />,
     route: "/coverstudent_homeworks/:classId",
+    component: <CoverHomework />,
+    role: "Cover",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Öğrenci Ödeme İşlemleri",
+    key: "coverstudent_homeworks_detail",
+    icon: <GroupIcon />,
+    route: "/coverstudent_homeworks_detail/:id",
     component: <CoverHomeworkDetail />,
     role: "Cover",
     isActive: false,
@@ -750,6 +773,16 @@ const routes = [
     component: <Homework />,
     role: "Admin",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Ödevler",
+    key: "homework",
+    icon: <HomeWorkIcon />,
+    route: "/homework_detail/:id",
+    component: <HomeworkDetail />,
+    role: "Admin",
+    isActive: false,
   },
 ];
 
