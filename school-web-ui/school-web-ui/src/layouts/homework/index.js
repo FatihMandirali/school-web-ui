@@ -28,20 +28,51 @@ import Badge from "@mui/material/Badge";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import TextField from "@mui/material/TextField";
 import Drawer from "@mui/material/Drawer";
+import Tooltip from "@mui/material/Tooltip";
 import useList from "./service/useList";
+import useHomeworkTaskStudents from "./service/useHomeworkTaskStudents";
 import MDButton from "../../components/MDButton";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../tableContentLanguage";
 import "../../assets/filter-css/filterbtn.css";
+// eslint-disable-next-line import/order
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+// eslint-disable-next-line import/order
+import CircularProgress from "@mui/material/CircularProgress";
+// eslint-disable-next-line import/order
+import Stack from "@mui/material/Stack";
+import HomeworkTasksComponent from "../../components/HomeworkTasks/HomeworkTasksComponent";
 
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
+  const { getTasksStudents } = useHomeworkTaskStudents();
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
+  const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
+  const [studentTasks, setStudentTasks] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [temporarySelectedRows, setTemporarySelectedRows] = useState([]);
 
   const handleEditClick = (id) => () => {
     window.location.href = `/homework_detail/${id}`;
+  };
+
+  const clickOpenTaskCompletedDialog = () => {
+    setOpenTaskCompletedDialog(false);
+  };
+
+  const chooseTemporarySelectedRows = (ids) => {
+    setTemporarySelectedRows(ids);
+  };
+  const handleTaskCompletedClick = (id) => async () => {
+    const res = await getTasksStudents(id);
+    setIsLoading(true);
+    if (res.serviceStatus === "loaded") {
+      setStudentTasks(res.data);
+    }
+    setOpenTaskCompletedDialog(true);
+    setIsLoading(false);
   };
 
   const columns = [
@@ -63,20 +94,36 @@ function Tables() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Detay",
+      headerName: "İşlemler",
       width: 100,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
+      getActions: (params) => [
+        <Tooltip title="Detay">
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(params.row.HomeworkId)}
+            color="inherit"
+          />
+        </Tooltip>,
+        <Tooltip title="Teslim Listesi">
+          <GridActionsCellItem
+            icon={<TaskAltIcon />}
+            label="TaskCompleted"
+            className="textPrimary"
+            onClick={handleTaskCompletedClick(1)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
+  ];
+
+  const columnStudents = [
+    { field: "StudentName", headerName: "Adı", width: 200 },
+    { field: "StudentSurname", headerName: "Soyadı", minWidth: 400 },
   ];
 
   const openFilterDialog = () => {
@@ -119,20 +166,26 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Ödevler" />
       <MDBox>
-        {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.HomeworkId}
-              components={{ Toolbar: CustomToolbar }}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+        {isLoading ? (
+          <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+            <CircularProgress color="secondary" />
+          </Stack>
+        ) : (
+          service.serviceStatus === "loaded" && (
+            <div style={{ height: 400, width: "100%" }}>
+              <DataGrid
+                rows={service.data}
+                columns={columns}
+                pageSize={8}
+                pagination
+                localeText={localizedTextsMap}
+                getRowId={(row) => row.HomeworkId}
+                components={{ Toolbar: CustomToolbar }}
+                rowsPerPageOptions={[5, 10, 15]}
+                loading={service.serviceStatus === "loading"}
+              />
+            </div>
+          )
         )}
       </MDBox>
       <Drawer anchor="right" open={openFilter} onClose={toggleDrawer()}>
@@ -164,6 +217,16 @@ function Tables() {
           </MDButton>
         </MDBox>
       </Drawer>
+
+      <HomeworkTasksComponent
+        columnStudents={columnStudents}
+        openTaskCompletedDialog={openTaskCompletedDialog}
+        clickOpenTaskCompletedDialog={clickOpenTaskCompletedDialog}
+        studentTasks={studentTasks}
+        chooseTemporarySelectedRows={chooseTemporarySelectedRows}
+        temporarySelectedRows={temporarySelectedRows}
+        isSelected={false}
+      />
     </DashboardLayout>
   );
 }

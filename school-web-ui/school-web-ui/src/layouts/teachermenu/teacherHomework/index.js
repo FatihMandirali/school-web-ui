@@ -36,15 +36,116 @@ import MDTypography from "../../../components/MDTypography";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
 import "../../../assets/filter-css/filterbtn.css";
+// eslint-disable-next-line import/order
+import Tooltip from "@mui/material/Tooltip";
+// eslint-disable-next-line import/order
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import useHomeworkTaskStudents from "../../homework/service/useHomeworkTaskStudents";
+import HomeworkTasksComponent from "../../../components/HomeworkTasks/HomeworkTasksComponent";
+// eslint-disable-next-line import/order
+import CircularProgress from "@mui/material/CircularProgress";
+// eslint-disable-next-line import/order
+import Stack from "@mui/material/Stack";
+import useSaveHomeworkTask from "./service/useSaveHomeworkTask";
+import MDSnackbar from "../../../components/MDSnackbar";
 
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
+  const { postSaveHomework } = useSaveHomeworkTask();
+  const { getTasksStudents } = useHomeworkTaskStudents();
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
+  const [selectedClassId, setSelectedClassId] = useState(0);
+  const [selectedLessonId, setSelectedLessonId] = useState(0);
+  const [selectedHomeworkId, setSelectedHomeworkId] = useState(0);
+  const [studentTasks, setStudentTasks] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [temporarySelectedRows, setTemporarySelectedRows] = useState([]);
+  const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
+  const [successSB, setSuccessSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="İşlem Başarılı"
+      content="Tebrikler, Ödev kontrolü başarılı bir şekilde güncellendi."
+      dateTime="şimdi"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Hata"
+      content={errorMsg}
+      dateTime="now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   const handleEditClick = (id) => () => {
     window.location.href = `/teacherHomework_detail/${id}`;
+  };
+
+  const clickOpenTaskCompletedDialog = () => {
+    setOpenTaskCompletedDialog(false);
+    setTemporarySelectedRows([]);
+  };
+
+  const chooseTemporarySelectedRows = (ids) => {
+    setTemporarySelectedRows(ids);
+  };
+  const saveHomeworkTask = async () => {
+    const request = [];
+    // eslint-disable-next-line array-callback-return
+    studentTasks.map((item) => {
+      request.push({
+        homeworkId: selectedHomeworkId,
+        classId: selectedClassId,
+        studentId: item.StudentId,
+        isActive: temporarySelectedRows.find((x) => x === item.StudentId) === undefined ? 0 : 1,
+        lessonId: selectedLessonId,
+      });
+    });
+    const res = await postSaveHomework(request);
+    if (res.serviceStatus === "loaded") {
+      openSuccessSB();
+      setOpenTaskCompletedDialog(false);
+    } else {
+      setErrorMsg("Ödev kontrolü güncellenirken bir hata oluştu.");
+      openErrorSB();
+    }
+  };
+
+  const handleTaskCompletedClick = (classId, homeworkId, lessonId) => async () => {
+    const res = await getTasksStudents(classId);
+    setIsLoading(true);
+    if (res.serviceStatus === "loaded") {
+      setStudentTasks(res.data);
+    }
+    setSelectedHomeworkId(homeworkId);
+    setSelectedClassId(classId);
+    setSelectedLessonId(lessonId);
+    setOpenTaskCompletedDialog(true);
+    setTemporarySelectedRows([]);
+    setIsLoading(false);
   };
 
   const columns = [
@@ -66,20 +167,36 @@ function Tables() {
     {
       field: "actions",
       type: "actions",
-      headerName: "Detay",
+      headerName: "İşlemler",
       width: 100,
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
+      getActions: (params) => [
+        <Tooltip title="Detay">
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(params.row.HomeworkId)}
+            color="inherit"
+          />
+        </Tooltip>,
+        <Tooltip title="Teslim Listesi">
+          <GridActionsCellItem
+            icon={<TaskAltIcon />}
+            label="TaskCompleted"
+            className="textPrimary"
+            onClick={handleTaskCompletedClick(params.row.ClassId, params.row.HomeworkId, params.row.LessonId)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
+  ];
+
+  const columnStudents = [
+    { field: "StudentName", headerName: "Adı", width: 200 },
+    { field: "StudentSurname", headerName: "Soyadı", minWidth: 400 },
   ];
 
   const openFilterDialog = () => {
@@ -131,20 +248,26 @@ function Tables() {
             </MDButton>
           </Link>
         </MDBox>
-        {service.serviceStatus === "loaded" && (
-          <div style={{ height: 400, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.HomeworkId}
-              components={{ Toolbar: CustomToolbar }}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+        {isLoading ? (
+          <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+            <CircularProgress color="secondary" />
+          </Stack>
+        ) : (
+          service.serviceStatus === "loaded" && (
+            <div style={{ height: 400, width: "100%" }}>
+              <DataGrid
+                rows={service.data}
+                columns={columns}
+                pageSize={8}
+                pagination
+                localeText={localizedTextsMap}
+                getRowId={(row) => row.HomeworkId}
+                components={{ Toolbar: CustomToolbar }}
+                rowsPerPageOptions={[5, 10, 15]}
+                loading={service.serviceStatus === "loading"}
+              />
+            </div>
+          )
         )}
       </MDBox>
       <Drawer anchor="right" open={openFilter} onClose={toggleDrawer()}>
@@ -176,6 +299,19 @@ function Tables() {
           </MDButton>
         </MDBox>
       </Drawer>
+
+      <HomeworkTasksComponent
+        columnStudents={columnStudents}
+        openTaskCompletedDialog={openTaskCompletedDialog}
+        clickOpenTaskCompletedDialog={clickOpenTaskCompletedDialog}
+        studentTasks={studentTasks}
+        chooseTemporarySelectedRows={chooseTemporarySelectedRows}
+        temporarySelectedRows={temporarySelectedRows}
+        isSelected
+        saveHomeworkTask={saveHomeworkTask}
+      />
+      {renderSuccessSB}
+      {renderErrorSB}
     </DashboardLayout>
   );
 }
