@@ -30,6 +30,7 @@ import TextField from "@mui/material/TextField";
 import Drawer from "@mui/material/Drawer";
 import Tooltip from "@mui/material/Tooltip";
 import useList from "./service/useList";
+import useHomeworkTaskCompletedStudents from "./service/useHomeworkTaskCompletedStudents";
 import useHomeworkTaskStudents from "./service/useHomeworkTaskStudents";
 import MDButton from "../../components/MDButton";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
@@ -46,6 +47,7 @@ import HomeworkTasksComponent from "../../components/HomeworkTasks/HomeworkTasks
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
   const { getTasksStudents } = useHomeworkTaskStudents();
+  const { getTasksCompletedStudents } = useHomeworkTaskCompletedStudents();
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
   const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
@@ -65,7 +67,17 @@ function Tables() {
   const chooseTemporarySelectedRows = (ids) => {
     setTemporarySelectedRows(ids);
   };
-  const handleTaskCompletedClick = (id) => async () => {
+  const handleTaskCompletedClick = (id, homeworkId) => async () => {
+    const resCompleted = await getTasksCompletedStudents(id, homeworkId);
+    if (resCompleted.serviceStatus === "loaded") {
+      const ids = [];
+      // eslint-disable-next-line array-callback-return
+      resCompleted.data.map((item) => {
+        ids.push(item.StudentId);
+      });
+      setTemporarySelectedRows(ids);
+    }
+    console.log(resCompleted);
     const res = await getTasksStudents(id);
     setIsLoading(true);
     if (res.serviceStatus === "loaded") {
@@ -113,7 +125,7 @@ function Tables() {
             icon={<TaskAltIcon />}
             label="TaskCompleted"
             className="textPrimary"
-            onClick={handleTaskCompletedClick(1)}
+            onClick={handleTaskCompletedClick(params.row.ClassId, params.row.HomeworkId)}
             color="inherit"
           />
         </Tooltip>,

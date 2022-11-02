@@ -91,7 +91,7 @@ function Tables() {
     {
       field: "HomeWorkDescription",
       headerName: "Açıklama",
-      width: 200,
+      width: 150,
       valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
     },
     {
@@ -100,9 +100,29 @@ function Tables() {
       width: 200,
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
-    { field: "LessonName", headerName: "Ders Adı", width: 200 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
-    { field: "ClassName", headerName: "Sınıf", width: 200 },
+    { field: "LessonName", headerName: "Ders Adı", width: 100 },
+    { field: "TeacherName", headerName: "Öğretmen Adı", width: 100 },
+    { field: "ClassName", headerName: "Sınıf", width: 100 },
+    {
+      field: "IsActive",
+      headerName: "Ödev Durumu",
+      width: 150,
+      valueGetter: (params) =>
+        // eslint-disable-next-line no-nested-ternary
+        params.value === null
+          ? "Kontrol Edilmedi"
+          : params.value === 0
+          ? "Ödev Yapılmadı"
+          : "Ödev Yapıldı",
+    },
+    {
+      field: "ControlDateTime",
+      headerName: "Ödev Açıklanma Tarihi",
+      width: 200,
+      valueGetter: (params) =>
+        // eslint-disable-next-line no-nested-ternary
+        params.value === null ? "Kontrol Edilmedi" : new Date(params.value).toLocaleString(),
+    },
     {
       field: "actions",
       type: "actions",
@@ -117,15 +137,6 @@ function Tables() {
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(params.row.HomeworkId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title="Teslim Listesi">
-          <GridActionsCellItem
-            icon={<TaskAltIcon />}
-            label="TaskCompleted"
-            className="textPrimary"
-            onClick={handleTaskCompletedClick(1)}
             color="inherit"
           />
         </Tooltip>,

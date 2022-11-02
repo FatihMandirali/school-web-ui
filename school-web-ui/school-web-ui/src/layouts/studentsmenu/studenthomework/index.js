@@ -89,7 +89,7 @@ function Tables() {
     {
       field: "HomeWorkDescription",
       headerName: "Açıklama",
-      width: 200,
+      width: 100,
       valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
     },
     {
@@ -99,8 +99,27 @@ function Tables() {
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
     { field: "LessonName", headerName: "Ders Adı", width: 200 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
-    { field: "ClassName", headerName: "Sınıf", width: 200 },
+    { field: "TeacherName", headerName: "Öğretmen Adı", width: 150 },
+    {
+      field: "IsActive",
+      headerName: "Ödev Durumu",
+      width: 150,
+      valueGetter: (params) =>
+        // eslint-disable-next-line no-nested-ternary
+        params.value === null
+          ? "Kontrol Edilmedi"
+          : params.value === 0
+          ? "Ödev Yapılmadı"
+          : "Ödev Yapıldı",
+    },
+    {
+      field: "ControlDateTime",
+      headerName: "Ödev Açıklanma Tarihi",
+      width: 200,
+      valueGetter: (params) =>
+        // eslint-disable-next-line no-nested-ternary
+        params.value === null ? "Kontrol Edilmedi" : new Date(params.value).toLocaleString(),
+    },
     {
       field: "actions",
       type: "actions",
