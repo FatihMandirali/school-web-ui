@@ -98,7 +98,7 @@ function Tables() {
       width: 200,
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
-    { field: "LessonName", headerName: "Ders Adı", width: 200 },
+    { field: "LessonName", headerName: "Ders Adı", width: 150 },
     { field: "TeacherName", headerName: "Öğretmen Adı", width: 150 },
     {
       field: "IsActive",
