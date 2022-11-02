@@ -103,9 +103,15 @@ function Tables() {
       width: 200,
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
-    { field: "LessonName", headerName: "Ders Adı", width: 200 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
-    { field: "ClassName", headerName: "Sınıf", width: 200 },
+    { field: "LessonName", headerName: "Ders Adı", width: 150 },
+    { field: "TeacherName", headerName: "Öğretmen Adı", width: 150 },
+    { field: "ClassName", headerName: "Sınıf", width: 150 },
+    {
+      field: "ControlType",
+      headerName: "Ödev Durumu",
+      width: 150,
+      valueGetter: (params) => (params.value === 1 ? "Kontrol edildi" : "Kontrol edilmedi"),
+    },
     {
       field: "actions",
       type: "actions",

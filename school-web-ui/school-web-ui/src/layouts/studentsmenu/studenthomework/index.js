@@ -29,14 +29,12 @@ import Drawer from "@mui/material/Drawer";
 import TextField from "@mui/material/TextField";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
 import MDButton from "../../../components/MDButton";
 import useHomeworkList from "./service/useList";
-import useHomeworkTaskStudents from "../../homework/service/useHomeworkTaskStudents";
 import HomeworkTasksComponent from "../../../components/HomeworkTasks/HomeworkTasksComponent";
 
 function Tables() {
@@ -45,9 +43,8 @@ function Tables() {
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
   const [homeWorks, setHomeWorks] = useState([]);
-  const { getTasksStudents } = useHomeworkTaskStudents();
-  const [studentTasks, setStudentTasks] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [studentTasks] = useState({});
+  const [isLoading] = useState(false);
   const [temporarySelectedRows, setTemporarySelectedRows] = useState([]);
   const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
 
@@ -65,15 +62,6 @@ function Tables() {
 
   const chooseTemporarySelectedRows = (ids) => {
     setTemporarySelectedRows(ids);
-  };
-  const handleTaskCompletedClick = (id) => async () => {
-    const res = await getTasksStudents(id);
-    setIsLoading(true);
-    if (res.serviceStatus === "loaded") {
-      setStudentTasks(res.data);
-    }
-    setOpenTaskCompletedDialog(true);
-    setIsLoading(false);
   };
 
   const columnStudents = [
@@ -134,15 +122,6 @@ function Tables() {
             label="Edit"
             className="textPrimary"
             onClick={handleEditClick(params.row.HomeworkId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title="Teslim Listesi">
-          <GridActionsCellItem
-            icon={<TaskAltIcon />}
-            label="TaskCompleted"
-            className="textPrimary"
-            onClick={handleTaskCompletedClick(1)}
             color="inherit"
           />
         </Tooltip>,

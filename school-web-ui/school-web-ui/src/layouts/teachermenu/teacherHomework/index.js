@@ -49,6 +49,7 @@ import Stack from "@mui/material/Stack";
 import useSaveHomeworkTask from "./service/useSaveHomeworkTask";
 import MDSnackbar from "../../../components/MDSnackbar";
 import useHomeworkTaskCompletedStudents from "../../homework/service/useHomeworkTaskCompletedStudents";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
@@ -66,6 +67,7 @@ function Tables() {
   const [temporarySelectedRows, setTemporarySelectedRows] = useState([]);
   const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -130,13 +132,16 @@ function Tables() {
     if (res.serviceStatus === "loaded") {
       openSuccessSB();
       setOpenTaskCompletedDialog(false);
+      await get(createdDate);
+      setOpenFilter(false);
+      setInvisible(false);
     } else {
       setErrorMsg("Ödev kontrolü güncellenirken bir hata oluştu.");
       openErrorSB();
     }
   };
 
-  const handleTaskCompletedClick = (classId, homeworkId, lessonId) => async () => {
+  const handleTaskCompletedClick = (classId, homeworkId, lessonId, checkType) => async () => {
     const resCompleted = await getTasksCompletedStudents(0, homeworkId);
     if (resCompleted.serviceStatus === "loaded") {
       const ids = [];
@@ -154,6 +159,7 @@ function Tables() {
     if (res.serviceStatus === "loaded") {
       setStudentTasks(res.data);
     }
+    setIsSelected(checkType === 0);
     setSelectedHomeworkId(homeworkId);
     setSelectedClassId(classId);
     setSelectedLessonId(lessonId);
@@ -165,7 +171,7 @@ function Tables() {
     {
       field: "HomeWorkDescription",
       headerName: "Açıklama",
-      width: 200,
+      width: 150,
       valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
     },
     {
@@ -174,9 +180,15 @@ function Tables() {
       width: 200,
       valueGetter: (params) => new Date(params.value).toLocaleString(),
     },
-    { field: "LessonName", headerName: "Ders Adı", width: 200 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
+    { field: "LessonName", headerName: "Ders Adı", width: 150 },
+    { field: "TeacherName", headerName: "Öğretmen Adı", width: 150 },
     { field: "ClassName", headerName: "Sınıf", width: 150 },
+    {
+      field: "ControlType",
+      headerName: "Ödev Durumu",
+      width: 150,
+      valueGetter: (params) => (params.value === 1 ? "Kontrol edildi" : "Kontrol edilmedi"),
+    },
     {
       field: "actions",
       type: "actions",
@@ -194,15 +206,16 @@ function Tables() {
             color="inherit"
           />
         </Tooltip>,
-        <Tooltip title="Teslim Listesi">
+        <Tooltip title={params.row.ControlType === 0 ? "Teslim Al" : "Teslim Listesi"}>
           <GridActionsCellItem
-            icon={<TaskAltIcon />}
+            icon={params.row.ControlType === 0 ? <FactCheckIcon /> : <TaskAltIcon />}
             label="TaskCompleted"
             className="textPrimary"
             onClick={handleTaskCompletedClick(
               params.row.ClassId,
               params.row.HomeworkId,
-              params.row.LessonId
+              params.row.LessonId,
+              params.row.ControlType
             )}
             color="inherit"
           />
@@ -324,7 +337,7 @@ function Tables() {
         studentTasks={studentTasks}
         chooseTemporarySelectedRows={chooseTemporarySelectedRows}
         temporarySelectedRows={temporarySelectedRows}
-        isSelected
+        isSelected={isSelected}
         saveHomeworkTask={saveHomeworkTask}
       />
       {renderSuccessSB}

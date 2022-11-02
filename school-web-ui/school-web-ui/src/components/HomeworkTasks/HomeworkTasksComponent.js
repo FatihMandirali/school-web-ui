@@ -26,7 +26,7 @@ function HomeworkTasksComponent({
         <div style={{ height: 400, width: "100%" }}>
           {studentTasks.length <= 0 ? (
             <b style={{ textAlign: "center", margin: "auto" }}>
-              Bu sınıfa ait yoklama alınacak öğrenci bulunmamaktadır
+              Bu sınıfa ait öğrenci bulunmamaktadır
             </b>
           ) : (
             <DataGrid
