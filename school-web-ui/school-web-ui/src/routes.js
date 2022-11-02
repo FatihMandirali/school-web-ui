@@ -319,7 +319,7 @@ const routes = [
     name: "Öğrenci Ödeme İşlemleri",
     key: "coverstudent_homeworks",
     icon: <GroupIcon />,
-    route: "/coverstudent_homeworks/:classId",
+    route: "/coverstudent_homeworks/:classId/student/:studentId",
     component: <CoverHomework />,
     role: "Cover",
     isActive: false,

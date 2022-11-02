@@ -36,8 +36,8 @@ function Tables() {
   const handlePaymentClick = (id) => () => {
     window.location.href = `/coverstudent_paymentdetail/${id}`;
   };
-  const handleHomeworkClick = (classId) => () => {
-    window.location.href = `/coverstudent_homeworks/${classId}`;
+  const handleHomeworkClick = (classId, studentId) => () => {
+    window.location.href = `/coverstudent_homeworks/${classId}/student/${studentId}`;
   };
 
   const columns = [
@@ -71,7 +71,7 @@ function Tables() {
             icon={<HomeWorkIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleHomeworkClick(params.row.ClassId)}
+            onClick={handleHomeworkClick(params.row.ClassId, params.row.StudentId)}
             color="inherit"
           />
         </Tooltip>,

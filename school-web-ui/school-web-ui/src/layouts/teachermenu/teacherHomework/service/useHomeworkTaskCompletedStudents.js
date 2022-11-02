@@ -1,21 +1,20 @@
 import { useState, useEffect } from "react";
-import httpservice from "../../../../httpservice/httpservice";
+import httpservice from "../../../httpservice/httpservice";
 
-const useHomeworkList = (page1) => {
-  const [service, setService] = useState({ serviceStatus: "loading" });
-  const getData = async (times, classId, studentId) =>
+const useRollCallStudentList = () => {
+  const [serviceRollCallStudent, setService] = useState({ serviceStatus: "loading" });
+  const getData = async (id, homeworkId) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
         setService({ serviceStatus: "loading" });
-        if (classId === undefined) return;
-        const res = await httpservice.get(
-          `Homework/ListForStudentAndCover?times=${times}&classId=${classId}&studentId=${studentId}`
-        );
+        if (id === undefined) return;
+        const res = await httpservice.get(`Homework/HomeworkControlAndCheck?homewprkId=${homeworkId}&classId=${id}`);
         const value = {
           data: res.data,
           serviceStatus: "loaded",
         };
+        console.log(value);
         setService(value);
         resolve(value);
       } catch (error) {
@@ -26,10 +25,10 @@ const useHomeworkList = (page1) => {
     });
 
   useEffect(() => {
-    getData(page1);
+    getData();
   }, []);
 
-  return { service, get: getData };
+  return { serviceRollCallStudent, getTasksCompletedStudents: getData };
 };
 
-export default useHomeworkList;
+export default useRollCallStudentList;

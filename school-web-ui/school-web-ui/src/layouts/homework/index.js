@@ -68,13 +68,16 @@ function Tables() {
     setTemporarySelectedRows(ids);
   };
   const handleTaskCompletedClick = (id, homeworkId) => async () => {
-    const resCompleted = await getTasksCompletedStudents(id, homeworkId);
+    const resCompleted = await getTasksCompletedStudents(0, homeworkId);
     if (resCompleted.serviceStatus === "loaded") {
       const ids = [];
       // eslint-disable-next-line array-callback-return
-      resCompleted.data.map((item) => {
-        ids.push(item.StudentId);
-      });
+      resCompleted.data
+        .filter((x) => x.IsActive === 1)
+        // eslint-disable-next-line array-callback-return
+        .map((item) => {
+          ids.push(item.StudentId);
+        });
       setTemporarySelectedRows(ids);
     }
     console.log(resCompleted);

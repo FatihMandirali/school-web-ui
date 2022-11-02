@@ -30,7 +30,6 @@ import TextField from "@mui/material/TextField";
 import { useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
@@ -41,8 +40,9 @@ import useHomeworkTaskStudents from "../../homework/service/useHomeworkTaskStude
 import HomeworkTasksComponent from "../../../components/HomeworkTasks/HomeworkTasksComponent";
 
 function Tables() {
-  const { classId } = useParams();
-  const { service, get } = useHomeworkList(new Date().toDateString(), classId);
+  const { classId, studentId } = useParams();
+  console.log(studentId);
+  const { service, get } = useHomeworkList(new Date().toDateString(), classId, studentId);
   const { getTasksStudents } = useHomeworkTaskStudents();
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
@@ -54,7 +54,7 @@ function Tables() {
   const [openTaskCompletedDialog, setOpenTaskCompletedDialog] = useState(false);
 
   useEffect(async () => {
-    const res = await get(new Date().toDateString(), classId);
+    const res = await get(new Date().toDateString(), classId, studentId);
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }
@@ -167,7 +167,7 @@ function Tables() {
   }
 
   const btnFilter = async () => {
-    const res = await get(createdDate, classId);
+    const res = await get(createdDate, classId, studentId);
     if (res.serviceStatus === "loaded") {
       setHomeWorks(res.data);
     }

@@ -48,11 +48,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import useSaveHomeworkTask from "./service/useSaveHomeworkTask";
 import MDSnackbar from "../../../components/MDSnackbar";
+import useHomeworkTaskCompletedStudents from "../../homework/service/useHomeworkTaskCompletedStudents";
 
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
   const { postSaveHomework } = useSaveHomeworkTask();
   const { getTasksStudents } = useHomeworkTaskStudents();
+  const { getTasksCompletedStudents } = useHomeworkTaskCompletedStudents();
   const [invisible, setInvisible] = useState(true);
   const [openFilter, setOpenFilter] = useState(false);
   const [createdDate, setCreatedDate] = useState("");
@@ -135,6 +137,18 @@ function Tables() {
   };
 
   const handleTaskCompletedClick = (classId, homeworkId, lessonId) => async () => {
+    const resCompleted = await getTasksCompletedStudents(0, homeworkId);
+    if (resCompleted.serviceStatus === "loaded") {
+      const ids = [];
+      // eslint-disable-next-line array-callback-return
+      resCompleted.data
+        .filter((x) => x.IsActive === 1)
+        // eslint-disable-next-line array-callback-return
+        .map((item) => {
+          ids.push(item.StudentId);
+        });
+      setTemporarySelectedRows(ids);
+    }
     const res = await getTasksStudents(classId);
     setIsLoading(true);
     if (res.serviceStatus === "loaded") {
@@ -144,7 +158,6 @@ function Tables() {
     setSelectedClassId(classId);
     setSelectedLessonId(lessonId);
     setOpenTaskCompletedDialog(true);
-    setTemporarySelectedRows([]);
     setIsLoading(false);
   };
 
@@ -186,7 +199,11 @@ function Tables() {
             icon={<TaskAltIcon />}
             label="TaskCompleted"
             className="textPrimary"
-            onClick={handleTaskCompletedClick(params.row.ClassId, params.row.HomeworkId, params.row.LessonId)}
+            onClick={handleTaskCompletedClick(
+              params.row.ClassId,
+              params.row.HomeworkId,
+              params.row.LessonId
+            )}
             color="inherit"
           />
         </Tooltip>,
