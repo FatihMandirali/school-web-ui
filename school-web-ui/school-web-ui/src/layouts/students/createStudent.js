@@ -1,5 +1,5 @@
 import Card from "@mui/material/Card";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, FormControl, InputLabel, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
@@ -7,12 +7,14 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiPhoneNumber from "material-ui-phone-number";
+import Grid from "@mui/material/Grid";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useCountryList from "./service/useCountryList";
 import useCreate from "./service/useCreate";
+import useCoverCreate from "./service/useCoverCreate";
 import useBranchList from "./service/useBranchList";
 import useClassList from "./service/useClassList";
 import useCoverList from "./service/useCoverList";
@@ -26,6 +28,7 @@ function CreateStudent() {
   const { serviceClass, getClass } = useClassList();
   const { serviceCover, getCover } = useCoverList();
   const { service: postService, post } = useCreate();
+  const { serviceCreateCover, postCoverCreate } = useCoverCreate();
   const [sendForm, setSendForm] = useState(false);
   const [successSB, setSuccessSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
@@ -34,6 +37,12 @@ function CreateStudent() {
   const [studentPerId2, setStudentPerId2] = useState(0);
   const [studentPerId3, setStudentPerId3] = useState(0);
   const [isActiveRecord] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [coverName, setCoverName] = useState("");
+  const [coverSurname, setCoverSurname] = useState("");
+  const [coverEmail, setCoverEmail] = useState("");
+  const [coverPhone1, setCoverPhone1] = useState("");
+  const [coverPhone2, setCoverPhone2] = useState("");
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -45,7 +54,7 @@ function CreateStudent() {
       color="success"
       icon="check"
       title="İşlem Başarılı"
-      content="Tebrikler, Öğrenci başarılı bir şekilde eklendi."
+      content={errorMsg}
       dateTime="şimdi"
       open={successSB}
       onClose={closeSuccessSB}
@@ -108,6 +117,7 @@ function CreateStudent() {
         values.schoolName
       );
       if (res.serviceStatus === "loaded") {
+        setErrorMsg("Tebrikler, Öğrenci başarılı bir şekilde eklendi.");
         openSuccessSB();
         window.location.href = "/student_notrecords";
       } else {
@@ -122,6 +132,37 @@ function CreateStudent() {
     if (values.branchId <= 0) return;
     await getClass(values.branchId);
   }, [values.branchId]);
+
+  const createCover = async () => {
+    if (
+      coverName === "" ||
+      coverName === null ||
+      coverSurname === "" ||
+      coverSurname === null ||
+      coverEmail === "" ||
+      coverEmail === null
+    ) {
+      setErrorMsg("Lütfen boş alanları doldurun");
+      openErrorSB();
+      return;
+    }
+    const res = await postCoverCreate(
+      coverName,
+      coverSurname,
+      coverEmail,
+      coverPhone1,
+      coverPhone2
+    );
+    if (res.serviceStatus === "loaded") {
+      await getCover();
+      setErrorMsg("Tebrikler, Veli başarılı bir şekilde eklendi.");
+      openSuccessSB();
+      setOpenDialog(false);
+    } else {
+      setErrorMsg(res.errorMessage);
+      openErrorSB();
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -316,95 +357,135 @@ function CreateStudent() {
                   )}
                 </FormControl>
               )}
-
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 1</InputLabel>
-                  <Select
-                    label="Veli 1"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
-                    fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={handleChange}
-                    defaultValue={0}
-                    name="studentPerId"
-                    className="specificSelectBox"
-                  >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {sendForm === true && errors.studentPerId && (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert severity="error">{errors.studentPerId}</Alert>
-                    </Stack>
+              <Grid container spacing={3}>
+                <Grid item md={8}>
+                  {serviceCover.serviceStatus === "loaded" && (
+                    <FormControl mb={5} fullWidth>
+                      <InputLabel id="demo-simple-select-filled-label">Veli 1</InputLabel>
+                      <Select
+                        label="Veli 1"
+                        displayEmpty
+                        variant="outlined"
+                        margin="dense"
+                        labelId="demo-simple-select-autowidth-label"
+                        id="demo-simple-select-autowidth"
+                        onChange={handleChange}
+                        defaultValue={0}
+                        name="studentPerId"
+                        className="specificSelectBox"
+                      >
+                        <MenuItem key={0} value={0}>
+                          Seçiniz
+                        </MenuItem>
+                        {serviceCover.data.map((u) => (
+                          <MenuItem key={u.CoverId} value={u.CoverId}>
+                            {u.CoverName} {u.CoverSurname}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {sendForm === true && errors.studentPerId && (
+                        <Stack sx={{ width: "100%" }} spacing={2}>
+                          <Alert severity="error">{errors.studentPerId}</Alert>
+                        </Stack>
+                      )}
+                    </FormControl>
                   )}
-                </FormControl>
-              )}
-
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 2</InputLabel>
-                  <Select
-                    label="Veli 2"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
+                </Grid>
+                <Grid item md={4}>
+                  <MDButton
+                    onClick={() => setOpenDialog(true)}
+                    type="button"
+                    color="info"
                     fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId2()}
-                    defaultValue={0}
-                    name="studentPerId2"
-                    className="specificSelectBox"
                   >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+                    VELİ Ekle
+                  </MDButton>
+                </Grid>
+              </Grid>
 
-              {serviceCover.serviceStatus === "loaded" && (
-                <FormControl mb={5} fullWidth>
-                  <InputLabel id="demo-simple-select-filled-label">Veli 3</InputLabel>
-                  <Select
-                    label="Veli 3"
-                    displayEmpty
-                    variant="outlined"
-                    margin="dense"
+              <Grid container spacing={3}>
+                <Grid item md={8}>
+                  {serviceCover.serviceStatus === "loaded" && (
+                    <FormControl mb={5} fullWidth>
+                      <InputLabel id="demo-simple-select-filled-label">Veli 2</InputLabel>
+                      <Select
+                        label="Veli 2"
+                        displayEmpty
+                        variant="outlined"
+                        margin="dense"
+                        fullWidth
+                        labelId="demo-simple-select-autowidth-label"
+                        id="demo-simple-select-autowidth"
+                        onChange={() => setStudentPerId2()}
+                        defaultValue={0}
+                        name="studentPerId2"
+                        className="specificSelectBox"
+                      >
+                        <MenuItem key={0} value={0}>
+                          Seçiniz
+                        </MenuItem>
+                        {serviceCover.data.map((u) => (
+                          <MenuItem key={u.CoverId} value={u.CoverId}>
+                            {u.CoverName} {u.CoverSurname}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </Grid>
+                <Grid item md={4}>
+                  <MDButton
+                    onClick={() => setOpenDialog(true)}
+                    type="button"
+                    color="info"
                     fullWidth
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    onChange={() => setStudentPerId3()}
-                    defaultValue={0}
-                    name="studentPerId3"
-                    className="specificSelectBox"
                   >
-                    <MenuItem key={0} value={0}>
-                      Seçiniz
-                    </MenuItem>
-                    {serviceCover.data.map((u) => (
-                      <MenuItem key={u.CoverId} value={u.CoverId}>
-                        {u.CoverName} {u.CoverSurname}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+                    VELİ Ekle
+                  </MDButton>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={3}>
+                <Grid item md={8}>
+                  {serviceCover.serviceStatus === "loaded" && (
+                    <FormControl mb={5} fullWidth>
+                      <InputLabel id="demo-simple-select-filled-label">Veli 3</InputLabel>
+                      <Select
+                        label="Veli 3"
+                        displayEmpty
+                        variant="outlined"
+                        margin="dense"
+                        fullWidth
+                        labelId="demo-simple-select-autowidth-label"
+                        id="demo-simple-select-autowidth"
+                        onChange={() => setStudentPerId3()}
+                        defaultValue={0}
+                        name="studentPerId3"
+                        className="specificSelectBox"
+                      >
+                        <MenuItem key={0} value={0}>
+                          Seçiniz
+                        </MenuItem>
+                        {serviceCover.data.map((u) => (
+                          <MenuItem key={u.CoverId} value={u.CoverId}>
+                            {u.CoverName} {u.CoverSurname}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </Grid>
+                <Grid item md={4}>
+                  <MDButton
+                    onClick={() => setOpenDialog(true)}
+                    type="button"
+                    color="info"
+                    fullWidth
+                  >
+                    VELİ Ekle
+                  </MDButton>
+                </Grid>
+              </Grid>
 
               <MDBox mb={2}>
                 <MuiPhoneNumber
@@ -431,6 +512,68 @@ function CreateStudent() {
         {renderSuccessSB}
         {renderErrorSB}
       </MDBox>
+      <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Veli Oluştur</DialogTitle>
+        <DialogContent>
+          <MDBox mt={2}>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                onChange={(e) => setCoverName(e.target.value)}
+                label="Veli Adı"
+                fullWidth
+                name="coverName"
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                onChange={(e) => setCoverSurname(e.target.value)}
+                label="Veli Soyadı"
+                fullWidth
+                name="coverSurname"
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                onChange={(e) => setCoverEmail(e.target.value)}
+                label="Veli Email"
+                fullWidth
+                name="coverEmail"
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MuiPhoneNumber
+                onChange={(e) => setCoverPhone1(e)}
+                defaultCountry="tr"
+                name="coverPhoneNumber"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MuiPhoneNumber
+                onChange={(e) => setCoverPhone2(e)}
+                defaultCountry="tr"
+                name="coverPhoneNumber"
+                fullWidth
+              />
+            </MDBox>
+
+            {serviceCreateCover.serviceStatus === "loading" ? (
+              <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+                <CircularProgress color="secondary" />
+              </Stack>
+            ) : (
+              <MDBox mt={4} mb={1}>
+                <MDButton type="submit" onClick={() => createCover()} color="dark" fullWidth>
+                  Oluştur
+                </MDButton>
+              </MDBox>
+            )}
+          </MDBox>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
