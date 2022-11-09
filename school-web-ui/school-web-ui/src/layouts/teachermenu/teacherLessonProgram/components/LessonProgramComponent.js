@@ -65,6 +65,9 @@ function Tables() {
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
+                          </span>
                         </Card>
                       </CardActionArea>
                     </Grid>
@@ -88,6 +91,9 @@ function Tables() {
                           </span>
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
+                          </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -113,6 +119,9 @@ function Tables() {
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
+                          </span>
                         </Card>
                       </CardActionArea>
                     </Grid>
@@ -136,6 +145,9 @@ function Tables() {
                           </span>
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
+                          </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
                           </span>
                         </Card>
                       </CardActionArea>
@@ -161,6 +173,9 @@ function Tables() {
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
+                          </span>
                         </Card>
                       </CardActionArea>
                     </Grid>
@@ -185,6 +200,9 @@ function Tables() {
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
                           </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
+                          </span>
                         </Card>
                       </CardActionArea>
                     </Grid>
@@ -208,6 +226,9 @@ function Tables() {
                           </span>
                           <span>
                             <b>Öğretmen :</b> {item.TeacherName} {item.TeacherSurname}
+                          </span>
+                          <span>
+                            <b>Sınıf :</b> {item.ClassName}
                           </span>
                         </Card>
                       </CardActionArea>

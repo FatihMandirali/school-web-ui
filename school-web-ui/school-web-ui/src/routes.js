@@ -102,6 +102,7 @@ import CoverHomeworkDetail from "layouts/covermenu/coverstudents/detailHomework"
 import StudentMenuHomework from "layouts/studentsmenu/studenthomework";
 import StudentMenuHomeworkDetail from "layouts/studentsmenu/studenthomework/detail";
 import HomeworkDetail from "layouts/homework/detail";
+import Exams from "layouts/exam";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -122,6 +123,7 @@ import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
 import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 const routes = [
   {
@@ -783,6 +785,16 @@ const routes = [
     component: <HomeworkDetail />,
     role: "Admin",
     isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Sınav İşlemleri",
+    key: "exams",
+    icon: <QuizIcon />,
+    route: "/exams",
+    component: <Exams />,
+    role: "Admin",
+    isActive: true,
   },
 ];
 
