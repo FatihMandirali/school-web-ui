@@ -36,7 +36,7 @@ const useUpdate = () => {
           branchId,
           studentPerId,
           email,
-          phoneNumber: studentPhoneNumber,
+          phoneNumber: studentPhoneNumber.replace(/\s/g, "").substring(1),
           studentPerId2,
           studentPerId3,
           adress,

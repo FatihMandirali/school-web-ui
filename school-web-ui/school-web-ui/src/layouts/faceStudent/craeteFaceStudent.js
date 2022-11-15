@@ -91,7 +91,8 @@ function CreateFinance() {
         values.idNo,
         values.email,
         phone,
-        chooseLesson
+        chooseLesson,
+        values.schoolName
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -168,6 +169,20 @@ function CreateFinance() {
                 {sendForm === true && errors.email && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
                     <Alert severity="error">{errors.email}</Alert>
+                  </Stack>
+                )}
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Okulu"
+                  fullWidth
+                  name="schoolName"
+                />
+                {sendForm === true && errors.schoolName && (
+                  <Stack sx={{ width: "100%" }} spacing={2}>
+                    <Alert severity="error">{errors.schoolName}</Alert>
                   </Stack>
                 )}
               </MDBox>

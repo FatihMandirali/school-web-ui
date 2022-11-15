@@ -25,7 +25,7 @@ const useCreate = () => {
           tcPaspNo,
           emailAdress,
           branchId,
-          teacherPhone: phone,
+          teacherPhone: phone.replace(/\s/g, "").substring(1),
           lessonId,
           classId,
           isBusy: isOneOnOne ? 1 : 0,

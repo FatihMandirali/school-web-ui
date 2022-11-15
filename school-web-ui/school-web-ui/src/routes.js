@@ -103,6 +103,7 @@ import StudentMenuHomework from "layouts/studentsmenu/studenthomework";
 import StudentMenuHomeworkDetail from "layouts/studentsmenu/studenthomework/detail";
 import HomeworkDetail from "layouts/homework/detail";
 import Exams from "layouts/exam";
+import TeacherRollCall from "layouts/teachermenu/teacherRollCall";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -365,6 +366,16 @@ const routes = [
     component: <RollCall />,
     role: "Admin",
     isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Yoklama",
+    key: "roll_call_teacher",
+    icon: <GroupIcon />,
+    route: "/roll_call",
+    component: <TeacherRollCall />,
+    role: "Teacher",
+    isActive: true,
   },
   {
     type: "collapse",

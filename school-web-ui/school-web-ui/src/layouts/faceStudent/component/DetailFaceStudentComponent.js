@@ -46,6 +46,8 @@ function DetailFaceStudentComponent(props) {
   const [studentEmail] = useState(props.data[0].StudentEmail);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [phone, setPhone] = useState(props.data[0].StudentPhoneNumber);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [schoolName] = useState(props.data[0].SchoolName);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -107,6 +109,7 @@ function DetailFaceStudentComponent(props) {
       StudentSurname: studentSurname,
       StudentTcOrPassNo: studentTcOrPassNo,
       StudentEmail: studentEmail,
+      SchoolName: schoolName,
     },
     validationSchema,
     // eslint-disable-next-line no-shadow
@@ -119,7 +122,8 @@ function DetailFaceStudentComponent(props) {
         values.StudentTcOrPassNo,
         values.StudentEmail,
         phone,
-        chooseLesson
+        chooseLesson,
+        values.SchoolName
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
@@ -249,6 +253,21 @@ function DetailFaceStudentComponent(props) {
                 {sendForm === true && errors.StudentEmail && (
                   <Stack sx={{ width: "100%" }} spacing={2}>
                     <Alert severity="error">{errors.StudentEmail}</Alert>
+                  </Stack>
+                )}
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  onChange={handleChange}
+                  label="Okulu"
+                  fullWidth
+                  name="SchoolName"
+                  value={values.SchoolName}
+                />
+                {sendForm === true && errors.SchoolName && (
+                  <Stack sx={{ width: "100%" }} spacing={2}>
+                    <Alert severity="error">{errors.SchoolName}</Alert>
                   </Stack>
                 )}
               </MDBox>

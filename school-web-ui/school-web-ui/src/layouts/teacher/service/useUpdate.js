@@ -29,7 +29,7 @@ const useUpdate = () => {
           lessonId,
           classId,
           teacherId,
-          teacherPhone,
+          teacherPhone: teacherPhone.replace(/\s/g, "").substring(1),
           isBusy: isBusy ? 1 : 0,
         };
         const res = await httpservice.post(`Teachers/AddOrUpdate`, request, {

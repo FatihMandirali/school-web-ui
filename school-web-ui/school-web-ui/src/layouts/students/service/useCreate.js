@@ -35,7 +35,7 @@ const useCreate = () => {
           email,
           classId,
           branchId,
-          phoneNumber: phone,
+          phoneNumber: phone.replace(/\s/g, "").substring(1),
           studentPerId,
           studentPerId2,
           studentPerId3,
