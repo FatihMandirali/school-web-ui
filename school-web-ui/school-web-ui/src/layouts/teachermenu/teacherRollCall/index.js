@@ -43,9 +43,9 @@ function Tables() {
 
   const rollCall = [
     {
-      ClockTime: "07:30 - 23:52",
+      ClockTime: "07:30 - 08:30",
       LessonName: "Matematik",
-      TeacherName: "Fatih Mandıralı",
+      TeacherName: "Ali Veli",
       LessonProgramId: 1,
     },
   ];

@@ -20,7 +20,8 @@ const useUpdate = () => {
     studentPerId2,
     studentPerId3,
     isActiveRecord,
-    schoolName
+    schoolName,
+    isAnswered
   ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
@@ -42,6 +43,7 @@ const useUpdate = () => {
           adress,
           country,
           schoolName,
+          isAnswered,
         };
         console.log(request);
         const res = await httpservice.put(`Students/Update`, request, {

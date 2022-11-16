@@ -64,6 +64,8 @@ function DetailStudentComponent(props) {
   const [studentClass] = useState(props.studentClass);
   // eslint-disable-next-line react/destructuring-assignment,react/prop-types
   const [schoolName] = useState(props.schoolName);
+  // eslint-disable-next-line react/destructuring-assignment,react/prop-types
+  const [isAnswered] = useState(props.isAnswered);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -137,7 +139,8 @@ function DetailStudentComponent(props) {
         studentPerId2,
         studentPerId3,
         isActiveRecord,
-        values.schoolName
+        values.schoolName,
+        isAnswered
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
