@@ -42,6 +42,8 @@ import localizedTextsMap from "../../tableContentLanguage";
 import MDTypography from "../../components/MDTypography";
 import MDInput from "../../components/MDInput";
 import StudentPaymentSummaryComponent from "../../components/StudentPaymentSummary/StudentPaymentSummaryComponent";
+import ReactExport from "react-export-excel";
+import { Card, CardHeader, CardContent, Grid, Button } from "@mui/material"
 
 const style = {
   position: "absolute",
@@ -69,12 +71,20 @@ function Tables() {
   const [sendForm, setSendForm] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [remainingPayment, setRemainingPayment] = useState("");
+  const [totalPaymentexcel, setTotalPaymentexcel] = useState([]);
+  const [studentPaymentExcel, setStudentPaymentExcel] = useState([]);
+  const [totalPaymentPlanExcel, setTotalPaymentPlanExcel] = useState([]);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentData, setPaymentData] = useState({
     studentPayment: [],
     totalPaymentPlan: [],
     totalFee: [],
   });
+
+/*eslint-disable */
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -107,11 +117,16 @@ function Tables() {
     />
   );
 
+  const excelGenerate = () =>{
+    document.getElementById("button2").click()
+  }
   useEffect(async () => {
     const res = await get(id);
     if (res.serviceStatus === "loaded") {
       setPaymentData(res.data);
+      
       // eslint-disable-next-line no-shadow
+      console.log("latest datata", res.data)
       let paymentAmount = 0;
       let remainingAmount = 0;
       // eslint-disable-next-line array-callback-return
@@ -126,6 +141,8 @@ function Tables() {
           paymentAmount += item.Amount;
         });
       // eslint-disable-next-line array-callback-return
+      
+      // document.getElementById("button2").click()
       res.data.studentPayment
         .filter((x) => x.Events === 0)
         // eslint-disable-next-line array-callback-return
@@ -137,6 +154,61 @@ function Tables() {
     }
   }, []);
 
+  useEffect(()=>{
+    let paymentAmount = 0;
+      let remainingAmount = 0;
+      paymentData.totalPaymentPlan.map((item) => {
+        paymentAmount += item.DownAmount;
+      });
+      paymentData.studentPayment
+        .filter((x) => x.Events === 1)
+        .map((item) => {
+          paymentAmount += item.Amount;
+        });
+
+      paymentData.studentPayment
+        .filter((x) => x.Events === 0)
+        .map((item) => {
+          remainingAmount += item.Amount;
+        });
+    const totalPayment = paymentData.totalFee?.map((v) => {
+      return {
+        totalFee: paymentData.totalFee.length > 0
+        ? paymentData.totalFee[0].TotalFee.toLocaleString("tr-TR", {
+            style: "currency",
+            currency: "TRY",
+          })
+        : "0",
+        remainingPayment: remainingAmount.toLocaleString("tr-TR", {
+          style: "currency",
+          currency: "TRY",
+        }),
+        paymentAmount: paymentAmount.toLocaleString("tr-TR", {
+          style: "currency",
+          currency: "TRY",
+        })
+      }
+    })
+    setTotalPaymentexcel(totalPayment)
+    const studentExcel = paymentData.studentPayment?.map((v) => {
+      return {
+        StudentName: v.StudentName,
+        StudentSurname: v.StudentSurname,
+        EndDate: new Date(v.EndDate).toLocaleDateString(),
+        Amount: v.Amount,
+        Events: v.Events <= 0 ? "Ödenmedi" : "Ödendi",
+      }
+    })
+    setStudentPaymentExcel(studentExcel)
+    const totalPaymentPlan1 = paymentData.totalPaymentPlan?.map((v) => {
+      return {
+        DownAmount: v.DownAmount,
+        DownType: v.DownType === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme",
+        PaymentDate: new Date(v.PaymentDate).toLocaleDateString(),
+      }
+    })
+    setTotalPaymentPlanExcel(totalPaymentPlan1)
+  },[paymentData])
   const handleEditClick = (selectedPaymentId) => () => {
     setPaymentId(selectedPaymentId);
     setPaymentPopup(true);
@@ -228,7 +300,7 @@ function Tables() {
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Öğrenci Ücret Ödeme" />
-      <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
+      <MDBox mb={1} display="flex" flexDirection="row-reverse" alignItems="flex-end">
         <MDTypography variant="h6" fontWeight="medium" />
         <MDButton
           onClick={() => supplementaryPayment()}
@@ -239,6 +311,34 @@ function Tables() {
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
           &nbsp;Ek Ödeme
         </MDButton>
+        <MDButton
+          onClick={() => excelGenerate()}
+          size="small"
+          variant="gradient"
+          color="dark"
+          style={{marginRight:"10px"}}
+        >
+          &nbsp;Excel'i İndir
+        </MDButton>
+        <ExcelFile filename="Ödeme Raporu" element={<button id="button2" style={{display:"none"}}>Download Data</button>}>
+                <ExcelSheet data={totalPaymentexcel} name="Ücret Özeti">
+                    <ExcelColumn label="Toplam Ödenecek Tutar" value="totalFee"/>
+                    <ExcelColumn label="Ödenen Tutar" value="paymentAmount"/>
+                    <ExcelColumn label="Kalan Tutar" value="remainingPayment"/>
+                </ExcelSheet>
+                <ExcelSheet data={studentPaymentExcel} name="Öğrenci Ücret Ödeme">
+                    <ExcelColumn label="Adı" value="StudentName"/>
+                    <ExcelColumn label="Soyadı" value="StudentSurname"/>
+                    <ExcelColumn label="Ödeme Tarihi" value="EndDate"/>
+                    <ExcelColumn label="Ödeme Tutarı" value="Amount"/>
+                    <ExcelColumn label="Ödeme Durumu" value="Events"/>
+                </ExcelSheet>
+                <ExcelSheet data={totalPaymentPlanExcel} name="Toplam Ödeme Planı">
+                    <ExcelColumn label="Ek Ödenen Tutarı" value="DownAmount"/>
+                    <ExcelColumn label="Ek Ödeme Tipi" value="DownType"/>
+                    <ExcelColumn label="Ek Ödeme Tarihi" value="PaymentDate"/>
+                </ExcelSheet>
+            </ExcelFile>
       </MDBox>
       <StudentPaymentSummaryComponent
         paymentAmount={paymentAmount}
