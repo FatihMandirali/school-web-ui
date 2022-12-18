@@ -126,7 +126,6 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
       setPaymentData(res.data);
       
       // eslint-disable-next-line no-shadow
-      console.log("latest datata", res.data)
       let paymentAmount = 0;
       let remainingAmount = 0;
       // eslint-disable-next-line array-callback-return
