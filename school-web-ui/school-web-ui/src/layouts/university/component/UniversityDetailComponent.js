@@ -11,10 +11,11 @@ import MDButton from "../../../components/MDButton";
 import MDBox from "../../../components/MDBox";
 import useUpdate from "../service/useUpdate";
 import useDelete from "../service/useDelete";
-import { validationSchema } from "../validations/announcementValidation";
+import { validationSchema } from "../validations/universityValidation";
 import MDSnackbar from "../../../components/MDSnackbar";
 
 function CreateAnnouncement(props) {
+  console.log(props);
   const { service, post } = useUpdate();
   const { serviceDelete, postDelete } = useDelete();
   const [sendForm, setSendForm] = useState(false);
@@ -78,7 +79,7 @@ function CreateAnnouncement(props) {
 
   const btnDelete = async () => {
     await postDelete(announcementId);
-    window.location.href = `/announcements`;
+    window.location.href = `/university`;
   };
 
   const { handleSubmit, handleChange, values, errors } = useFormik({
@@ -104,6 +105,7 @@ function CreateAnnouncement(props) {
       );
       if (res.serviceStatus === "loaded") {
         openSuccessSB();
+        window.location.href = `/university`;
       } else {
         setErrorMsg(res.errorMessage);
         openErrorSB();
@@ -119,9 +121,10 @@ function CreateAnnouncement(props) {
             <MDInput
               type="text"
               onChange={handleChange}
-              label="Başlık"
+              label="Üniversite"
               fullWidth
               name="title"
+              disabled
               value={values.title}
             />
             {sendForm === true && errors.title && (
@@ -161,45 +164,6 @@ function CreateAnnouncement(props) {
               </Stack>
             )}
           </MDBox>
-
-          <FormControl mb={5} fullWidth>
-            <InputLabel id="demo-simple-select-filled-label">Yayınlanacak Sayfa</InputLabel>
-            <Select
-              label="Yayınlanacak Sayfa"
-              displayEmpty
-              variant="outlined"
-              margin="dense"
-              fullWidth
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              onChange={handleChange}
-              defaultValue={values.locationId}
-              name="locationId"
-              value={values.locationId}
-              className="specificSelectBox"
-            >
-              <MenuItem key={1} value={1}>
-                Giriş Sayfası
-              </MenuItem>
-              <MenuItem key={2} value={2}>
-                Öğrenci Sayfası
-              </MenuItem>
-              <MenuItem key={3} value={3}>
-                Öğretmen Sayfası
-              </MenuItem>
-              <MenuItem key={4} value={4}>
-                Veli Sayfası
-              </MenuItem>
-              <MenuItem key={5} value={5}>
-                Öğrenci ve Veli Sayfası
-              </MenuItem>
-            </Select>
-            {sendForm === true && errors.locationId && (
-              <Stack sx={{ width: "100%" }} spacing={2}>
-                <Alert severity="error">{errors.locationId}</Alert>
-              </Stack>
-            )}
-          </FormControl>
 
           <MDBox mb={2}>
             <TextField

@@ -104,6 +104,10 @@ import StudentMenuHomeworkDetail from "layouts/studentsmenu/studenthomework/deta
 import HomeworkDetail from "layouts/homework/detail";
 import Exams from "layouts/exam";
 import TeacherRollCall from "layouts/teachermenu/teacherRollCall";
+import StudentUniversityList from "layouts/studentsmenu/studentuniversity";
+import UniversityList from "layouts/university/index";
+import UniversityCreate from "layouts/university/createUniversity";
+import UniversityDetail from "layouts/university/detailUniversity";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -154,6 +158,16 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/studentAnnouncement",
     component: <StudentAnnouncement />,
+    role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Üniversite",
+    key: "studentUniversity",
+    icon: <HistoryEduIcon />,
+    route: "/studentUniversty",
+    component: <StudentUniversityList />,
     role: "Student",
     isActive: true,
   },
@@ -806,6 +820,36 @@ const routes = [
     component: <Exams />,
     role: "Admin",
     isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Üniversite İşlemleri",
+    key: "exams",
+    icon: <HistoryEduIcon />,
+    route: "/university",
+    component: <UniversityList />,
+    role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Üniversite İşlemleri",
+    key: "exams",
+    icon: <QuizIcon />,
+    route: "/university_create",
+    component: <UniversityCreate />,
+    role: "Admin",
+    isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "Üniversite İşlemleri",
+    key: "exams",
+    icon: <QuizIcon />,
+    route: "/university_detail/:id",
+    component: <UniversityDetail />,
+    role: "Admin",
+    isActive: false,
   },
 ];
 

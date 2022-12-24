@@ -22,22 +22,87 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import PaymentIcon from "@mui/icons-material/Payment";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import * as React from "react";
+import Grid from "@mui/material/Grid";
 import useList from "./service/useList";
+import useActiveUniversityList from "./service/useActiveUniversityList";
+import useApplyUniversityList from "./service/useApplyUniversityList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
+import MDSnackbar from "../../../components/MDSnackbar";
 
 function Tables() {
   const { service, get } = useList();
+  const { getActiveUniversityList } = useActiveUniversityList();
+  const { getApplyUniversityList } = useApplyUniversityList();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [activeUniList, setActiveUniList] = useState([]);
+  const [applyUniList, setApplyUniList] = useState([]);
+  const [successSB, setSuccessSB] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // const openSuccessSB = () => setSuccessSB(true);
+  const closeSuccessSB = () => setSuccessSB(false);
+  // const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const renderSuccessSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="İşlem Başarılı"
+      content="Tebrikler, İşlem başarılı bir şekilde gerçekleşti."
+      dateTime="şimdi"
+      open={successSB}
+      onClose={closeSuccessSB}
+      close={closeSuccessSB}
+      bgWhite
+    />
+  );
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Hata"
+      content={errorMsg}
+      dateTime="now"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
 
   const handlePaymentClick = (id) => () => {
     window.location.href = `/coverstudent_paymentdetail/${id}`;
   };
   const handleHomeworkClick = (classId, studentId) => () => {
     window.location.href = `/coverstudent_homeworks/${classId}/student/${studentId}`;
+  };
+  const handleUniClick = (studentId) => async () => {
+    const res = await getActiveUniversityList();
+    if (res.serviceStatus !== "loaded") {
+      setErrorMsg("Bir hata oluştu");
+      renderErrorSB();
+      return;
+    }
+    const resStudentApplyUni = await getApplyUniversityList(studentId);
+    if (resStudentApplyUni.serviceStatus !== "loaded") {
+      setErrorMsg("Bir hata oluştu");
+      renderErrorSB();
+      return;
+    }
+    setApplyUniList(resStudentApplyUni.data);
+    setActiveUniList(res.data);
+    setOpenDialog(true);
   };
 
   const columns = [
@@ -84,6 +149,15 @@ function Tables() {
             color="inherit"
           />
         </Tooltip>,
+        <Tooltip title="Başvurulan Üniversiteler">
+          <GridActionsCellItem
+            icon={<HistoryEduIcon />}
+            label="Payment"
+            className="textPrimary"
+            onClick={handleUniClick(params.row.StudentId)}
+            color="inherit"
+          />
+        </Tooltip>,
       ],
     },
   ];
@@ -91,6 +165,63 @@ function Tables() {
   useEffect(async () => {
     await get();
   }, []);
+
+  const activeUniListTable = (
+    <Grid container spacing={2}>
+      {activeUniList.map((car) => (
+        <Grid item xl={10}>
+          <div
+            style={{
+              border: "2px solid rgb(230, 235, 240)",
+              padding: "10px",
+              borderRadius: "7px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "17px",
+                fontWeight: "bold",
+                width: "80%",
+                float: "left",
+                marginLeft: "10px",
+              }}
+            >
+              <span style={{ float: "left" }}>{car.AnnouncementTitle}</span>
+            </div>
+            <br />
+          </div>
+        </Grid>
+      ))}
+    </Grid>
+  );
+  const applyUniListTable = (
+    <Grid container spacing={2}>
+      {applyUniList.map((car) => (
+        <Grid item xl={10}>
+          <div
+            style={{
+              border: "2px solid rgb(230, 235, 240)",
+              padding: "10px",
+              borderRadius: "7px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "17px",
+                fontWeight: "bold",
+                width: "80%",
+                float: "left",
+                marginLeft: "10px",
+              }}
+            >
+              <span style={{ float: "left" }}>{car.Name}</span>
+            </div>
+            <br />
+          </div>
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   return (
     <DashboardLayout>
@@ -111,6 +242,26 @@ function Tables() {
           </div>
         )}
       </MDBox>
+      <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Başvurulan Üniversiteler</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={3}>
+            <Grid item xs={6} md={6}>
+              <h3>Aktif Üniversiteler</h3>
+              {activeUniList.length <= 0 ? "Aktif üniversite bulunmamaktadır." : activeUniListTable}
+            </Grid>
+            <Grid item xs={6} md={6}>
+              <h3>Başvurulan Üniversiteler</h3>
+              {applyUniList.length <= 0
+                ? "Başvurulan üniversite bulunmamaktadır."
+                : applyUniListTable}
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+
+      {renderErrorSB}
+      {renderSuccessSB}
     </DashboardLayout>
   );
 }

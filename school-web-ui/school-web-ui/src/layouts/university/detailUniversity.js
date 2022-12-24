@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import MDBox from "../../components/MDBox";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import useDetail from "./service/useDetail";
-import AnnouncementDetailComponent from "./component/AnnouncementDetailComponent";
+import UniversityDetailComponent from "./component/UniversityDetailComponent";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 function DetailBranch() {
@@ -16,7 +16,7 @@ function DetailBranch() {
       <MDBox>
         <Card>
           {serviceDetail.serviceStatus === "loaded" && (
-            <AnnouncementDetailComponent
+            <UniversityDetailComponent
               announcementId={serviceDetail.data.AnnouncementId}
               announcementText={serviceDetail.data.AnnouncementText}
               announcementTitle={serviceDetail.data.AnnouncementTitle}
