@@ -824,7 +824,7 @@ const routes = [
   {
     type: "collapse",
     name: "Üniversite İşlemleri",
-    key: "exams",
+    key: "university",
     icon: <HistoryEduIcon />,
     route: "/university",
     component: <UniversityList />,

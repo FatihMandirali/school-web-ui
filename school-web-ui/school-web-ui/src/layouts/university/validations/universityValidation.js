@@ -4,7 +4,12 @@ import * as Yup from "yup";
 export const validationSchema = Yup.object({
   title: Yup.string().required("Lütfen üniversite seçin."),
   // title: Yup.number().min(1, "Lütfen Üniversite seçin."),
-  text: Yup.string().required("Lütfen açıklama girin."),
+  text: Yup.string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      "Lütfen url girin"
+    )
+    .required("Lütfen url girin"),
   createdDate: Yup.date().required("Lütfen başlangıç tarihi seçiniz."),
   sharingEndDate: Yup.date()
     .required("Lütfen bitiş tarihini seçiniz.")

@@ -129,7 +129,7 @@ function CreateAnnouncement() {
                 <MDInput
                   type="text"
                   onChange={handleChange}
-                  label="Açıklama"
+                  label="URL(*Lütfen url girin)"
                   fullWidth
                   name="text"
                 />

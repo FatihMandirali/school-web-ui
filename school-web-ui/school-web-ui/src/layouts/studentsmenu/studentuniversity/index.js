@@ -28,6 +28,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Modal } from "@mui/material";
+import * as React from "react";
 import useList from "./service/useList";
 import useApplyUniversity from "./service/useApplyUniversity";
 import useStudentUniversity from "./service/useStudentUniversity";
@@ -133,8 +134,17 @@ function Tables() {
   }, []);
 
   const columns = [
-    { field: "AnnouncementTitle", headerName: "Başlık", width: 250 },
-    { field: "AnnouncementText", headerName: "Açıklama", width: 250 },
+    { field: "AnnouncementTitle", headerName: "Üniversite", width: 250 },
+    {
+      field: "AnnouncementText",
+      headerName: "URL",
+      width: 250,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
     {
       field: "RelaseDate",
       headerName: "Yayın Tarihi",

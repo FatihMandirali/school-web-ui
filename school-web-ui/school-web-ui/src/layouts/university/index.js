@@ -30,13 +30,13 @@ import Tooltip from "@mui/material/Tooltip";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
 import Grid from "@mui/material/Grid";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import useList from "./service/useList";
 import useApplyStudentList from "./service/useApplyStudentList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../tableContentLanguage";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 function Tables() {
   const { service, get } = useList();
@@ -57,8 +57,17 @@ function Tables() {
   };
 
   const columns = [
-    { field: "AnnouncementTitle", headerName: "Başlık", width: 250 },
-    { field: "AnnouncementText", headerName: "Açıklama", width: 250 },
+    { field: "AnnouncementTitle", headerName: "Üniversite", width: 250 },
+    {
+      field: "AnnouncementText",
+      headerName: "URL",
+      width: 250,
+      renderCell: (params) => (
+        <a href={params.value} target="_blank" rel="noreferrer">
+          {params.value}
+        </a>
+      ),
+    },
     {
       field: "RelaseDate",
       headerName: "Yayın Tarihi",
@@ -106,9 +115,11 @@ function Tables() {
   }, []);
 
   const studentListTable = (
-    <>
-      <Grid container spacing={2}>
-        {studentList.map((car) => (
+    <Grid container spacing={2}>
+      {studentList.length <= 0 ? (
+        <h4>Üniversiteye kayıtlı öğrenci bulunmamaktadır.</h4>
+      ) : (
+        studentList.map((car) => (
           <Grid item xl={3}>
             <div
               style={{
@@ -133,9 +144,9 @@ function Tables() {
               <br />
             </div>
           </Grid>
-        ))}
-      </Grid>
-    </>
+        ))
+      )}
+    </Grid>
   );
 
   return (
