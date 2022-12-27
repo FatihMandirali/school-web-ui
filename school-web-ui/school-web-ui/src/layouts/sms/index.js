@@ -33,6 +33,8 @@ import useCoverList from "./service/useCoverList";
 import useRecorStudentList from "./service/useRecorStudentList";
 import useNotRecordList from "./service/useNotRecordList";
 import useCreate from "./service/useCreate";
+import useClassList from "./service/useClassList";
+import useClassPhoneList from "./service/useClassPhoneList";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
@@ -60,6 +62,9 @@ function Tables() {
   const [selectedRecordStudents, setSelectedRecordStudents] = useState([]);
   const [selectedNotRecordStudents, setSelectedNotRecordStudents] = useState([]);
   const [selectedCovers, setSelectedCovers] = useState([]);
+  const [classList, setClassList] = useState([]);
+  const [selectedClassList, setSelectedClassList] = useState([]);
+  const [autoSelectedClassList, setAutoSelectedClassList] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [sendForm, setSendForm] = useState(false);
   const { get } = useList();
@@ -67,6 +72,8 @@ function Tables() {
   const { getCover } = useCoverList();
   const { getRecordStudent } = useRecorStudentList();
   const { getNotRecordList } = useNotRecordList();
+  const { getClassList } = useClassList();
+  const { getClassPhoneList } = useClassPhoneList();
   const { post } = useCreate();
 
   const [successSB, setSuccessSB] = useState(false);
@@ -182,6 +189,18 @@ function Tables() {
       setCoversAll(resCover.data);
       setAutoSelecetCovers(coversArray);
     }
+    const responseClassList = await getClassList();
+    if (responseClassList.serviceStatus === "failed") {
+      setErrorMsg("Sınıflar listelenirken hata oluştu");
+      openErrorSB();
+    } else {
+      const classListPush = [];
+      responseClassList.data.map((x) => {
+        classListPush.push({ id: x.ClassId, label: x.ClassName, type: "CLASS_LIST" });
+      });
+      setClassList(classListPush);
+      setAutoSelectedClassList(classListPush);
+    }
   }, []);
 
   const btnOpenDialog = () => {
@@ -223,6 +242,9 @@ function Tables() {
       }
     } else if (item.type === "PHONE_NUMBER") {
       setSelectedCovers(selectedCovers.filter((x) => x.label !== item.label));
+    } else if (item.type === "CLASS_LIST") {
+      setSelectedClassList(selectedClassList.filter((x) => x.id !== item.id));
+      setAutoSelectedClassList([...autoSelectedClassList, item]);
     }
   };
 
@@ -273,6 +295,12 @@ function Tables() {
       }
     } else if (type === "PHONE_NUMBER") {
       setSelectedCovers([...selectedCovers, { id: 0, label: event, type: "PHONE_NUMBER" }]);
+    } else if (type === "CLASS_LIST") {
+      setSelectedClassList([
+        ...selectedClassList,
+        { id: event.id, label: event.label, type: "CLASS_LIST" },
+      ]);
+      setAutoSelectedClassList(autoSelectedClassList.filter((x) => x.id !== event.id));
     }
   };
   const ApplySendForm = async () => {
@@ -351,14 +379,26 @@ function Tables() {
     selectedPhoneNumberList.map((item) => {
       phones.push(item.label);
     });
+
+    if (selectedClassList.length > 0) {
+      await Promise.all(
+        selectedClassList.map(async (x) => {
+          const res = await getClassPhoneList(x.id);
+          if (res.serviceStatus === "loaded") {
+            res.data.map((y) => {
+              phones.push(y.StudentPhoneNumber);
+            });
+          }
+        })
+      );
+    }
+
     console.log(phones);
     const newPhones = [];
     // eslint-disable-next-line array-callback-return
     phones.map((item) => {
-      newPhones.push(item.replaceAll(" ", "").replaceAll("+90", ""));
+      newPhones.push(item.replaceAll(" ", "").replaceAll("+", "").substr(2));
     });
-
-    console.log(newPhones);
 
     if (newPhones.length <= 0) {
       setErrorMsg("Lütfen herhangi bir numara girin veya seçin.");
@@ -512,7 +552,26 @@ function Tables() {
               float: "left",
             }}
           />
-          <Grid mt={35} textAlign="center" container spacing={2}>
+          <Autocomplete
+            fullWidth
+            id="free-solo-demo"
+            freeSolo
+            onChange={(event, newValue) => {
+              console.log(newValue);
+              coverSelected(newValue, "CLASS_LIST");
+            }}
+            options={autoSelectedClassList}
+            renderInput={(params) => <TextField {...params} label="Sınıflar" />}
+            style={{
+              height: "15px",
+              margin: "auto",
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: "50px",
+              float: "left",
+            }}
+          />
+          <Grid mt={43} textAlign="center" container spacing={2}>
             {selectedCovers.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
@@ -547,6 +606,17 @@ function Tables() {
               </Box>
             ))}
             {selectedNotRecordStudents.map((item) => (
+              <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
+                <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
+                <Button>
+                  <ClearIcon
+                    onClick={() => coverSelectedDelete(item)}
+                    style={{ margin: "auto", alignContent: "center", textAlign: "center" }}
+                  />
+                </Button>
+              </Box>
+            ))}
+            {selectedClassList.map((item) => (
               <Box component="span" ml={2} mb={2} sx={{ border: "1px dashed grey" }}>
                 <b style={{ padding: "2px", marginLeft: "10px", fontSize: "15px" }}>{item.label}</b>
                 <Button>
