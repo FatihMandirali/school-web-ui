@@ -4,15 +4,15 @@ import httpservice from "../../../../httpservice/httpservice";
 const useList = (page1) => {
   const [service, setService] = useState({ serviceStatus: "loading" });
   const getData = async (
-    date // eslint-disable-next-line no-async-promise-executor
+    classId // eslint-disable-next-line no-async-promise-executor
   ) =>
     // eslint-disable-next-line no-async-promise-executor
     new Promise(async (resolve) => {
       try {
+        if (classId === undefined) return;
         setService({ serviceStatus: "loading" });
-        if (date === undefined) return;
-        console.log(date);
-        const res = await httpservice.get(`JoinTakesControllers/ListJoinTeacher?startDate=${date}`);
+        console.log(classId);
+        const res = await httpservice.get(`JoinTakesControllers/List?classId=${classId}`);
         console.log(res);
         const value = {
           data: res.data,
@@ -32,7 +32,7 @@ const useList = (page1) => {
     getData(page1);
   }, []);
 
-  return { service, get: getData };
+  return { service, getClassList: getData };
 };
 
 export default useList;
