@@ -397,7 +397,11 @@ function Tables() {
     const newPhones = [];
     // eslint-disable-next-line array-callback-return
     phones.map((item) => {
-      newPhones.push(item.replaceAll(" ", "").replaceAll("+", "").substr(2));
+      if (item.startsWith("+90") || item.startsWith("90")) {
+        newPhones.push(item.replaceAll(" ", "").replaceAll("+", "").substr(2));
+      } else {
+        newPhones.push(item.replaceAll(" ", "").replaceAll("+", ""));
+      }
     });
 
     if (newPhones.length <= 0) {
