@@ -125,7 +125,7 @@ function Tables() {
               localeText={localizedTextsMap}
               getRowId={(row) => row.AdminId}
               rowsPerPageOptions={[5, 10, 15]}
-              components={{ Toolbar: CustomToolbar }}
+              //components={{ Toolbar: CustomToolbar }}
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
             />

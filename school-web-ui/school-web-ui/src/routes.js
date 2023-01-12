@@ -106,6 +106,7 @@ import Exams from "layouts/exam";
 import TeacherRollCall from "layouts/teachermenu/teacherRollCall";
 import StudentUniversityList from "layouts/studentsmenu/studentuniversity";
 import UniversityList from "layouts/university/index";
+import TeacherUniversityList from "layouts/teachermenu/teacherUniversity";
 import UniversityCreate from "layouts/university/createUniversity";
 import UniversityDetail from "layouts/university/detailUniversity";
 // @mui icons
@@ -169,6 +170,16 @@ const routes = [
     route: "/studentUniversty",
     component: <StudentUniversityList />,
     role: "Student",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Üniversite",
+    key: "studentUniversity",
+    icon: <HistoryEduIcon />,
+    route: "/teacherUniversty",
+    component: <TeacherUniversityList />,
+    role: "Teacher",
     isActive: true,
   },
   {

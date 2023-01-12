@@ -33,10 +33,8 @@ import Grid from "@mui/material/Grid";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import useList from "./service/useList";
 import useApplyStudentList from "./service/useApplyStudentList";
-import MDButton from "../../components/MDButton";
-import MDTypography from "../../components/MDTypography";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
+import localizedTextsMap from "../../../tableContentLanguage";
 
 function Tables() {
   const { service, get } = useList();
@@ -45,9 +43,6 @@ function Tables() {
   const [isLoading, setIsLoading] = useState(false);
   const [studentList, setStudentList] = useState([]);
 
-  const handleEditClick = (id) => () => {
-    window.location.href = `/university_detail/${id}`;
-  };
   const handleRecordClick = (id) => async () => {
     setIsLoading(true);
     const res = await getApplyStudentList(id);
@@ -88,15 +83,6 @@ function Tables() {
       cellClassName: "actions",
       // eslint-disable-next-line react/no-unstable-nested-components
       getActions: (params) => [
-        <Tooltip title="Detay">
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(params.row.AnnouncementId)}
-            color="inherit"
-          />
-        </Tooltip>,
         <Tooltip title="Kayıtlı Öğrenciler">
           <GridActionsCellItem
             icon={<HistoryEduIcon />}
@@ -152,15 +138,6 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar pageName="Üniversite" />
       <MDBox>
-        <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium" />
-          <Link to="/university_create" style={{ color: "#FFF" }}>
-            <MDButton size="small" variant="gradient" color="dark">
-              <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-              &nbsp;ekle
-            </MDButton>
-          </Link>
-        </MDBox>
         {service.serviceStatus === "loaded" && (
           <div style={{ height: 550, width: "100%" }}>
             <DataGrid
