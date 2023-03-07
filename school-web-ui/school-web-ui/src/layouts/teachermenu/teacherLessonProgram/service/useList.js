@@ -25,6 +25,12 @@ const useList = (page1) => {
 
   useEffect(() => {
     getData(page1);
+    try {
+      const res = httpservice.get(`JoinTakes/ListTeacher?classId=1`);
+      console.log(res);
+    } catch (error) {
+      console.log("errorr", error);
+    }
   }, []);
 
   return { service, get: getData };

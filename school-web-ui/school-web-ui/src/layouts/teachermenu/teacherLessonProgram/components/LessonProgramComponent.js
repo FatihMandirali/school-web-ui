@@ -27,6 +27,7 @@ import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import useLessonProgramByClassId from "../service/useList";
 import DashboardNavbar from "../../../../examples/Navbars/DashboardNavbar";
+import userEvent from "@testing-library/user-event";
 
 // eslint-disable-next-line react/prop-types
 function Tables() {
