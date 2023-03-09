@@ -15,7 +15,7 @@ const classList = (page1) => {
           if (now === "Monday") {
             return e.DayName === "Monday";
           } else if (now === "Tuesday") {
-            return e.DayName === "Sunday";
+            return e.DayName === "Tuesday";
           } else if (now === "Wednesday") {
             return e.DayName === "Wednesday";
           } else if (now === "Thursday") {
