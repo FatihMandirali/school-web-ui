@@ -154,6 +154,7 @@ function Configurator() {
   };
   const logOutConfirm = () => {
     sessionStorageService.returnClearToken();
+    localStorage.removeItem("fullName")
     window.location.href = "/authentication/sign-in";
   };
   const handleFixedNavbar = () => setFixedNavbar(dispatch, !fixedNavbar);
