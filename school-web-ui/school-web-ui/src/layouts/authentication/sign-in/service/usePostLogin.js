@@ -20,10 +20,10 @@ const usePost = () => {
         });
 
         const value = {
-          ...res.data,
+          ...res.data.accessToken,
           serviceStatus: "loaded",
         };
-
+        localStorage.setItem("fullName", res.data.fullName);
         setService(value);
         resolve(value);
       } catch (error) {

@@ -128,6 +128,7 @@ function DashboardNavbar({ absolute, light, isMini, pageName }) {
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
           <Breadcrumbs icon="home" title={pageName} route={[]} light={light} />
         </MDBox>
+        <span style={{fontSize:"14px"}}>Hoşgeldiniz <b>{localStorage.getItem("fullName").toUpperCase()}</b></span>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
