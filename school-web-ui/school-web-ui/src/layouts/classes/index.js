@@ -17,12 +17,10 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import {useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
@@ -33,7 +31,8 @@ import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -48,66 +47,109 @@ function Tables() {
   const handleRollCallProgramEditClick = (id) => () => {
     window.location.href = `/roll_call/${id}`;
   };
-
-  const columns = [
-    { field: "ClassName", headerName: "Sınıf", width: 200 },
-    { field: "TeacherName", headerName: "Sınıf Öğretmeni Adı", minWidth: 200 },
-    { field: "TeacherSurname", headerName: "Sınıf Öğretmeni Soyadı", minWidth: 200 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "CourseName",
-      headerName: "Kurs Adı",
-      minWidth: 200,
-      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
+      name: "ClassName",
+      label: "Sınıf",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "BranchName",
-      headerName: "Şube",
-      minWidth: 200,
+      name: "TeacherName",
+      label: "Sınıf Öğretmeni Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
-        <Tooltip title="Ders Programı">
-          <GridActionsCellItem
-            icon={<EventIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleLessonProgramEditClick(id)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title="Yoklama">
-          <GridActionsCellItem
-            icon={<HowToRegIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleRollCallProgramEditClick(id)}
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "TeacherSurname",
+      label: "Sınıf Öğretmeni Soyadı",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "CourseName",
+      label: "Kurs Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "BranchName",
+      label: "Şube",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].ClassId;
+          return (
+            <>
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+              />
+              ,
+              <Tooltip title="Ders Programı">
+                <GridActionsCellItem
+                  icon={<EventIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleLessonProgramEditClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+              <Tooltip title="Yoklama">
+                <GridActionsCellItem
+                  icon={<HowToRegIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleRollCallProgramEditClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+            </>
+          );
+        },
+      },
     },
   ];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
   };
 
   return (
@@ -124,19 +166,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.ClassId}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Sınıflar"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
     </DashboardLayout>

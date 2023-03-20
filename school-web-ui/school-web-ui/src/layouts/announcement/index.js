@@ -17,11 +17,9 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
@@ -30,7 +28,8 @@ import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const { service, get } = useList(0);
@@ -47,45 +46,101 @@ function Tables() {
     if (locationId === 5) return "Öğrenci ve Veli Sayfası";
   };
 
-  const columns = [
-    { field: "AnnouncementTitle", headerName: "Başlık", width: 200 },
-    { field: "AnnouncementText", headerName: "Açıklama", width: 200 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "RelaseDate",
-      headerName: "Yayın Tarihi",
-      width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      name: "AnnouncementTitle",
+      label: "Başlık",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "EndDate",
-      headerName: "Bitiş Tarihi",
-      width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      name: "AnnouncementText",
+      label: "Açıklama",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "LocationId",
-      headerName: "Paylaşılma Yeri",
-      width: 200,
-      valueGetter: (params) => shareLocation(params.row.LocationId),
+      name: "RelaseDate",
+      label: "Yayın Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Detay",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
-      ],
+      name: "EndDate",
+      label: "Bitiş Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
+    },
+    {
+      name: "LocationId",
+      label: "Paylaşılma Yeri",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{shareLocation(value)}</div>;
+        },
+        
+      },
+    },
+    {
+      name: "actions",
+      label: "Detay",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].AnnouncementId;
+          return (
+            <>
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+              />
+            </>
+          );
+        },
+      },
     },
   ];
+
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  };
+
 
   useEffect(() => {
     get();
@@ -105,18 +160,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.AnnouncementId}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Duyurular"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
     </DashboardLayout>

@@ -17,12 +17,10 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import {  GridActionsCellItem } from "@mui/x-data-grid";
+import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
@@ -30,7 +28,8 @@ import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -40,47 +39,82 @@ function Tables() {
     window.location.href = `/teacher_allow_detail/${id}`;
   };
 
-  const columns = [
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 200 },
-    { field: "TeacherSurname", headerName: "Öğretmen Soyadı", minWidth: 200 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "DayNameTR",
-      headerName: "İzin Günü",
-      minWidth: 200,
-      // valueGetter: (params) => dayName(params.row.DayName),
+      name: "TeacherName",
+      label: "Öğretmen Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "Clock",
-      headerName: "İzin Saati",
-      minWidth: 200,
+      name: "TeacherSurname",
+      label: "Öğretmen Soyadı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Detay",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
-      ],
+      name: "DayNameTR",
+      label: "İzin Günü",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "Clock",
+      label: "İzin Saati",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "actions",
+      label: "Detay",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].TeacherId;
+          return (
+            <>
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+              />
+            </>
+          );
+        },
+      },
     },
   ];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
-  };
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  }
 
   return (
     <DashboardLayout>
@@ -96,19 +130,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.AllowTeacherId}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Öğretmen İzinleri"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
     </DashboardLayout>

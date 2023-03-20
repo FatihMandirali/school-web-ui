@@ -20,49 +20,92 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import useList from "./service/useList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const [email, setEmail] = useState(0);
   const { service, get } = useList(email);
 
-  const columns = [
-    { field: "StudentName", headerName: "Öğrenci Adı", width: 200 },
-    { field: "StudentSurname", headerName: "Öğrenci Soyadı", width: 200 },
-    {
-      field: "Times",
-      headerName: "Tarih",
-      minWidth: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+  const getMuiTheme = () =>
+  createTheme({
+    components: {
     },
-    {
-      field: "ClockTime",
-      headerName: "Ders Saati",
-      minWidth: 200,
-      // valueGetter: (params) => (params.row.adminRole === 1 ? "Admin" : "Değil"),
+  });
+const columnss = [
+  {
+    name: "StudentName",
+    label: "Öğrenci Adı",
+    options: {
+      filter: true,
+      sort: false,
     },
-  ];
+  },
+  {
+    name: "StudentSurname",
+    label: "Öğrenci Soyadı",
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
+  {
+    name: "Times",
+    label: "Tarih",
+    options: {
+      filter: true,
+      sort: false,
+      customBodyRender: (value) => {
+        return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+      },
+    },
+  },
+  {
+    name: "ClockTime",
+    label: "Ders Saati",
+    options: {
+      filter: true,
+      sort: false,
+    },
+  }
+];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
-  };
+const options = {
+  filterType: "checkbox",
+  responsive: "standard",
+  filter: false,
+  download: false,
+  print: false,
+  selectableRows: "none",
+  rowsPerPage: 10,
+  rowsPerPageOptions: [10, 100, 200, 500],
+  textLabels: {
+    body: {
+      noMatch: 'Üzgünüz, eşleşen kayıt bulunamadı',
+    }
+  }
+};
+
 
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Bire bir dersler" />
       <MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
+          <>
+          <ThemeProvider theme={getMuiTheme()}>
+                <MUIDataTable
+                  title={"Bire Bir Dersler"}
+                  data={service.data}
+                  columns={columnss}
+                  options={options}
+                />
+              </ThemeProvider>
+          
+          {/* <div style={{ height: 550, width: "100%" }}>
             <DataGrid
               rows={service.data}
               columns={columns}
@@ -74,7 +117,8 @@ function Tables() {
               onPageChange={(newPage) => changePage(newPage)}
               loading={service.serviceStatus === "loading"}
             />
-          </div>
+          </div> */}
+          </>
         )}
       </MDBox>
     </DashboardLayout>

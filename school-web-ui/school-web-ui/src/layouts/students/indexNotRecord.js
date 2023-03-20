@@ -17,12 +17,10 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import {  GridActionsCellItem } from "@mui/x-data-grid";
+import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
@@ -53,7 +51,8 @@ import MDSnackbar from "../../components/MDSnackbar";
 import MDInput from "../../components/MDInput";
 import { validationSchema } from "./validations/studentPaymentValidation";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const style = {
   position: "absolute",
@@ -126,34 +125,62 @@ function Tables() {
       bgWhite
     />
   );
-
-  const columns = [
-    { field: "StudentName", headerName: "Adı", width: 200 },
-    { field: "StudentSurname", headerName: "Soyadı", minWidth: 200 },
-    {
-      field: "StudentTcOrPassNo",
-      headerName: "Kimlik Bilgisi",
-      minWidth: 200,
+  const getMuiTheme = () =>
+  createTheme({
+    components: {},
+  });
+const columnss = [
+  {
+    name: "StudentName",
+    label: "Adı",
+    options: {
+      filter: true,
+      sort: false,
     },
-    {
-      field: "BranchName",
-      headerName: "Şube",
-      minWidth: 200,
+  },
+  {
+    name: "StudentSurname",
+    label: "Soyadı",
+    options: {
+      filter: true,
+      sort: false,
     },
-    {
-      field: "ClassName",
-      headerName: "Sınıf",
-      minWidth: 200,
+  },
+  {
+    name: "StudentTcOrPassNo",
+    label: "Kimlik Bilgisi",
+    options: {
+      filter: true,
+      sort: false,
     },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
+  },
+  {
+    name: "BranchName",
+    label: "Şube",
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
+  {
+    name: "ClassName",
+    label: "Sınıf",
+    options: {
+      filter: true,
+      sort: false,
+    },
+  },
+  {
+    name: "actions",
+    label: "İşlemler",
+    options: {
+      filter: true,
+      sort: false,
+      customBodyRenderLite: (dataIndex) => {
+        const id = service.data[dataIndex].StudentId;
+        return (
+          <>
+           <GridActionsCellItem
           icon={<EditIcon />}
           label="Edit"
           className="textPrimary"
@@ -168,19 +195,29 @@ function Tables() {
             onClick={handleChangeStatusClick(id)}
             color="inherit"
           />
-        </Tooltip>,
-      ],
+        </Tooltip>
+          </>
+        );
+      },
     },
-  ];
+  },
+];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
-  };
+const options = {
+  filterType: "checkbox",
+  responsive: "standard",
+  filter: false,
+  download: false,
+  print: false,
+  selectableRows: "none",
+  rowsPerPage: 10,
+  rowsPerPageOptions: [10, 100, 200, 500],
+  textLabels: {
+    body: {
+      noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+    },
+  },
+}
 
   const { handleSubmit, handleChange, errors } = useFormik({
     initialValues: {
@@ -223,19 +260,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.StudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
+          <>
+          <ThemeProvider theme={getMuiTheme()}>
+            <MUIDataTable
+              title={"Kayıtsız Öğrenciler"}
+              data={service.data}
+              columns={columnss}
+              options={options}
             />
-          </div>
+          </ThemeProvider>
+          </>
         )}
       </MDBox>
       <Modal

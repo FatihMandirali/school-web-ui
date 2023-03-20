@@ -20,9 +20,8 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
@@ -32,7 +31,8 @@ import useList from "./service/useList";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -44,61 +44,100 @@ function Tables() {
   const handlePaymentClick = (id) => () => {
     window.location.href = `/student_paymentdetail/${id}`;
   };
-
-  const columns = [
-    { field: "StudentName", headerName: "Adı", width: 200 },
-    { field: "StudentSurname", headerName: "Soyadı", minWidth: 200 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "StudentTcOrPassNo",
-      headerName: "Kimlik Bilgisi",
-      minWidth: 200,
+      name: "StudentName",
+      label: "Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "BranchName",
-      headerName: "Şube",
-      minWidth: 200,
+      name: "StudentSurname",
+      label: "Soyadı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "ClassName",
-      headerName: "Sınıf",
-      minWidth: 200,
+      name: "StudentTcOrPassNo",
+      label: "Kimlik Bilgisi",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
-        <Tooltip title="Ödeme Detay">
-          <GridActionsCellItem
-            icon={<PaymentIcon />}
-            label="Payment"
-            className="textPrimary"
-            onClick={handlePaymentClick(id)}
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "BranchName",
+      label: "Şube",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "ClassName",
+      label: "Sınıf",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].StudentId;
+          return (
+            <>
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleEditClick(id)}
+                color="inherit"
+              />
+              ,
+              <Tooltip title="Ödeme Detay">
+                <GridActionsCellItem
+                  icon={<PaymentIcon />}
+                  label="Payment"
+                  className="textPrimary"
+                  onClick={handlePaymentClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+            </>
+          );
+        },
+      },
     },
   ];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
-  };
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  }
 
   return (
     <DashboardLayout>
@@ -114,19 +153,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.StudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Kayıtlı Öğrenciler"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
     </DashboardLayout>

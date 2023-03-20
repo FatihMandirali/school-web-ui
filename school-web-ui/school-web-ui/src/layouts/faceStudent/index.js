@@ -17,12 +17,10 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
@@ -52,7 +50,8 @@ import { validationSchema } from "../students/validations/studentPaymentValidati
 import MDSnackbar from "../../components/MDSnackbar";
 import usePostPaymentPlan from "../students/service/usePostPaymentPlan";
 import useChangeStatus from "../students/service/useChangeStatus";
-import localizedTextsMap from "../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const [email, setEmail] = useState(0);
@@ -83,56 +82,119 @@ function Tables() {
     setSelectedId(id);
     setOpenDialog(true);
   };
-
-  const columns = [
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "StudentName",
-      headerName: "Adı",
-      width: 200,
-      valueGetter: (params) => `${params.row.StudentName} ${params.row.StudentSurname}`,
+      name: "StudentName",
+      label: "Adı",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const StudentName = service.data[dataIndex].StudentName;
+          const StudentSurname = service.data[dataIndex].StudentSurname;
+          return (
+            <>
+              {StudentName} {StudentSurname}
+            </>
+          );
+        },
+      },
     },
-    { field: "StudentPhoneNumber", headerName: "Telefon", width: 200 },
-    { field: "StudentEmail", headerName: "Mail", width: 200 },
-    { field: "StudentTcOrPassNo", headerName: "Kimlik Bilgisi", width: 200 },
     {
-      field: "IsActive",
-      headerName: "Aktiflik",
-      minWidth: 50,
-      valueGetter: (params) => (params.row.IsActive === 1 ? "Aktif" : "Aktif Değil"),
+      name: "StudentPhoneNumber",
+      label: "Telefon",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: (params) => [
-        <Tooltip title="Detay">
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(params.row.StudentId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title={params.row.IsAnswered === 1 ? "Ödeme Detay" : "Ödeme Planı Oluştur"}>
-          <GridActionsCellItem
-            icon={params.row.IsAnswered === 1 ? <PaymentIcon /> : <AddCardIcon />}
-            label="PaymentCreate"
-            className="textPrimary"
-            onClick={
-              params.row.IsAnswered === 1
-                ? handleStudentPaymentDetailClick(params.row.StudentId)
-                : handleNewPaymentClick(params.row.StudentId)
-            }
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "StudentEmail",
+      label: "Mail",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "StudentTcOrPassNo",
+      label: "Kimlik Bilgisi",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "IsActive",
+      label: "Aktiflik",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{value === 1 ? "Aktif" : "Aktif Değil"}</div>;
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].StudentId;
+          const IsAnswered = service.data[dataIndex].IsAnswered;
+          return (
+            <>
+              <Tooltip title="Detay">
+                <GridActionsCellItem
+                  icon={<EditIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleEditClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+              <Tooltip title={IsAnswered === 1 ? "Ödeme Detay" : "Ödeme Planı Oluştur"}>
+                <GridActionsCellItem
+                  icon={IsAnswered === 1 ? <PaymentIcon /> : <AddCardIcon />}
+                  label="PaymentCreate"
+                  className="textPrimary"
+                  onClick={
+                    IsAnswered === 1
+                      ? handleStudentPaymentDetailClick(id)
+                      : handleNewPaymentClick(id)
+                  }
+                  color="inherit"
+                />
+              </Tooltip>
+            </>
+          );
+        },
+      },
     },
   ];
+
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  }
 
   const renderSuccessSB = (
     <MDSnackbar
@@ -160,14 +222,6 @@ function Tables() {
     />
   );
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
-  };
 
   const { handleSubmit, handleChange, errors } = useFormik({
     initialValues: {
@@ -210,19 +264,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.StudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Bire Bir Dersler"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
       <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>

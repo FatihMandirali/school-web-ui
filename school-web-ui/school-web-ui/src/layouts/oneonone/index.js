@@ -17,12 +17,10 @@
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import { useState } from "react";
 import Icon from "@mui/material/Icon";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -34,8 +32,9 @@ import useDelete from "./service/useDelete";
 import MDButton from "../../components/MDButton";
 import MDTypography from "../../components/MDTypography";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../tableContentLanguage";
 import MDSnackbar from "../../components/MDSnackbar";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const style = {
   position: "absolute",
@@ -107,58 +106,110 @@ function Tables() {
       openErrorSB();
     }
   };
-
-  const columns = [
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "StudentName",
-      headerName: "Öğrenci Adı",
-      width: 250,
-      valueGetter: (params) => `${params.row.StudentName} ${params.row.StudentSurname}`,
+      name: "StudentName",
+      label: "Öğrenci Adı",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const StudentName = service.data[dataIndex].StudentName;
+          const StudentSurname = service.data[dataIndex].StudentSurname;
+          return (
+            <>
+              {StudentName} {StudentSurname}
+            </>
+          );
+        },
+      },
     },
     {
-      field: "TeacherName",
-      headerName: "Öğretmen Adı",
-      minWidth: 250,
-      valueGetter: (params) => `${params.row.TeacherName} ${params.row.TeacherSurname}`,
+      name: "TeacherName",
+      label: "Öğretmen Adı",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const TeacherName = service.data[dataIndex].TeacherName;
+          const TeacherSurname = service.data[dataIndex].TeacherSurname;
+          return (
+            <>
+              {TeacherName} {TeacherSurname}
+            </>
+          );
+        },
+      },
     },
-    { field: "LessonName", headerName: "Ders Adı", minWidth: 150 },
     {
-      field: "Times",
-      headerName: "Ders Tarihi",
-      minWidth: 200,
-      valueGetter: (params) => new Date(params.row.Times).toLocaleString(),
+      name: "LessonName",
+      label: "Ders Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "ClockTime",
-      headerName: "Ders Saati",
-      minWidth: 150,
+      name: "Times",
+      label: "Ders Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Sil",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: ({ id }) => [
-        <GridActionsCellItem
-          icon={<Icon>delete</Icon>}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleDeleteClick(id)}
-          color="inherit"
-        />,
-      ],
+      name: "ClockTime",
+      label: "Ders Saati",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "actions",
+      label: "Sil",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].OneOnOneId;
+          return (
+            <>
+              <GridActionsCellItem
+                icon={<Icon>delete</Icon>}
+                label="Edit"
+                className="textPrimary"
+                onClick={handleDeleteClick(id)}
+                color="inherit"
+              />
+            </>
+          );
+        },
+      },
     },
   ];
 
-  const changePage = (page) => {
-    console.log("page");
-    console.log(page);
-    setEmail(page);
-    useEffect(() => {
-      get(email);
-    }, [email]);
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
   };
 
   return (
@@ -175,19 +226,16 @@ function Tables() {
           </Link>
         </MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              getRowId={(row) => row.OneOnOneId}
-              localeText={localizedTextsMap}
-              rowsPerPageOptions={[5, 10, 15]}
-              onPageChange={(newPage) => changePage(newPage)}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Bire Bir Dersler"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
       {renderSuccessSB}

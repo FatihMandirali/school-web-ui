@@ -23,9 +23,6 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import Icon from "@mui/material/Icon";
-import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
@@ -35,6 +32,8 @@ import useList from "./service/useList";
 import useApplyStudentList from "./service/useApplyStudentList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../../tableContentLanguage";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const { service, get } = useList();
@@ -50,51 +49,91 @@ function Tables() {
     setIsLoading(false);
     setOpenDialog(true);
   };
-
-  const columns = [
-    { field: "AnnouncementTitle", headerName: "Üniversite", width: 250 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {},
+    });
+  const columnss = [
     {
-      field: "AnnouncementText",
-      headerName: "URL",
-      width: 250,
-      renderCell: (params) => (
-        <a href={params.value} target="_blank" rel="noreferrer">
-          {params.value}
-        </a>
-      ),
+      name: "AnnouncementTitle",
+      label: "Üniversite",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "RelaseDate",
-      headerName: "Yayın Tarihi",
-      width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      name: "AnnouncementText",
+      label: "URL",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "EndDate",
-      headerName: "Bitiş Tarihi",
-      width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      name: "RelaseDate",
+      label: "Yayın Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: (params) => [
-        <Tooltip title="Kayıtlı Öğrenciler">
-          <GridActionsCellItem
-            icon={<HistoryEduIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleRecordClick(params.row.AnnouncementTitle)}
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "EndDate",
+      label: "Bitiş Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const alldata = service.data[dataIndex];
+          return (
+            <>
+              <Tooltip title="Kayıtlı Öğrenciler">
+                <GridActionsCellItem
+                  icon={<HistoryEduIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleRecordClick(alldata.AnnouncementTitle)}
+                  color="inherit"
+                />
+              </Tooltip>
+            </>
+          );
+        },
+      },
     },
   ];
+
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  };
+
   const columnsDetail = [
     {
       field: "StudentName",
@@ -139,18 +178,16 @@ function Tables() {
       <DashboardNavbar pageName="Üniversite" />
       <MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 550, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={8}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.AnnouncementId}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Üniversite"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
 

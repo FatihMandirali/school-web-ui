@@ -21,7 +21,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import { DataGrid, GridActionsCellItem, GridToolbarContainer } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridToolbarContainer } from "@mui/x-data-grid";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
@@ -34,7 +34,6 @@ import useList from "./service/useList";
 import MDButton from "../../../components/MDButton";
 import MDTypography from "../../../components/MDTypography";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../../tableContentLanguage";
 import "../../../assets/filter-css/filterbtn.css";
 // eslint-disable-next-line import/order
 import Tooltip from "@mui/material/Tooltip";
@@ -50,6 +49,8 @@ import useSaveHomeworkTask from "./service/useSaveHomeworkTask";
 import MDSnackbar from "../../../components/MDSnackbar";
 import useHomeworkTaskCompletedStudents from "../../homework/service/useHomeworkTaskCompletedStudents";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const { service, get } = useList(new Date().toDateString());
@@ -166,63 +167,126 @@ function Tables() {
     setOpenTaskCompletedDialog(true);
     setIsLoading(false);
   };
-
-  const columns = [
+  const getMuiTheme = () =>
+    createTheme({
+      components: {
+      },
+    });
+  const columnss = [
     {
-      field: "HomeWorkDescription",
-      headerName: "Açıklama",
-      width: 150,
-      valueGetter: (params) => params.value.replace(/<\/?[^>]+(>|$)/g, ""),
+      name: "HomeWorkDescription",
+      label: "Açıklama",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{value.replace(/<\/?[^>]+(>|$)/g, "")}</div>;
+        },
+      },
     },
     {
-      field: "DateOfTime",
-      headerName: "Ödev Tarihi",
-      width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
-    },
-    { field: "LessonName", headerName: "Ders Adı", width: 150 },
-    { field: "TeacherName", headerName: "Öğretmen Adı", width: 150 },
-    { field: "ClassName", headerName: "Sınıf", width: 150 },
-    {
-      field: "ControlType",
-      headerName: "Ödev Durumu",
-      width: 150,
-      valueGetter: (params) => (params.value === 1 ? "Kontrol edildi" : "Kontrol edilmedi"),
+      name: "DateOfTime",
+      label: "Ödev Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: (params) => [
-        <Tooltip title="Detay">
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(params.row.HomeworkId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title={params.row.ControlType === 0 ? "Teslim Al" : "Teslim Listesi"}>
-          <GridActionsCellItem
-            icon={params.row.ControlType === 0 ? <FactCheckIcon /> : <TaskAltIcon />}
-            label="TaskCompleted"
-            className="textPrimary"
-            onClick={handleTaskCompletedClick(
-              params.row.ClassId,
-              params.row.HomeworkId,
-              params.row.LessonId,
-              params.row.ControlType
-            )}
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "LessonName",
+      label: "Ders Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "TeacherName",
+      label: "Öğretmen Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "ClassName",
+      label: "Sınıf",
+      options: {
+        filter: true,
+        sort: false,
+      },
+    },
+    {
+      name: "ControlType",
+      label: "Ödev Durumu",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{value === 1 ? "Kontrol edildi" : "Kontrol edilmedi"}</div>;
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const alldata = service.data[dataIndex];
+          return (
+            <>
+              <Tooltip title="Detay">
+                <GridActionsCellItem
+                  icon={<EditIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleEditClick(alldata.HomeworkId)}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+              <Tooltip title={alldata.ControlType === 0 ? "Teslim Al" : "Teslim Listesi"}>
+                <GridActionsCellItem
+                  icon={alldata.ControlType === 0 ? <FactCheckIcon /> : <TaskAltIcon />}
+                  label="TaskCompleted"
+                  className="textPrimary"
+                  onClick={handleTaskCompletedClick(
+                    alldata.ClassId,
+                    alldata.HomeworkId,
+                    alldata.LessonId,
+                    alldata.ControlType
+                  )}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+            </>
+          );
+        },
+      },
     },
   ];
+
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: 'Üzgünüz, eşleşen kayıt bulunamadı',
+      }
+    }
+  };
 
   const columnStudents = [
     { field: "StudentName", headerName: "Adı", width: 200 },
@@ -234,22 +298,6 @@ function Tables() {
   };
 
   // eslint-disable-next-line react/no-unstable-nested-components
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <Badge color="secondary" variant="dot" invisible={invisible}>
-          <FilterListIcon
-            className="filterbtn"
-            ml={1}
-            fontSize="medium"
-            onClick={() => openFilterDialog()}
-          >
-            Filtrele
-          </FilterListIcon>
-        </Badge>
-      </GridToolbarContainer>
-    );
-  }
 
   const btnFilter = async () => {
     await get(createdDate);
@@ -284,19 +332,16 @@ function Tables() {
           </Stack>
         ) : (
           service.serviceStatus === "loaded" && (
-            <div style={{ height: 400, width: "100%" }}>
-              <DataGrid
-                rows={service.data}
-                columns={columns}
-                pageSize={8}
-                pagination
-                localeText={localizedTextsMap}
-                getRowId={(row) => row.HomeworkId}
-                components={{ Toolbar: CustomToolbar }}
-                rowsPerPageOptions={[5, 10, 15]}
-                loading={service.serviceStatus === "loading"}
-              />
-            </div>
+            <>
+              <ThemeProvider theme={getMuiTheme()}>
+                <MUIDataTable
+                  title={"Ödevler"}
+                  data={service.data}
+                  columns={columnss}
+                  options={options}
+                />
+              </ThemeProvider>
+            </>
           )
         )}
       </MDBox>

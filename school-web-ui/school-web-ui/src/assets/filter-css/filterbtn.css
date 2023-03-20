@@ -1,3 +1,21 @@
 .filterbtn:hover{
     color: #047f94;
 }
+.css-nfmglb-MuiTableCell-root {
+    background: #F0F2F5;
+}
+.css-1t29gy6-MuiToolbar-root {
+    background: #F0F2F5;
+}
+.css-rqglhn-MuiTable-root {
+    background: #F0F2F5;
+}
+.tss-vn2xz8-MUIDataTableBodyCell-root {
+    background: #F0F2F5 !important;
+}
+.tss-gm6zfk-MUIDataTableHeadCell-fixedHeader {
+    background: #F0F2F5 !important;
+}
+.css-1ex1afd-MuiTableCell-root {
+    padding: 6px 15px !important;
+}
