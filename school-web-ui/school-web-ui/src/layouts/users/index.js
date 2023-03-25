@@ -21,9 +21,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import {
-  GridActionsCellItem,
-} from "@mui/x-data-grid";
+import { GridActionsCellItem } from "@mui/x-data-grid";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import Icon from "@mui/material/Icon";
@@ -45,7 +43,32 @@ function Tables() {
   };
   const getMuiTheme = () =>
     createTheme({
-      components: {},
+      components: {
+        MUIDataTable: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'lightblue',
+            },
+            paper: {
+              boxShadow: 'none',
+            },
+          },
+        },
+        MUIDataTableHeadCell: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'lightblue',
+            },
+          },
+        },
+        MuiTableCell: {
+          styleOverrides: {
+            root: {
+              padding: '6px 15px',
+            },
+          },
+        },
+      },
     });
   const columnss = [
     {
@@ -58,7 +81,7 @@ function Tables() {
     },
     {
       name: "AdminSurname",
-      label: "dmin Soyadı",
+      label: "Admin Soyadı",
       options: {
         filter: true,
         sort: false,
@@ -120,10 +143,9 @@ function Tables() {
         noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
       },
     },
-  }
+  };
 
   // eslint-disable-next-line react/no-unstable-nested-components
-
 
   return (
     <DashboardLayout>
@@ -148,7 +170,6 @@ function Tables() {
                 options={options}
               />
             </ThemeProvider>
-
           </>
         )}
       </MDBox>

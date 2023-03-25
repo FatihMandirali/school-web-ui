@@ -126,9 +126,34 @@ function Tables() {
     />
   );
   const getMuiTheme = () =>
-  createTheme({
-    components: {},
-  });
+    createTheme({
+      components: {
+        MUIDataTable: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'lightblue',
+            },
+            paper: {
+              boxShadow: 'none',
+            },
+          },
+        },
+        MUIDataTableHeadCell: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'lightblue',
+            },
+          },
+        },
+        MuiTableCell: {
+          styleOverrides: {
+            root: {
+              padding: '6px 15px',
+            },
+          },
+        },
+      },
+    });
 const columnss = [
   {
     name: "StudentName",

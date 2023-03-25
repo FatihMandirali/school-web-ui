@@ -21,7 +21,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import PaymentIcon from "@mui/icons-material/Payment";
@@ -34,8 +34,9 @@ import useList from "./service/useList";
 import useActiveUniversityList from "./service/useActiveUniversityList";
 import useApplyUniversityList from "./service/useApplyUniversityList";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
-import localizedTextsMap from "../../../tableContentLanguage";
 import MDSnackbar from "../../../components/MDSnackbar";
+import MUIDataTable from "mui-datatables";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Tables() {
   const { service, get } = useList();
@@ -104,63 +105,133 @@ function Tables() {
     setActiveUniList(res.data);
     setOpenDialog(true);
   };
-
-  const columns = [
-    { field: "StudentName", headerName: "Adı", width: 200 },
+  const getMuiTheme = () =>
+    createTheme({
+      components: {
+        MUIDataTable: {
+          styleOverrides: {
+            root: {
+              backgroundColor: "lightblue",
+            },
+            paper: {
+              boxShadow: "none",
+            },
+          },
+        },
+        MUIDataTableHeadCell: {
+          styleOverrides: {
+            root: {
+              backgroundColor: "lightblue",
+            },
+          },
+        },
+        MuiTableCell: {
+          styleOverrides: {
+            root: {
+              padding: "6px 15px",
+            },
+          },
+        },
+      },
+    });
+  const columnss = [
     {
-      field: "StudentSurname",
-      headerName: "Soyadı",
-      minWidth: 200,
+      name: "StudentName",
+      label: "Adı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "ClassName",
-      headerName: "Sınıf",
-      minWidth: 200,
+      name: "StudentSurname",
+      label: "Soyadı",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "CreateDate",
-      headerName: "Kayıt Tarihi",
-      minWidth: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      name: "ClassName",
+      label: "Sınıf",
+      options: {
+        filter: true,
+        sort: false,
+      },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "İşlemler",
-      width: 100,
-      cellClassName: "actions",
-      // eslint-disable-next-line react/no-unstable-nested-components
-      getActions: (params) => [
-        <Tooltip title="Ödevler">
-          <GridActionsCellItem
-            icon={<HomeWorkIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleHomeworkClick(params.row.ClassId, params.row.StudentId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title="Ödeme Detay">
-          <GridActionsCellItem
-            icon={<PaymentIcon />}
-            label="Payment"
-            className="textPrimary"
-            onClick={handlePaymentClick(params.row.StudentId)}
-            color="inherit"
-          />
-        </Tooltip>,
-        <Tooltip title="Başvurulan Üniversiteler">
-          <GridActionsCellItem
-            icon={<HistoryEduIcon />}
-            label="Payment"
-            className="textPrimary"
-            onClick={handleUniClick(params.row.StudentId)}
-            color="inherit"
-          />
-        </Tooltip>,
-      ],
+      name: "CreateDate",
+      label: "Kayıt Tarihi",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRender: (value) => {
+          return <div style={{}}>{new Date(value).toLocaleString()}</div>;
+        },
+      },
+    },
+    {
+      name: "actions",
+      label: "İşlemler",
+      options: {
+        filter: true,
+        sort: false,
+        customBodyRenderLite: (dataIndex) => {
+          const id = service.data[dataIndex].StudentId;
+          const ClassId = service.data[dataIndex].ClassId;
+          return (
+            <>
+              <Tooltip title="Ödevler">
+                <GridActionsCellItem
+                  icon={<HomeWorkIcon />}
+                  label="Edit"
+                  className="textPrimary"
+                  onClick={handleHomeworkClick(ClassId, id)}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+              <Tooltip title="Ödeme Detay">
+                <GridActionsCellItem
+                  icon={<PaymentIcon />}
+                  label="Payment"
+                  className="textPrimary"
+                  onClick={handlePaymentClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+              ,
+              <Tooltip title="Başvurulan Üniversiteler">
+                <GridActionsCellItem
+                  icon={<HistoryEduIcon />}
+                  label="Payment"
+                  className="textPrimary"
+                  onClick={handleUniClick(id)}
+                  color="inherit"
+                />
+              </Tooltip>
+            </>
+          );
+        },
+      },
     },
   ];
+
+  const options = {
+    filterType: "checkbox",
+    responsive: "standard",
+    filter: false,
+    download: false,
+    print: false,
+    selectableRows: "none",
+    rowsPerPage: 10,
+    rowsPerPageOptions: [10, 100, 200, 500],
+    textLabels: {
+      body: {
+        noMatch: "Üzgünüz, eşleşen kayıt bulunamadı",
+      },
+    },
+  };
 
   useEffect(async () => {
     await get();
@@ -228,18 +299,16 @@ function Tables() {
       <DashboardNavbar pageName="Öğrenciler" />
       <MDBox>
         {service.serviceStatus === "loaded" && (
-          <div style={{ height: 600, width: "100%" }}>
-            <DataGrid
-              rows={service.data}
-              columns={columns}
-              pageSize={9}
-              pagination
-              localeText={localizedTextsMap}
-              getRowId={(row) => row.StudentId}
-              rowsPerPageOptions={[5, 10, 15]}
-              loading={service.serviceStatus === "loading"}
-            />
-          </div>
+          <>
+            <ThemeProvider theme={getMuiTheme()}>
+              <MUIDataTable
+                title={"Devamsızlıklar"}
+                data={service.data}
+                columns={columnss}
+                options={options}
+              />
+            </ThemeProvider>
+          </>
         )}
       </MDBox>
       <Dialog maxWidth="xl" fullWidth open={openDialog} onClose={() => setOpenDialog(false)}>
