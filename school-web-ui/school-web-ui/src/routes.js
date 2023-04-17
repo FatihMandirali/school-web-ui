@@ -109,6 +109,7 @@ import UniversityList from "layouts/university/index";
 import TeacherUniversityList from "layouts/teachermenu/teacherUniversity";
 import UniversityCreate from "layouts/university/createUniversity";
 import UniversityDetail from "layouts/university/detailUniversity";
+import AttendanceList from "layouts/attendance/AttendanceList";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -130,6 +131,7 @@ import RemoveDoneIcon from "@mui/icons-material/RemoveDone";
 import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndividualSuite";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import QuizIcon from "@mui/icons-material/Quiz";
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 
 const routes = [
   {
@@ -519,6 +521,16 @@ const routes = [
     icon: <CampaignIcon />,
     route: "/announcements",
     component: <Announcement />,
+    role: "Admin",
+    isActive: true,
+  },
+  {
+    type: "collapse",
+    name: "Yoklama Listesi",
+    key: "attendancelist",
+    icon: <AddToQueueIcon />,
+    route: "/attendance_list",
+    component: <AttendanceList />,
     role: "Admin",
     isActive: true,
   },
