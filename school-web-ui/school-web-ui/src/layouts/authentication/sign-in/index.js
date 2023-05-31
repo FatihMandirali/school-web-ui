@@ -112,7 +112,7 @@ function Basic() {
         openSuccessSB();
         jwtDecode.returnSetTokeSave(res.token);
         if (values.roleName === "Admin") {
-          window.location.href = "/users";
+          window.location.href = "/home";
         } else if (values.roleName === "Cover") {
           window.location.href = "/coverAnnouncement";
         } else if (values.roleName === "Teacher") {

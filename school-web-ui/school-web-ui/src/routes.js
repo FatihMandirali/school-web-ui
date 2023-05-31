@@ -110,6 +110,7 @@ import TeacherUniversityList from "layouts/teachermenu/teacherUniversity";
 import UniversityCreate from "layouts/university/createUniversity";
 import UniversityDetail from "layouts/university/detailUniversity";
 import AttendanceList from "layouts/attendance/AttendanceList";
+import Home from "layouts/home";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import GroupIcon from "@mui/icons-material/Group";
@@ -132,6 +133,7 @@ import AirlineSeatIndividualSuiteIcon from "@mui/icons-material/AirlineSeatIndiv
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import QuizIcon from "@mui/icons-material/Quiz";
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import Homes from "@mui/icons-material/Home";
 
 const routes = [
   {
@@ -143,6 +145,16 @@ const routes = [
     component: <SignIn />,
     role: "SignIn",
     isActive: false,
+  },
+  {
+    type: "collapse",
+    name: "AnaSayfa",
+    key: "Home",
+    icon: <Homes />,
+    route: "/home",
+    component: <Home />,
+    role: "Admin",
+    isActive: true,
   },
   {
     type: "collapse",

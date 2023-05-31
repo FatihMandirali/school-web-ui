@@ -40,32 +40,19 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
           alignItems="center"
           width="4rem"
           height="4rem"
-          mt={-3}
+          mt={4}
+          mb={4}
         >
           <Icon fontSize="medium" color="inherit">
             {icon}
           </Icon>
         </MDBox>
-        <MDBox textAlign="right" lineHeight={1.25}>
-          <MDTypography variant="button" fontWeight="light" color="text">
+        <MDBox mt={3} mb={3} textAlign="right" lineHeight={1.25}>
+          <MDTypography variant="button" fontWeight="dark" color="dark">
             {title}
           </MDTypography>
-          <MDTypography variant="h4">{count}</MDTypography>
+          <MDTypography variant="h3">{count}</MDTypography>
         </MDBox>
-      </MDBox>
-      <Divider />
-      <MDBox pb={2} px={2}>
-        <MDTypography component="p" variant="button" color="text" display="flex">
-          <MDTypography
-            component="span"
-            variant="button"
-            fontWeight="bold"
-            color={percentage.color}
-          >
-            {percentage.amount}
-          </MDTypography>
-          &nbsp;{percentage.label}
-        </MDTypography>
       </MDBox>
     </Card>
   );
