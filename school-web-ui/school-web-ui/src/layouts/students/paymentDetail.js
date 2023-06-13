@@ -243,8 +243,8 @@ function Tables() {
       <StudentPaymentSummaryComponent
         paymentAmount={paymentAmount}
         paymentData={
-          paymentData.totalFee.length > 0
-            ? paymentData.totalFee[0].TotalFee.toLocaleString("tr-TR", {
+          paymentData?.totalFee?.length > 0
+            ? paymentData?.totalFee[0]?.TotalFee?.toLocaleString("tr-TR", {
                 style: "currency",
                 currency: "TRY",
               })
