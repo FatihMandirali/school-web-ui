@@ -253,7 +253,7 @@ function Tables() {
         studentPayment[i].StudentSurname,
         new Date(studentPayment[i].EndDate).toLocaleDateString(),
         studentPayment[i].Amount,
-        (studentPayment[i].Events === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme"),
+        (studentPayment[i].Events === 0 ? "Ödenmedi" : "Ödendi"),
       ];
       rows.push(temp);
     }
