@@ -41,6 +41,8 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import localizedTextsMap from "../../tableContentLanguage";
 import MDTypography from "../../components/MDTypography";
 import MDInput from "../../components/MDInput";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import StudentPaymentSummaryComponent from "../../components/StudentPaymentSummary/StudentPaymentSummaryComponent";
 
 const style = {
@@ -70,6 +72,9 @@ function Tables() {
   const [openDialog, setOpenDialog] = useState(false);
   const [remainingPayment, setRemainingPayment] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
+  const [studentPayment, setStudentPayment] = useState([]);
+  const [totalPaymentPlan, setTotalPaymentPlan] = useState([]);
+  const [totalFee, setTotalFee] = useState([]);
   const [paymentData, setPaymentData] = useState({
     studentPayment: [],
     totalPaymentPlan: [],
@@ -111,6 +116,9 @@ function Tables() {
     const res = await get(id);
     if (res.serviceStatus === "loaded") {
       setPaymentData(res.data);
+      setStudentPayment(res.data?.studentPayment);
+      setTotalPaymentPlan(res.data?.totalPaymentPlan);
+      setTotalFee(res.data?.totalFee);
       // eslint-disable-next-line no-shadow
       let paymentAmount = 0;
       let remainingAmount = 0;
@@ -224,12 +232,184 @@ function Tables() {
       openErrorSB();
     }
   };
+  const pdfDownload = () => {
+    const pdf = new jsPDF("l", "pt", "a4");
+    const columns = [
+      "Adı",
+      "Soyadı",
+      "Ödeme Tarihi",
+      "Ödeme Tutarı",
+      "Ödeme Durumu",
+    ];
+    var rows = [];
 
+    for (let i = 0; i < studentPayment.length; i++) {
+      /*for (var key in json[i]) {
+        var temp = [key, json[i][key]];
+        rows.push(temp);
+      }*/
+      var temp = [
+        studentPayment[i].StudentName,
+        studentPayment[i].StudentSurname,
+        new Date(studentPayment[i].EndDate).toLocaleDateString(),
+        studentPayment[i].Amount,
+        (studentPayment[i].Events === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme"),
+      ];
+      rows.push(temp);
+    }
+
+    const columns2 = [
+      "Ek Ödenen Tutarı",
+      "Ek Ödeme Tipi",
+      "Ek Ödeme Tarihi",
+    ];
+    var rows2 = [];
+
+    for (let i = 0; i < totalPaymentPlan.length; i++) {
+      /*for (var key in json[i]) {
+        var temp = [key, json[i][key]];
+        rows.push(temp);
+      }*/
+      var temp2 = [
+        totalPaymentPlan[i].DownAmount,
+        (totalPaymentPlan[i].DownType === 1 ? "İlk Kayıt Ödemesi" : "Ara Ödeme"),
+        new Date(totalPaymentPlan[i].PaymentDate).toLocaleDateString(),
+      ];
+      rows2.push(temp2);
+    }
+
+    const columns3 = [
+      "Toplam Ödenecek Tutar",
+      "Ödenen Tutar",
+      "Kalan Tutar",
+    ];
+    var rows3 = [];
+
+    for (let i = 0; i < totalFee.length; i++) {
+      var temp3 = [
+        (paymentData?.totalFee?.length > 0
+          ? paymentData?.totalFee[0]?.TotalFee?.toLocaleString()
+          : "0"),
+        paymentAmount,
+        remainingPayment,
+      ];
+      rows3.push(temp3);
+    }
+    let finalY = pdf.lastAutoTable.finalY || 10
+    pdf.setFontSize(16);
+    pdf.text(345, finalY + 30, "ödeme detaylari");
+    pdf.setFontSize(12);
+    pdf.autoTable(columns3, rows3, {
+      startY: finalY + 50,
+      theme: "grid",
+      styles: {
+        font: "times",
+        halign: "center",
+        cellPadding: 3.5,
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        textColor: [255, 255, 255 ],
+        fontStyle: "normal",
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        fillColor: [254, 21, 21],
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      rowStyles: {
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      tableLineColor: [0, 0, 0],
+    });
+    pdf.setFontSize(12);
+    pdf.text(45, finalY + 130, "öğrenci ödemesi:");
+    pdf.autoTable(columns, rows, {
+      startY: finalY + 150,
+      theme: "grid",
+      styles: {
+        font: "times",
+        halign: "center",
+        cellPadding: 3.5,
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        textColor: [250, 248, 248],
+        fontStyle: "normal",
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        fillColor: [50, 49, 49],
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      rowStyles: {
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      tableLineColor: [0, 0, 0],
+    });
+    finalY = pdf.lastAutoTable.finalY
+    pdf.setFontSize(12);
+    pdf.text(45, finalY + 50, "toplam Ödeme Plani:");
+    pdf.autoTable(columns2, rows2, {
+      startY: finalY + 70,
+      theme: "grid",
+      styles: {
+        font: "times",
+        halign: "center",
+        cellPadding: 3.5,
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        textColor: [255, 255, 255 ],
+        fontStyle: "normal",
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        fillColor: [50, 49, 49],
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      rowStyles: {
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      tableLineColor: [0, 0, 0],
+    });
+    pdf.save("ödeme detayları");
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar pageName="Öğrenci Ücret Ödeme" />
-      <MDBox mb={1} display="flex" justifyContent="space-between" alignItems="center">
+      <MDBox mb={1} display="flex" justifyContent="end" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium" />
+        <MDButton
+          onClick={() => pdfDownload()}
+          size="small"
+          variant="gradient"
+          color="success"
+          style={{marginRight:"20px"}}
+        >
+          PDF olarak indir
+        </MDButton>
         <MDButton
           onClick={() => supplementaryPayment()}
           size="small"
